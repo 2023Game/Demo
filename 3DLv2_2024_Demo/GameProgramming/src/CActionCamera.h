@@ -49,5 +49,17 @@ private:
 	//“ü—ÍƒNƒ‰ƒX
 	CInput mInput;
 };
+
+class CFloatCamera : public CActionCamera
+{
+public:
+
+
+private:
+	CVector mEyeTarget;
+	CVector mEyeCurrent;
+
+};
+
 #endif
 
