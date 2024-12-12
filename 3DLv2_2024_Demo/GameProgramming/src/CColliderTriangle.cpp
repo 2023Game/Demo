@@ -60,3 +60,12 @@ void CColliderTriangle::Render()
 	//çsóÒïúãA
 	glPopMatrix();
 }
+
+void CColliderTriangle::Update()
+{
+	CCollider::mV[0] = mV[0] * *mpMatrix;
+	CCollider::mV[1] = mV[1] * *mpMatrix;
+	CCollider::mV[2] = mV[2] * *mpMatrix;
+	CCollider::mV[3] = ((CCollider::mV[1] - CCollider::mV[0]).Cross(CCollider::mV[2] - CCollider::mV[0])).Normalize();
+	ChangePriority();
+}

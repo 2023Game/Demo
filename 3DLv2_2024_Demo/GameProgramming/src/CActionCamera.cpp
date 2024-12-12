@@ -1,4 +1,6 @@
 #include "CActionCamera.h"
+#include "CCollisionManager.h"
+
 #include "glut.h"
 
 #define TURN_V 3.0f	//‰ñ“]‘¬“x
@@ -31,7 +33,7 @@ void CActionCamera::Set(float distance, float xaxis, float yaxis)
 	mInput.GetMousePos(&mx, &my);
 }
 
-void CActionCamera::Update()
+void CActionCamera::Update2()
 {
 	int ry = 0, rx = 0;
 	if (mInput.Key('J'))
@@ -112,8 +114,10 @@ void CActionCamera::Update()
 
 #include <stdio.h>
 
-void CActionCamera::Render()
+void CActionCamera::LookAt()
 {
+	Update2();
+
 	gluLookAt(mEye.X(), mEye.Y(), mEye.Z(),
 		mCenter.X(), mCenter.Y(), mCenter.Z(),
 		mUp.X(), mUp.Y(), mUp.Z());
@@ -154,4 +158,97 @@ CVector CActionCamera::VectorX()
 CVector CActionCamera::VectorZ()
 {
 	return CVector(-mModelView.M(0, 2), -mModelView.M(1, 2), -mModelView.M(2, 2));
+}
+
+
+void CFloatCamera::Collision(CCollider* m, CCollider* o)
+{
+	CVector adjust;
+	switch (m->Type())
+	{
+	case CCollider::EType::ECAPSULE:
+		switch (o->Type())
+		{
+		case CCollider::EType::ECAPSULE:
+			switch (o->ParentTag())
+			{
+			case CCharacter3::ETag::EENEMY:
+				if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+				{
+					mAdjust = mAdjust + adjust;
+				}
+			}
+			break;
+		case CCollider::EType::ETRIANGLE:
+			if (CCollider::CollisionCapsuleTriangle(m, o, &adjust))
+			{
+				mVelocityG = 0.0f;
+				mGrounded = true;
+				mAdjust = mAdjust + adjust;
+			}
+			break;
+		}
+		break;
+	}
+}
+
+void CFloatCamera::Collision()
+{
+	//CCollisionManager::Instance()->Collision(&mColBody, COLLISIONRANGE);
+	//CCollisionManager::Instance()->Collision(&mColSword, COLLISIONRANGE);
+}
+
+void CFloatCamera::Update()
+{
+	int ry = 0, rx = 0;
+	if (mInput.Key('J'))
+	{
+		ry += TURN_V;
+	}
+	if (mInput.Key('L'))
+	{
+		ry -= TURN_V;
+	}
+	if (mInput.Key('I'))
+	{
+		rx -= TURN_V;
+	}
+	if (mInput.Key('K'))
+	{
+		rx += TURN_V;
+	}
+
+	float x, y;
+	mInput.GetMousePos(&x, &y);
+	ry += (mx - x);
+	rx += (my - y);
+	mx = x;
+	my = y;
+
+	mRotation = mRotation + CVector(0.0f, ry, 0.0f);
+	mRotation = mRotation + CVector(rx, 0.0f, 0.0f);
+	if (mRotation.X() < -80.0f)
+	{
+		mRotation.X(-80.0f);
+	}
+	if (mRotation.X() > 80.0f)
+	{
+		mRotation.X(80.0f);
+	}
+
+
+	CTransform::Update();
+
+	mCenter = mPosition;
+	mEye = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
+
+	if (mInput.Key('N') || mInput.Key(VK_MBUTTON))
+	{
+		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		//		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
+	if (mInput.Key('M'))
+	{
+		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	}
 }

@@ -76,11 +76,13 @@ public:
 	CCharacter3* Parent();
 	//描画
 	void Render();
+	void Update();
+
 protected:
 	ETag mTag;//タグ
 	EType mType;//コライダタイプ
 	//頂点
-	CVector mV[3];
+	CVector mV[4];
 
 	CCharacter3* mpParent;//親
 	CMatrix* mpMatrix;//親行列

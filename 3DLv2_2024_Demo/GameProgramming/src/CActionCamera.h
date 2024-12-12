@@ -2,13 +2,13 @@
 #define CACTIONCAMERA_H
 
 #include "CVector.h"
-#include "CTransform.h"
+#include "CCharacter3.h"
 #include "CMatrix.h"
 #include "CInput.h"
 /*
 カメラクラス
 */
-class CActionCamera : public CTransform {
+class CActionCamera : public CCharacter3 {
 public:
 	//ワールド座標をスクリーン座標へ変換する
 	//WorldToScreen(スクリーン座標, ワールド座標)
@@ -27,10 +27,11 @@ public:
 	//設定メソッド(距離, X回転,Y回転)
 	void Set(float distance, float xaxis, float yaxis);
 	//カメラ更新
-	void Update();
+	void Update2();
 	//カメラ適用
-	void Render();
-private:
+	void LookAt();
+	void Render() {}
+protected:
 	float mx, my;
 	int mScreenWidth; //幅
 	int mScreenHeight; //高さ
@@ -50,12 +51,19 @@ private:
 	CInput mInput;
 };
 
+
+#include "CColliderLine.h"
+
 class CFloatCamera : public CActionCamera
 {
 public:
 
+	void Update();
+	void Collision();
+	void Collision(CCollider* m, CCollider* o);
 
 private:
+	CColliderLine mColLine;
 	CVector mEyeTarget;
 	CVector mEyeCurrent;
 
