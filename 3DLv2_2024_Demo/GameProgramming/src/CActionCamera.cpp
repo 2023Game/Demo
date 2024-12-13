@@ -6,7 +6,7 @@
 #include "glut.h"
 
 #define TURN_V 5.0f	//回転速度
-#define TURN_MOUSE_SENSE  0.5f //マウスの回転感度
+#define TURN_MOUSE_SENSE  0.25f //マウスの回転感度
 
 CActionCamera* CActionCamera::spInstance = nullptr;
 
@@ -66,8 +66,8 @@ void CActionCamera::Update2()
 
 	float x, y;
 	mInput.GetMousePos(&x, &y);
-	ry += (mx - x);
-	rx += (my - y);
+	ry += (mx - x) * TURN_MOUSE_SENSE;
+	rx += (my - y) * TURN_MOUSE_SENSE;
 	mx = x;
 	my = y;
 

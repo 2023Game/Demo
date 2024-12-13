@@ -108,11 +108,8 @@ void CApplication::Update()
 
 	CTaskManager::Instance()->Update();
 
-	//mActionCamera.Position(mpPaladin->Position()
-	//	+ CVector(0.0f, 2.0f, 0.0f));
-	//mActionCamera.Update2();
-	//mActionCamera.LookAt();
 
+	CFloatCamera::Instance()->LookAt();
 	//モデルビュー行列の取得
 	glGetFloatv(GL_MODELVIEW_MATRIX, mModelViewInverse.M());
 	//逆行列の取得

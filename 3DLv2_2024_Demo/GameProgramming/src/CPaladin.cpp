@@ -132,7 +132,6 @@ void CPaladin::Update()
 	mAdjust = CVector();
 
 	CFloatCamera::Instance()->TargetPosition(Position() + CVector(0.0f, 2.0f, 0.0f));
-	CFloatCamera::Instance()->LookAt();
 }
 
 void CPaladin::Collision(CCollider* m, CCollider* o)
