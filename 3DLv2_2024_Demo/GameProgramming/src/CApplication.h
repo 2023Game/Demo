@@ -38,7 +38,7 @@ private:
 	CShadowMap mShadowMap;
 
 	//CActionCamera
-	CActionCamera mActionCamera;
+	//CActionCamera mActionCamera;
 
 	CPaladin* mpPaladin;
 //	CModelX mKnight;

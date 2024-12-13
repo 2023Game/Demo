@@ -1,9 +1,11 @@
 #include "CActionCamera.h"
 #include "CCollisionManager.h"
+#include "CPaladin.h"
 
 #include "glut.h"
 
-#define TURN_V 3.0f	//回転速度
+#define TURN_V 5.0f	//回転速度
+#define TURN_MOUSE_SENSE  0.5f //マウスの回転感度
 
 CActionCamera* CActionCamera::spInstance = nullptr;
 
@@ -14,11 +16,16 @@ CActionCamera::CActionCamera()
 
 CActionCamera* CActionCamera::Instance()
 {
+	if (spInstance == nullptr)
+	{
+		new CActionCamera();
+	}
 	return spInstance;
 }
 
-void CActionCamera::Set(float distance, float xaxis, float yaxis)
+void CActionCamera::Set(const CVector& pos, float distance, float xaxis, float yaxis)
 {
+	CTransform::Position(pos);
 	Rotation(CVector(xaxis, yaxis, 0.0f));
 	Scale(CVector(0.0f, 0.0f, distance));
 	mUp = CVector(0.0f, 1.0f, 0.0f);
@@ -31,6 +38,9 @@ void CActionCamera::Set(float distance, float xaxis, float yaxis)
 	//プロジェクション行列の取得
 	glGetFloatv(GL_PROJECTION_MATRIX, mProjection.M());
 	mInput.GetMousePos(&mx, &my);
+	CTransform::Update();
+	Position(pos);
+	mEye = mTargetPosition;
 }
 
 void CActionCamera::Update2()
@@ -129,6 +139,13 @@ void CActionCamera::LookAt()
 	//printf("%f,%f\n", x, y);
 }
 
+void CActionCamera::Position(const CVector& pos)
+{
+	mPosition = pos;
+	mCenter = mPosition;
+	mTargetPosition = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
+}
+
 bool CActionCamera::WorldToScreen(CVector* screen, const CVector& world)
 {
 	//座標変換
@@ -158,6 +175,25 @@ CVector CActionCamera::VectorX()
 CVector CActionCamera::VectorZ()
 {
 	return CVector(-mModelView.M(0, 2), -mModelView.M(1, 2), -mModelView.M(2, 2));
+}
+
+
+
+// CFloatCamera class
+
+CFloatCamera* CFloatCamera::mspInstance = nullptr;
+
+CFloatCamera::CFloatCamera()
+{
+}
+
+CFloatCamera* CFloatCamera::Instance()
+{
+	if (mspInstance == nullptr)
+	{
+		mspInstance = new CFloatCamera();
+	}
+	return mspInstance;
 }
 
 
@@ -198,7 +234,7 @@ void CFloatCamera::Collision()
 	//CCollisionManager::Instance()->Collision(&mColSword, COLLISIONRANGE);
 }
 
-void CFloatCamera::Update()
+void CFloatCamera::Update2()
 {
 	int ry = 0, rx = 0;
 	if (mInput.Key('J'))
@@ -220,27 +256,47 @@ void CFloatCamera::Update()
 
 	float x, y;
 	mInput.GetMousePos(&x, &y);
-	ry += (mx - x);
-	rx += (my - y);
+	ry += (mx - x) * TURN_MOUSE_SENSE;
+	rx += (my - y) * TURN_MOUSE_SENSE;
 	mx = x;
 	my = y;
 
-	mRotation = mRotation + CVector(0.0f, ry, 0.0f);
-	mRotation = mRotation + CVector(rx, 0.0f, 0.0f);
-	if (mRotation.X() < -80.0f)
+	if (rx < -80.0f)
 	{
-		mRotation.X(-80.0f);
+		rx = (-80.0f);
 	}
-	if (mRotation.X() > 80.0f)
+	if (rx > 80.0f)
 	{
-		mRotation.X(80.0f);
+		rx = (80.0f);
 	}
 
+	mRotation = mRotation + CVector(0.0f, ry, 0.0f);
+	mRotation = mRotation + CVector(rx, 0.0f, 0.0f);
 
 	CTransform::Update();
 
 	mCenter = mPosition;
-	mEye = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
+	mTargetPosition = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
+
+	CVector v = mTargetPosition - mEye;
+
+	if (v.Length() > 0.09f)
+	{
+		if (v.Length() < mSpeed)
+		{
+			mSpeed -= 0.005f;
+		}
+		else if (mSpeed < VELOCITY)
+		{
+			mSpeed += 0.005f;
+		}
+		mVelocity = v.Normalize() * mSpeed;
+		mEye = mEye + mVelocity;
+	}
+	else
+	{
+		mSpeed = 0.0f;
+	}
 
 	if (mInput.Key('N') || mInput.Key(VK_MBUTTON))
 	{

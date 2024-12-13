@@ -172,8 +172,8 @@ bool CCollider::CollisionTriangleLine(CCollider* t, CCollider* l, CVector* a) {
 	v[0] = t->mV[0];// **t->mpMatrix;
 	v[1] = t->mV[1];// **t->mpMatrix;
 	v[2] = t->mV[2];// **t->mpMatrix;
-	sv = l->mV[0] * *l->mpMatrix;
-	ev = l->mV[1] * *l->mpMatrix;
+	sv = l->mV[0];// **l->mpMatrix;
+	ev = l->mV[1];// **l->mpMatrix;
 	//面の法線を、外積を正規化して求める
 	CVector normal = (v[1] - v[0]).Cross(v[2] - v[0]).Normalize();
 	//三角の頂点から線分始点へのベクトルを求める

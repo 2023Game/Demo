@@ -58,3 +58,10 @@ void CColliderLine::Render()
 	//s—ñ•œ‹A
 	glPopMatrix();
 }
+
+void CColliderLine::Update()
+{
+	CCollider::mV[0] = mV[0] * *mpMatrix;
+	CCollider::mV[1] = mV[1] * *mpMatrix;
+	ChangePriority();
+}

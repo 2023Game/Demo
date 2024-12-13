@@ -20,18 +20,21 @@ public:
 	//カメラのZ軸取得
 	CVector VectorZ();
 
-	CActionCamera();
+
 	//インスタンスの取得
 	static CActionCamera* Instance();
 
 	//設定メソッド(距離, X回転,Y回転)
-	void Set(float distance, float xaxis, float yaxis);
+	void Set(const CVector& pos, float distance, float xaxis, float yaxis);
 	//カメラ更新
-	void Update2();
+	virtual void Update2();
 	//カメラ適用
 	void LookAt();
 	void Render() {}
+	void Position(const CVector& pos);
 protected:
+	CActionCamera();
+
 	float mx, my;
 	int mScreenWidth; //幅
 	int mScreenHeight; //高さ
@@ -57,12 +60,14 @@ protected:
 class CFloatCamera : public CActionCamera
 {
 public:
-
-	void Update();
+	static CFloatCamera* Instance();
+	void Update2();
 	void Collision();
 	void Collision(CCollider* m, CCollider* o);
 
 private:
+	CFloatCamera();
+	static CFloatCamera *mspInstance;
 	CColliderLine mColLine;
 	CVector mEyeTarget;
 	CVector mEyeCurrent;
