@@ -40,7 +40,6 @@ private:
 	//CActionCamera
 	//CActionCamera mActionCamera;
 
-	CPaladin* mpPaladin;
 //	CModelX mKnight;
 //	CXEnemy mXEnemy;
 	//キャラクタのインスタンス
@@ -92,6 +91,7 @@ private:
 	//CCharacterのポインタの可変長配列
 //	std::vector<CCharacter*> mCharacters;
 public:
+	static CPaladin* mspPaladin;
 	~CApplication();
 	static CUi* Ui();	//UIクラスのインスタンスを取得
 	//モデルビュー行列の取得

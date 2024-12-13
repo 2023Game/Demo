@@ -131,7 +131,7 @@ void CPaladin::Update()
 	mGrounded = false;
 	mAdjust = CVector();
 
-	CFloatCamera::Instance()->Position(Position() + CVector(0.0f, 2.0f, 0.0f));
+	CFloatCamera::Instance()->TargetPosition(Position() + CVector(0.0f, 2.0f, 0.0f));
 	CFloatCamera::Instance()->LookAt();
 }
 

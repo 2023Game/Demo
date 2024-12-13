@@ -10,6 +10,8 @@
 */
 class CActionCamera : public CCharacter3 {
 public:
+	void Eye(const CVector& pos);
+
 	//ワールド座標をスクリーン座標へ変換する
 	//WorldToScreen(スクリーン座標, ワールド座標)
 	bool WorldToScreen(
@@ -31,7 +33,7 @@ public:
 	//カメラ適用
 	void LookAt();
 	void Render() {}
-	void Position(const CVector& pos);
+	void TargetPosition(const CVector& pos);
 protected:
 	CActionCamera();
 

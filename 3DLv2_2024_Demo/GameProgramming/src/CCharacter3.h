@@ -69,6 +69,14 @@ public:
 	{
 		return mVelocity;
 	}
+	void Speed(float speed)
+	{
+		mSpeed = speed;
+	}
+	float Speed()
+	{
+		return mSpeed;
+	}
 protected:
 	CVector mAdjust;
 	bool mGrounded;

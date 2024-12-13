@@ -1,6 +1,7 @@
 #include "CActionCamera.h"
 #include "CCollisionManager.h"
 #include "CPaladin.h"
+#include "CApplication.h"
 
 #include "glut.h"
 
@@ -139,11 +140,18 @@ void CActionCamera::LookAt()
 	//printf("%f,%f\n", x, y);
 }
 
-void CActionCamera::Position(const CVector& pos)
+void CActionCamera::TargetPosition(const CVector& pos)
 {
 	mPosition = pos;
 	mCenter = mPosition;
 	mTargetPosition = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
+}
+
+void CActionCamera::Eye(const CVector& pos)
+{
+	mPosition = pos;
+	mCenter = mPosition;
+	mEye = mTargetPosition = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
 }
 
 bool CActionCamera::WorldToScreen(CVector* screen, const CVector& world)
@@ -202,24 +210,12 @@ void CFloatCamera::Collision(CCollider* m, CCollider* o)
 	CVector adjust;
 	switch (m->Type())
 	{
-	case CCollider::EType::ECAPSULE:
+	case CCollider::EType::ELINE:
 		switch (o->Type())
 		{
-		case CCollider::EType::ECAPSULE:
-			switch (o->ParentTag())
-			{
-			case CCharacter3::ETag::EENEMY:
-				if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
-				{
-					mAdjust = mAdjust + adjust;
-				}
-			}
-			break;
 		case CCollider::EType::ETRIANGLE:
-			if (CCollider::CollisionCapsuleTriangle(m, o, &adjust))
+			if (CCollider::CollisionTriangleLine(o, m, &adjust))
 			{
-				mVelocityG = 0.0f;
-				mGrounded = true;
 				mAdjust = mAdjust + adjust;
 			}
 			break;
@@ -280,16 +276,21 @@ void CFloatCamera::Update2()
 
 	CVector v = mTargetPosition - mEye;
 
-	if (v.Length() > 0.09f)
+	if (v.Length() > CApplication::mspPaladin->Speed())
 	{
 		if (v.Length() < mSpeed)
 		{
 			mSpeed -= 0.005f;
 		}
-		else if (mSpeed < VELOCITY)
+		else if (mSpeed < CApplication::mspPaladin->Speed())
 		{
 			mSpeed += 0.005f;
 		}
+		else
+		{
+			mSpeed = CApplication::mspPaladin->Speed();
+		}
+		//mSpeed = VELOCITY;
 		mVelocity = v.Normalize() * mSpeed;
 		mEye = mEye + mVelocity;
 	}

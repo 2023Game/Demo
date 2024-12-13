@@ -23,9 +23,9 @@ void CPaladinRun::Start()
 void CPaladinRun::Update()
 {
 	//カメラの前方
-	CVector cameraZ = CActionCamera::Instance()->VectorZ();
+	CVector cameraZ = CFloatCamera::Instance()->VectorZ();
 	//カメラの左方向
-	CVector cameraX = CActionCamera::Instance()->VectorX();
+	CVector cameraX = CFloatCamera::Instance()->VectorX();
 	//キャラクタの前方
 	CVector charZ = mpParent->MatrixRotate().VectorZ();
 	//XZ平面にして正規化
@@ -108,5 +108,5 @@ void CPaladinRun::Update()
 			mState = CCharacter3::EState::EWALK;
 		}
 	}
-
+	//CFloatCamera::Instance()->Eye(mpParent->Position() + CVector(0.0f, 2.0f, 0.0f));
 }

@@ -18,8 +18,7 @@
 
 //クラスのstatic変数
 CTexture CApplication::mTexture;
-
-//CCamera CApplication::mCamera;
+CPaladin* CApplication::mspPaladin = nullptr;
 
 CUi* CApplication::spUi = nullptr;
 CApplication::~CApplication()
@@ -42,23 +41,10 @@ CUi* CApplication::Ui()
 #define MODEL_BACKGROUND  "res\\sky.obj", "res\\sky.mtl"
 
 
-//CTaskManager CApplication::mTaskManager;
-
-//CTaskManager* CApplication::TaskManager()
-//{
-//	return &mTaskManager;
-//}
-
-//CCamera* CApplication::Camera()
-//{
-//	return &mCamera;
-//}
-
 void gRender()
 {
 	CTaskManager::Instance()->Render();
 }
-
 
 CMatrix CApplication::mModelViewInverse;
 
@@ -103,7 +89,7 @@ void CApplication::Start()
 
 	new CMap();
 
-	mpPaladin = new CPaladin(CVector(-1.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	mspPaladin = new CPaladin(CVector(-1.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 	new CZombie(CVector(1.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
@@ -152,7 +138,7 @@ void CApplication::Update()
 
 	CVector screen;
 	//Enemyの座標をスクリーン座標へ変換します
-	if (CActionCamera::Instance()->WorldToScreen(&screen, mpPaladin->Position()))
+	if (CActionCamera::Instance()->WorldToScreen(&screen, mspPaladin->Position()))
 	{
 		//変換先の座標に文字列を出力する
 		mFont.Draw(screen.X(), screen.Y() - 25, 7, 14, "PLAYER");
