@@ -68,6 +68,7 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 
 private:
+	CCollider mColSphere;
 	CFloatCamera();
 	static CFloatCamera *mspInstance;
 	CColliderLine mColLine;

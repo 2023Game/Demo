@@ -216,7 +216,20 @@ void CFloatCamera::Collision(CCollider* m, CCollider* o)
 		case CCollider::EType::ETRIANGLE:
 			if (CCollider::CollisionTriangleLine(o, m, &adjust))
 			{
-				mAdjust = mAdjust + adjust;
+				//mAdjust = mAdjust + adjust;
+				mEye = mEye + adjust.Normalize() * (adjust.Length());
+			}
+			break;
+		}
+		break;
+	case CCollider::EType::ESPHERE:
+		switch (o->Type())
+		{
+		case CCollider::EType::ETRIANGLE:
+			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+			{
+				//mAdjust = mAdjust + adjust;
+				mEye = mEye + adjust.Normalize() * (adjust.Length());
 			}
 			break;
 		}
@@ -298,6 +311,10 @@ void CFloatCamera::Update2()
 	{
 		mSpeed = 0.0f;
 	}
+
+	mColLine.Set(this, nullptr, mCenter, mEye);
+	mColLine.Update();
+	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
 
 	if (mInput.Key('N') || mInput.Key(VK_MBUTTON))
 	{
