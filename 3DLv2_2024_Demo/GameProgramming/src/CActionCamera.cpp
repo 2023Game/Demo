@@ -192,6 +192,7 @@ CVector CActionCamera::VectorZ()
 CFloatCamera* CFloatCamera::mspInstance = nullptr;
 
 CFloatCamera::CFloatCamera()
+	: mColSphere(this,nullptr,CVector(),1.2f)
 {
 }
 
@@ -229,7 +230,7 @@ void CFloatCamera::Collision(CCollider* m, CCollider* o)
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
 				//mAdjust = mAdjust + adjust;
-				mEye = mEye + adjust.Normalize() * (adjust.Length());
+				mEye = mEye + adjust;
 			}
 			break;
 		}
@@ -312,9 +313,13 @@ void CFloatCamera::Update2()
 		mSpeed = 0.0f;
 	}
 
-	mColLine.Set(this, nullptr, mCenter, mEye);
-	mColLine.Update();
-	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
+	//mColLine.Set(this, nullptr, mCenter, mEye);
+	//mColLine.Update();
+	//CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
+
+	mColSphere.Position(mEye);
+	mColSphere.Update();
+	CCollisionManager::Instance()->Collision(&mColSphere, COLLISIONRANGE);
 
 	if (mInput.Key('N') || mInput.Key(VK_MBUTTON))
 	{

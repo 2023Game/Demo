@@ -125,7 +125,10 @@ CCollider::CCollider(CCharacter3* parent, CMatrix* matrix,
 	//親設定
 	mpParent = parent;
 	//親行列設定
-	mpMatrix = matrix;
+	if (matrix)
+		mpMatrix = matrix;
+	else
+		mpMatrix = &mMatrix;
 	//CTransform設定
 	mPosition = position; //位置
 	//半径設定
