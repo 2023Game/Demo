@@ -1,5 +1,8 @@
 #include "CZombie.h"
 #include "CCollisionManager.h"
+#include "CZombieWalk.h"
+
+
 
 #define MODEL_PATH "res\\WorldZombie\\world_war_zombie.x"
 //追加のアニメーションセット
@@ -14,9 +17,9 @@ CZombie::CZombie()
 	, mColBody(
 		this, 
 		nullptr, 
-		CVector(0.0f, -70.0f, 0.0f),
+		CVector(0.0f, -90.0f, 0.0f),
 		CVector(0.0f, 70.0f, 0.0f), 
-		0.5f)
+		0.15f)
 	, mCntNoDame(0)
 {
 	if (sModel.IsLoaded() == false)
@@ -24,12 +27,20 @@ CZombie::CZombie()
 		sModel.Load(MODEL_PATH);
 		//アニメーションの追加
 		sModel.AddAnimationSet(ANIMATION_WALK); //0
-		sModel.AddAnimationSet(ANIMATION_HIT); //1
-		sModel.AddAnimationSet(ANIMATION_DEATH); //2
+		//sModel.AddAnimationSet(ANIMATION_HIT); //1
+		//sModel.AddAnimationSet(ANIMATION_DEATH); //2
 	}
 	Init(&sModel);
 	mColBody.Matrix(&mpCombinedMatrix[3]);
-	mState = EState::EWALK;
+
+	mpState = mpWalk = new CZombieWalk(this);
+	mpWalk->Start();
+	mState = mpWalk->State();
+}
+
+CZombie::~CZombie()
+{
+	delete mpWalk;
 }
 
 CZombie::CZombie(const CVector& pos, const CVector& rot, const CVector& scale)
@@ -42,23 +53,68 @@ CZombie::CZombie(const CVector& pos, const CVector& rot, const CVector& scale)
 
 void CZombie::Update()
 {
-	switch(mState)
+	mTargetPosition = mPosition + mAdjust;
+
+	if (mState == mpState->State())
 	{
-	case CCharacter3::EState::EHIT:
-		Hit();
-		break;
-	case CCharacter3::EState::EDEATH:
-		Death();
-		break;
-	default:
-		ChangeAnimation(0, false, 243);
-		break;
+		mpState->Update();
 	}
+	else
+	{
+		mState = mpState->State();
+		switch (mState)
+		{
+		//case EState::ERUN:
+		//	mpState = mpRun;
+		//	break;
+		//case EState::EJUMP:
+		//	mpState = mpJump;
+		//	break;
+		//case EState::EIDLE:
+		//	mpState = mpIdle;
+		//	break;
+		//case EState::EATTACK:
+		//	mpState = mpAttack;
+		//	break;
+		case EState::EWALK:
+			mpState = mpWalk;
+			break;
+		}
+		mpState->Start();
+		mpState->Update();
+	}
+
+	if (mState != EState::EIDLE || !mGrounded)
+	{
+		mVelocityG += mGravity;
+		mTargetPosition = mTargetPosition + CVector(0.0f, mVelocityG, 0.0f);
+
+		CVector v = mTargetPosition - mPosition;
+
+		if (v.Length() > 0.001f)
+		{
+			if (v.Length() < mSpeed)
+			{
+				mSpeed -= 0.005f;
+			}
+			else if (mSpeed < VELOCITY)
+			{
+				mSpeed += 0.005f;
+			}
+			mVelocity = v.Normalize() * mSpeed;
+			mPosition = mPosition + mVelocity;
+		}
+		else
+		{
+			mSpeed = 0.0f;
+		}
+	}
+
 	CXCharacter::Update();
 	mColBody.Update();
 
-	mVelocityG += mGravity;
-	mPosition = mPosition + CVector(0.0f, mVelocityG, 0.0f);
+	mGrounded = false;
+	mAdjust = CVector();
 
 #ifdef _DEBUG
 
@@ -106,7 +162,10 @@ void CZombie::Collision(CCollider* m, CCollider* o)
 			if (CCollider::CollisionCapsuleTriangle(m, o, &adjust))
 			{
 				mVelocityG = 0.0f;
-				mPosition = mPosition + adjust;
+				mGrounded = true;
+				mAdjust = mAdjust + adjust;
+//				mVelocityG = 0.0f;
+//				mPosition = mPosition + adjust;
 			}
 			break;
 		}

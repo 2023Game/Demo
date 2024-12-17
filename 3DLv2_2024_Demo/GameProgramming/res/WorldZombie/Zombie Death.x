@@ -592,7 +592,7 @@ Frame Root {
     } // End of Armature_mixamorig_Hips
   } // End of Armature
 } // End of Root
-AnimationSet Global {
+AnimationSet Death {
   Animation {
     {Armature}
     AnimationKey { // Rotation

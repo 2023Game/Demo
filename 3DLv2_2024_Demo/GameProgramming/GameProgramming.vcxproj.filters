@@ -37,6 +37,9 @@
     <Filter Include="ソース ファイル\Character\Paladin">
       <UniqueIdentifier>{b8fa390b-6e86-43ec-8bf3-97ea8fc3de80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Character\Zombie">
+      <UniqueIdentifier>{a0e25053-6b74-45b4-8f56-f999ea83ece0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -147,9 +150,6 @@
     <ClCompile Include="src\CMap.cpp">
       <Filter>ソース ファイル\Character</Filter>
     </ClCompile>
-    <ClCompile Include="src\CZombie.cpp">
-      <Filter>ソース ファイル\Character</Filter>
-    </ClCompile>
     <ClCompile Include="src\CShadowMap.cpp">
       <Filter>ソース ファイル\Model</Filter>
     </ClCompile>
@@ -173,6 +173,12 @@
     </ClCompile>
     <ClCompile Include="src\CPaladinRun.cpp">
       <Filter>ソース ファイル\Character\Paladin</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CZombie.cpp">
+      <Filter>ソース ファイル\Character\Zombie</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CZombieWalk.cpp">
+      <Filter>ソース ファイル\Character\Zombie</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,9 +296,6 @@
     <ClInclude Include="src\CMap.h">
       <Filter>ソース ファイル\Character</Filter>
     </ClInclude>
-    <ClInclude Include="src\CZombie.h">
-      <Filter>ソース ファイル\Character</Filter>
-    </ClInclude>
     <ClInclude Include="src\CShadowMap.h">
       <Filter>ソース ファイル\Model</Filter>
     </ClInclude>
@@ -316,6 +319,12 @@
     </ClInclude>
     <ClInclude Include="src\CPaladinRun.h">
       <Filter>ソース ファイル\Character\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CZombie.h">
+      <Filter>ソース ファイル\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CZombieWalk.h">
+      <Filter>ソース ファイル\Character\Zombie</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
