@@ -62,7 +62,7 @@ void CApplication::Start()
 {
 	//ƒJƒƒ‰‚ÌÝ’è
 	//CFloatCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 2.5f, -15.0f, 180.0f);
-	CCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 2.5f, -15.0f, 180.0f);
+	CCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 7.5f, -10.0f, 180.0f);
 
 	//mKnight.Load("res\\knight\\knight_low.x");
 	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:ˆÚ“®

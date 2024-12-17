@@ -11,7 +11,7 @@
 CActionCamera* CActionCamera::spInstance = nullptr;
 
 CActionCamera::CActionCamera()
-	: mColSphere(this, nullptr, CVector(), 1.3f)
+	: mColSphere(this, nullptr, CVector(), 0.3f)
 {
 	spInstance = this;
 }
@@ -47,6 +47,7 @@ void CActionCamera::Set(const CVector& pos, float distance, float xaxis, float y
 
 void CActionCamera::Update2()
 {
+	//キーボードで上下左右に回転
 	int ry = 0, rx = 0;
 	if (mInput.Key('J'))
 	{
@@ -65,6 +66,7 @@ void CActionCamera::Update2()
 		rx += TURN_V;
 	}
 
+	//マウスで上下左右に回転
 	float x, y;
 	mInput.GetMousePos(&x, &y);
 	ry += (mx - x) * TURN_MOUSE_SENSE;
@@ -83,54 +85,35 @@ void CActionCamera::Update2()
 		mRotation.X(80.0f);
 	}
 
-	//if (y != 0)
-	//{
-	//	mRotation = mRotation + CVector(0.0f, TURN_V, 0.0f);
-	//}
-	//if (y < 0)
-	//{
-	//	mRotation = mRotation - CVector(0.0f, TURN_V, 0.0f);
-	//}
-	//if (x < 0)
-	//{
-	//	mRotation = mRotation + CVector(x, 0.0f, 0.0f);
-	//	if (mRotation.X() < -80.0f)
-	//	{
-	//		mRotation.X(-80.0f);
-	//	}
-	//}
-	//if (x > 0)
-	//{
-	//	mRotation = mRotation + CVector(x, 0.0f, 0.0f);
-	//	if (mRotation.X() > 80.0f)
-	//	{
-	//		mRotation.X(80.0f);
-	//	}
-	//}
-
 	CTransform::Update();
 
 	mCenter = mPosition;
 	mEye = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
 
+	//壁を通過しないように調整
 	mAdjust = CVector();
 	mColLine.Set(this, nullptr, mCenter, mEye);
 	mColLine.Update();
 	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
 
-	mColSphere.Position(mEye + mAdjust);
+	mEye = mEye + mAdjust;
+	mColSphere.Position(mEye);
 	mColSphere.Update();
 	CCollisionManager::Instance()->Collision(&mColSphere, COLLISIONRANGE);
 
+#ifdef _DEBUG
+	// Nキーでマウスカーソル消す
 	if (mInput.Key('N') || mInput.Key(VK_MBUTTON))
 	{
 		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		//		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	}
+	// Mキーでマウスカーソル表示
 	if (mInput.Key('M'))
 	{
 		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
+#endif
 }
 
 #include <stdio.h>
@@ -159,6 +142,7 @@ void CActionCamera::TargetPosition(const CVector& pos)
 
 void CActionCamera::Collision(CCollider* m, CCollider* o)
 {
+	//Lineで壁まで移動し、球でさらに壁から離す
 	CVector adjust;
 	switch (m->Type())
 	{
@@ -168,13 +152,11 @@ void CActionCamera::Collision(CCollider* m, CCollider* o)
 		case CCollider::EType::ETRIANGLE:
 			if (CCollider::CollisionTriangleLine(o, m, &adjust))
 			{
-				if (mAdjust.Length() <= 0.0f
-					|| mAdjust.Length() > adjust.Length())
+				//一番近い場所に調整する
+				if (mAdjust.Length() < adjust.Length())
 				{
 					mAdjust = adjust;
 				}
-				//mAdjust = mAdjust + adjust;
-				//mEye = mEye + adjust.Normalize() * (adjust.Length());
 			}
 			break;
 		}
@@ -185,7 +167,7 @@ void CActionCamera::Collision(CCollider* m, CCollider* o)
 		case CCollider::EType::ETRIANGLE:
 			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
 			{
-				//mAdjust = mAdjust + adjust;
+				//壁ピッタリにはしない
 				mEye = mEye + adjust;
 			}
 			break;
@@ -368,8 +350,9 @@ void CFloatCamera::Update2()
 	mColLine.Set(this, nullptr, mCenter, mEye);
 	mColLine.Update();
 	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
+	mEye = mEye + mAdjust;
 
-	mColSphere.Position(mEye + mAdjust);
+	mColSphere.Position(mEye);
 	mColSphere.Update();
 	CCollisionManager::Instance()->Collision(&mColSphere, COLLISIONRANGE);
 

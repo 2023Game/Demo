@@ -6,7 +6,7 @@
 #include "CPaladinAttack.h"
 #include "CPaladinJump.h"
 #include "CPaladinRun.h"
-#include "CActionCamera.h"
+#include "CCamera.h"
 
 #define PALADIN_MODEL_PATH "res\\paladin\\paladin.x"
 //追加のアニメーションセット
@@ -132,7 +132,7 @@ void CPaladin::Update()
 	mAdjust = CVector();
 
 	//CFloatCamera::Instance()->TargetPosition(Position() + CVector(0.0f, 2.0f, 0.0f));
-	CActionCamera::Instance()->TargetPosition(Position() + CVector(0.0f, 2.0f, 0.0f));
+	CCamera::Instance()->TargetPosition(Position() + CVector(0.0f, 1.5f, 0.0f));
 }
 
 void CPaladin::Collision(CCollider* m, CCollider* o)

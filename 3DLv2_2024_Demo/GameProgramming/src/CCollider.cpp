@@ -23,7 +23,8 @@ bool CollisionTriangleLine2(const CVector& tv0, const CVector& tv1, const CVecto
 	//線分は面と交差している
 	//面と線分の交点を求める
 	//交点の計算
-	CVector cross = lv0 + (lv1 - lv0) * (abs(dots) / (abs(dots) + abs(dote)));
+	float per = (abs(dots) / (abs(dots) + abs(dote)));
+	CVector cross = lv0 + (lv1 - lv0) * per;
 
 	//交点が三角形内なら衝突している
 	//頂点1頂点2ベクトルと頂点1交点ベクトルとの外積を求め、
@@ -51,11 +52,13 @@ bool CollisionTriangleLine2(const CVector& tv0, const CVector& tv1, const CVecto
 	//調整値計算（衝突しない位置まで戻す）
 	if (dots < 0.0f) {
 		//始点が裏面
-		*adjust = normal * -dots;
+		//*adjust = normal * -dots;
+		*adjust = (lv1 - lv0) * per;
 	}
 	else {
 		//終点が裏面
-		*adjust = normal * -dote;
+		//*adjust = normal * -dote;
+		*adjust = (lv0 - lv1) * (1.0f - per);
 	}
 	return true;
 }
@@ -177,6 +180,9 @@ bool CCollider::CollisionTriangleLine(CCollider* t, CCollider* l, CVector* a) {
 	v[2] = t->mV[2];// **t->mpMatrix;
 	sv = l->mV[0];// **l->mpMatrix;
 	ev = l->mV[1];// **l->mpMatrix;
+
+	return CollisionTriangleLine2(v[0], v[1], v[2], sv, ev, a);
+
 	//面の法線を、外積を正規化して求める
 	CVector normal = (v[1] - v[0]).Cross(v[2] - v[0]).Normalize();
 	//三角の頂点から線分始点へのベクトルを求める

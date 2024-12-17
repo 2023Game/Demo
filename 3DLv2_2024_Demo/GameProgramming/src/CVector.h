@@ -1,5 +1,6 @@
 #ifndef CVECTOR_H
 #define CVECTOR_H
+#include <stdio.h>
 #include "CMatrix.h"
 
 /*
@@ -8,6 +9,10 @@
 */
 class CVector {
 public:
+	void Print()
+	{
+		printf("%10f%10f%10f\n", mX, mY, mZ);
+	}
 	//+=演算子のオーバーロード
 	//CVector1 += CVector2 の演算を行う
 	void operator+=(const CVector& v);
