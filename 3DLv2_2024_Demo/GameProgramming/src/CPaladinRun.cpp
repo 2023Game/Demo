@@ -1,5 +1,5 @@
 #include "CPaladinRun.h"
-#include "CActionCamera.h"
+#include "CCamera.h"
 
 #define ANIMATION_FILE "res\\paladin\\Paladin WProp J Nordstrom@Sword And Shield Run.fbx.x"
 #define ANIMATION_SIZE 33
@@ -23,9 +23,9 @@ void CPaladinRun::Start()
 void CPaladinRun::Update()
 {
 	//カメラの前方
-	CVector cameraZ = CFloatCamera::Instance()->VectorZ();
+	CVector cameraZ = CCamera::Instance()->VectorZ();
 	//カメラの左方向
-	CVector cameraX = CFloatCamera::Instance()->VectorX();
+	CVector cameraX = CCamera::Instance()->VectorX();
 	//キャラクタの前方
 	CVector charZ = mpParent->MatrixRotate().VectorZ();
 	//XZ平面にして正規化

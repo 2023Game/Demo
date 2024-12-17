@@ -1,6 +1,11 @@
 #include "CCamera.h"
 #include "glut.h"
 
+CActionCamera* CCamera::Instance()
+{
+	return CActionCamera::Instance();
+}
+
 void CCamera::Start(double left, double right, double bottom, double top)
 {
 	//モデルビュー行列の退避

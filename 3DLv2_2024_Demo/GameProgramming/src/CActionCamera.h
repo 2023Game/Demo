@@ -5,6 +5,9 @@
 #include "CCharacter3.h"
 #include "CMatrix.h"
 #include "CInput.h"
+
+#include "CColliderLine.h"
+
 /*
 ÉJÉÅÉâÉNÉâÉX
 */
@@ -34,7 +37,11 @@ public:
 	void LookAt();
 	void Render() {}
 	void TargetPosition(const CVector& pos);
+	void Collision(CCollider* m, CCollider* o);
 protected:
+	CCollider mColSphere;
+	CColliderLine mColLine;
+
 	CActionCamera();
 
 	float mx, my;
@@ -57,8 +64,6 @@ protected:
 };
 
 
-#include "CColliderLine.h"
-
 class CFloatCamera : public CActionCamera
 {
 public:
@@ -68,10 +73,9 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 
 private:
-	CCollider mColSphere;
+
 	CFloatCamera();
 	static CFloatCamera *mspInstance;
-	CColliderLine mColLine;
 	CVector mEyeTarget;
 	CVector mEyeCurrent;
 

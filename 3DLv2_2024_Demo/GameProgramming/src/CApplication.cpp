@@ -61,7 +61,8 @@ CTexture* CApplication::Texture()
 void CApplication::Start()
 {
 	//カメラの設定
-	CFloatCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 2.5f, -15.0f, 180.0f);
+	//CFloatCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 2.5f, -15.0f, 180.0f);
+	CCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 2.5f, -15.0f, 180.0f);
 
 	//mKnight.Load("res\\knight\\knight_low.x");
 	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
@@ -109,7 +110,9 @@ void CApplication::Update()
 	CTaskManager::Instance()->Update();
 
 
-	CFloatCamera::Instance()->LookAt();
+	//CFloatCamera::Instance()->LookAt();
+	CCamera::Instance()->LookAt();
+
 	//モデルビュー行列の取得
 	glGetFloatv(GL_MODELVIEW_MATRIX, mModelViewInverse.M());
 	//逆行列の取得

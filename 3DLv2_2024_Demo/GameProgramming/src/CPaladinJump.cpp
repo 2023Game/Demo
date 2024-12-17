@@ -1,5 +1,5 @@
 #include "CPaladinJump.h"
-#include "CActionCamera.h"
+#include "CCamera.h"
 
 #define ANIMATION_FILE "res\\paladin\\Sword And Shield Jump.x"
 #define ANIMATION_SIZE 51
@@ -32,5 +32,5 @@ void CPaladinJump::Update()
 	}
 	mpParent->Position(mpParent->Position() + mVelocity);
 
-	//CFloatCamera::Instance()->TargetPosition(mpParent->Position() + CVector(0.0f, 2.0f, 0.0f));
+	//CCamera::Instance()->TargetPosition(mpParent->Position() + CVector(0.0f, 2.0f, 0.0f));
 }

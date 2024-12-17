@@ -1,5 +1,5 @@
 #include "CPaladinWalk.h"
-#include "CActionCamera.h"
+#include "CCamera.h"
 
 // CPaladinWalk class
 
@@ -25,9 +25,9 @@ void CPaladinWalk::Start()
 void CPaladinWalk::Update()
 {
 	//カメラの前方
-	CVector cameraZ = CFloatCamera::Instance()->VectorZ();
+	CVector cameraZ = CCamera::Instance()->VectorZ();
 	//カメラの左方向
-	CVector cameraX = CFloatCamera::Instance()->VectorX();
+	CVector cameraX = CCamera::Instance()->VectorX();
 	//キャラクタの前方
 	CVector charZ = mpParent->MatrixRotate().VectorZ();
 	//XZ平面にして正規化

@@ -11,6 +11,7 @@
 CActionCamera* CActionCamera::spInstance = nullptr;
 
 CActionCamera::CActionCamera()
+	: mColSphere(this, nullptr, CVector(), 1.3f)
 {
 	spInstance = this;
 }
@@ -112,6 +113,15 @@ void CActionCamera::Update2()
 	mCenter = mPosition;
 	mEye = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
 
+	mAdjust = CVector();
+	mColLine.Set(this, nullptr, mCenter, mEye);
+	mColLine.Update();
+	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
+
+	mColSphere.Position(mEye + mAdjust);
+	mColSphere.Update();
+	CCollisionManager::Instance()->Collision(&mColSphere, COLLISIONRANGE);
+
 	if (mInput.Key('N') || mInput.Key(VK_MBUTTON))
 	{
 		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
@@ -145,6 +155,43 @@ void CActionCamera::TargetPosition(const CVector& pos)
 	mPosition = pos;
 	mCenter = mPosition;
 	mTargetPosition = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
+}
+
+void CActionCamera::Collision(CCollider* m, CCollider* o)
+{
+	CVector adjust;
+	switch (m->Type())
+	{
+	case CCollider::EType::ELINE:
+		switch (o->Type())
+		{
+		case CCollider::EType::ETRIANGLE:
+			if (CCollider::CollisionTriangleLine(o, m, &adjust))
+			{
+				if (mAdjust.Length() <= 0.0f
+					|| mAdjust.Length() > adjust.Length())
+				{
+					mAdjust = adjust;
+				}
+				//mAdjust = mAdjust + adjust;
+				//mEye = mEye + adjust.Normalize() * (adjust.Length());
+			}
+			break;
+		}
+		break;
+	case CCollider::EType::ESPHERE:
+		switch (o->Type())
+		{
+		case CCollider::EType::ETRIANGLE:
+			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+			{
+				//mAdjust = mAdjust + adjust;
+				mEye = mEye + adjust;
+			}
+			break;
+		}
+		break;
+	}
 }
 
 void CActionCamera::Eye(const CVector& pos)
@@ -192,7 +239,6 @@ CVector CActionCamera::VectorZ()
 CFloatCamera* CFloatCamera::mspInstance = nullptr;
 
 CFloatCamera::CFloatCamera()
-	: mColSphere(this,nullptr,CVector(),1.2f)
 {
 }
 
@@ -208,34 +254,39 @@ CFloatCamera* CFloatCamera::Instance()
 
 void CFloatCamera::Collision(CCollider* m, CCollider* o)
 {
-	CVector adjust;
-	switch (m->Type())
-	{
-	case CCollider::EType::ELINE:
-		switch (o->Type())
-		{
-		case CCollider::EType::ETRIANGLE:
-			if (CCollider::CollisionTriangleLine(o, m, &adjust))
-			{
-				//mAdjust = mAdjust + adjust;
-				mEye = mEye + adjust.Normalize() * (adjust.Length());
-			}
-			break;
-		}
-		break;
-	case CCollider::EType::ESPHERE:
-		switch (o->Type())
-		{
-		case CCollider::EType::ETRIANGLE:
-			if (CCollider::CollisionTriangleSphere(o, m, &adjust))
-			{
-				//mAdjust = mAdjust + adjust;
-				mEye = mEye + adjust;
-			}
-			break;
-		}
-		break;
-	}
+	//CVector adjust;
+	//switch (m->Type())
+	//{
+	//case CCollider::EType::ELINE:
+	//	switch (o->Type())
+	//	{
+	//	case CCollider::EType::ETRIANGLE:
+	//		if (CCollider::CollisionTriangleLine(o, m, &adjust))
+	//		{
+	//			if (mAdjust.Length() <= 0.0f
+	//				|| mAdjust.Length() > adjust.Length())
+	//			{
+	//				mAdjust = adjust;
+	//			}
+	//			//mAdjust = mAdjust + adjust;
+	//			//mEye = mEye + adjust.Normalize() * (adjust.Length());
+	//		}
+	//		break;
+	//	}
+	//	break;
+	//case CCollider::EType::ESPHERE:
+	//	switch (o->Type())
+	//	{
+	//	case CCollider::EType::ETRIANGLE:
+	//		if (CCollider::CollisionTriangleSphere(o, m, &adjust))
+	//		{
+	//			//mAdjust = mAdjust + adjust;
+	//			mEye = mEye + adjust;
+	//		}
+	//		break;
+	//	}
+	//	break;
+	//}
 }
 
 void CFloatCamera::Collision()
@@ -313,11 +364,12 @@ void CFloatCamera::Update2()
 		mSpeed = 0.0f;
 	}
 
-	//mColLine.Set(this, nullptr, mCenter, mEye);
-	//mColLine.Update();
-	//CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
+	mAdjust = CVector();
+	mColLine.Set(this, nullptr, mCenter, mEye);
+	mColLine.Update();
+	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
 
-	mColSphere.Position(mEye);
+	mColSphere.Position(mEye + mAdjust);
 	mColSphere.Update();
 	CCollisionManager::Instance()->Collision(&mColSphere, COLLISIONRANGE);
 
