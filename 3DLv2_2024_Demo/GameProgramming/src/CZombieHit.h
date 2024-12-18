@@ -3,10 +3,10 @@
 #include "CState.h"
 #include "CInput.h"
 
-class CZombieWalk : public CState
+class CZombieHit : public CState
 {
 public:
-	CZombieWalk(CZombie* parent);
+	CZombieHit(CZombie* parent);
 
 	void Start();
 	void Update();

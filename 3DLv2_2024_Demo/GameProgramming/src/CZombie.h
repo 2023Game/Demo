@@ -24,6 +24,7 @@ private:
 	CState* mpState;
 	//CState* mpIdle;
 	CState* mpWalk;
+	CState* mpHit;
 };
 
 #define VELOCITY 0.015f

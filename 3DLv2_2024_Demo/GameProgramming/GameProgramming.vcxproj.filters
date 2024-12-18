@@ -180,6 +180,9 @@
     <ClCompile Include="src\CZombieWalk.cpp">
       <Filter>ソース ファイル\Character\Zombie</Filter>
     </ClCompile>
+    <ClCompile Include="src\CZombieHit.cpp">
+      <Filter>ソース ファイル\Character\Zombie</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CSound.h">
@@ -324,6 +327,9 @@
       <Filter>ソース ファイル\Character\Zombie</Filter>
     </ClInclude>
     <ClInclude Include="src\CZombieWalk.h">
+      <Filter>ソース ファイル\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CZombieHit.h">
       <Filter>ソース ファイル\Character\Zombie</Filter>
     </ClInclude>
   </ItemGroup>

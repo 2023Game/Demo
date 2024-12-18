@@ -1,6 +1,7 @@
 #include "CZombie.h"
 #include "CCollisionManager.h"
 #include "CZombieWalk.h"
+#include "CZombieHit.h"
 
 
 
@@ -36,11 +37,14 @@ CZombie::CZombie()
 	mpState = mpWalk = new CZombieWalk(this);
 	mpWalk->Start();
 	mState = mpWalk->State();
+	// Status ’Ç‰Á
+	mpHit = new CZombieHit(this);
 }
 
 CZombie::~CZombie()
 {
 	delete mpWalk;
+	delete mpHit;
 }
 
 CZombie::CZombie(const CVector& pos, const CVector& rot, const CVector& scale)
@@ -78,6 +82,9 @@ void CZombie::Update()
 		//	break;
 		case EState::EWALK:
 			mpState = mpWalk;
+			break;
+		case EState::EHIT:
+			mpState = mpHit;
 			break;
 		}
 		mpState->Start();
@@ -126,38 +133,39 @@ void CZombie::Update()
 
 void CZombie::Collision(CCollider* m, CCollider* o)
 {
+	mpState->Collision(m, o);
 	CVector adjust;
 	switch (m->Type())
 	{
 	case CCollider::EType::ECAPSULE:
 		switch (o->Type())
 		{
-		case CCollider::EType::ECAPSULE:
-			switch (o->ParentTag())
-			{
-			case CCharacter3::ETag::EPLAYER:
-				if (o->ParentState() == CCharacter3::EState::EATTACK)
-				{
-					if (mCntNoDame > 0) return;
-					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
-					{
-						if (mState != CCharacter3::EState::EHIT)
-						{
-							mState = CCharacter3::EState::EHIT;
-							mCntNoDame = 60;
-							ChangeAnimation(1, false, 121);
-							AnimationFrame(0.3f);
-						}
-						else if (mState == CCharacter3::EState::EHIT)
-						{
-							mState = CCharacter3::EState::EDEATH;
-							ChangeAnimation(2, false, 178);
-							AnimationFrame(0.3f);
-						}
-					}
-				}
-			}
-			break;
+		//case CCollider::EType::ECAPSULE:
+		//	switch (o->ParentTag())
+		//	{
+		//	case CCharacter3::ETag::EPLAYER:
+		//		if (o->ParentState() == CCharacter3::EState::EATTACK)
+		//		{
+		//			if (mCntNoDame > 0) return;
+		//			if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+		//			{
+		//				if (mState != CCharacter3::EState::EHIT)
+		//				{
+		//					mState = CCharacter3::EState::EHIT;
+		//					mCntNoDame = 60;
+		//					ChangeAnimation(1, false, 121);
+		//					AnimationFrame(0.3f);
+		//				}
+		//				else if (mState == CCharacter3::EState::EHIT)
+		//				{
+		//					mState = CCharacter3::EState::EDEATH;
+		//					ChangeAnimation(2, false, 178);
+		//					AnimationFrame(0.3f);
+		//				}
+		//			}
+		//		}
+		//	}
+		//	break;
 		case CCollider::EType::ETRIANGLE:
 			if (CCollider::CollisionCapsuleTriangle(m, o, &adjust))
 			{
