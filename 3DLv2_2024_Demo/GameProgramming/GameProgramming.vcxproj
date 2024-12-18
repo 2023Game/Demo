@@ -55,6 +55,7 @@
     <ClCompile Include="src\CXEnemy.cpp" />
     <ClCompile Include="src\CXPlayer.cpp" />
     <ClCompile Include="src\CZombie.cpp" />
+    <ClCompile Include="src\CZombieDeath.cpp" />
     <ClCompile Include="src\CZombieHit.cpp" />
     <ClCompile Include="src\CZombieWalk.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="src\CXEnemy.h" />
     <ClInclude Include="src\CXPlayer.h" />
     <ClInclude Include="src\CZombie.h" />
+    <ClInclude Include="src\CZombieDeath.h" />
     <ClInclude Include="src\CZombieHit.h" />
     <ClInclude Include="src\CZombieWalk.h" />
     <ClInclude Include="src\main.h" />
