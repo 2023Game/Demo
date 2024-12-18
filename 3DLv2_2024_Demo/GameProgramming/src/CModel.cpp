@@ -21,6 +21,8 @@ int strcmp(const char* s1, const char* s2)
 	//“¯‚¶‚È‚çˆø‚¢‚Ä0
 	return s1[i] - s2[i];
 }
+#else
+#include <string.h>
 #endif
 
 #include "glut.h"

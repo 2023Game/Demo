@@ -91,11 +91,12 @@ void CActionCamera::Update2()
 	mEye = mPosition + mMatrixRotate.VectorZ() * mScale.Z();
 
 	//壁を通過しないように調整
+	// まず線コライダ
 	mAdjust = CVector();
 	mColLine.Set(this, nullptr, mCenter, mEye);
 	mColLine.Update();
 	CCollisionManager::Instance()->Collision(&mColLine, COLLISIONRANGE);
-
+	// 次に球コライダ
 	mEye = mEye + mAdjust;
 	mColSphere.Position(mEye);
 	mColSphere.Update();
@@ -154,10 +155,14 @@ void CActionCamera::Collision(CCollider* m, CCollider* o)
 		case CCollider::EType::ETRIANGLE:
 			if (CCollider::CollisionTriangleLine(o, m, &adjust))
 			{
-				//一番近い場所に調整する
-				if (mAdjust.Length() < adjust.Length())
+				// 近づく方向へ移動させる
+				if (m->V(2).Dot(adjust) < 0)
 				{
-					mAdjust = adjust;
+					//一番近い場所に調整する
+					if (mAdjust.Length() < adjust.Length())
+					{
+						mAdjust = adjust;
+					}
 				}
 			}
 			break;

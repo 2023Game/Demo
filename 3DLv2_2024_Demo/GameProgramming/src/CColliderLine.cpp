@@ -63,5 +63,6 @@ void CColliderLine::Update()
 {
 	CCollider::mV[0] = mV[0] * *mpMatrix;
 	CCollider::mV[1] = mV[1] * *mpMatrix;
+	CCollider::mV[2] = CCollider::mV[1] - CCollider::mV[0];
 	ChangePriority();
 }
