@@ -7,7 +7,6 @@
 CPaladinRun::CPaladinRun(CPaladin* parent)
 {
 	mpParent = parent;
-	mState = CCharacter3::EState::ERUN;
 	if (mpParent->Model()->IsLoaded())
 	{
 		mAnimNo = mpParent->Model()->AddAnimationSet(ANIMATION_FILE) - 1;

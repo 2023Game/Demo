@@ -7,7 +7,6 @@
 CPaladinJump::CPaladinJump(CPaladin* parent)
 {
 	mpParent = parent;
-	mState = CCharacter3::EState::EJUMP;
 	if (mpParent->Model()->IsLoaded())
 	{
 		mAnimNo = mpParent->Model()->AddAnimationSet(ANIMATION_FILE) - 1;

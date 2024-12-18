@@ -67,12 +67,8 @@ CPaladin::CPaladin(const CVector& pos, const CVector& rot, const CVector& scale)
 void CPaladin::Update()
 {
 	mTargetPosition = mPosition + mAdjust;
-
-	if (mState == mpState->State())
-	{
-		mpState->Update();
-	}
-	else
+	// 状態が変わればインスタンスを切替える
+	if (mState != mpState->State())
 	{
 		mState = mpState->State();
 		switch (mState)
@@ -94,8 +90,8 @@ void CPaladin::Update()
 			break;
 		}
 		mpState->Start();
-		mpState->Update();
 	}
+	mpState->Update();
 
 	if (mState != EState::EIDLE || !mGrounded)
 	{

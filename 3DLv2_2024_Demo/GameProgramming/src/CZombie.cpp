@@ -55,11 +55,7 @@ void CZombie::Update()
 {
 	mTargetPosition = mPosition + mAdjust;
 
-	if (mState == mpState->State())
-	{
-		mpState->Update();
-	}
-	else
+	if (mState != mpState->State())
 	{
 		mState = mpState->State();
 		switch (mState)
@@ -78,8 +74,8 @@ void CZombie::Update()
 			break;
 		}
 		mpState->Start();
-		mpState->Update();
 	}
+	mpState->Update();
 
 	if (mState != EState::EDEATH || !mGrounded)
 	{

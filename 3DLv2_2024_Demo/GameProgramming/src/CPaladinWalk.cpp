@@ -9,7 +9,6 @@
 CPaladinWalk::CPaladinWalk(CPaladin* parent)
 {
 	mpParent = parent;
-	mState = CCharacter3::EState::EWALK;
 	if (mpParent->Model()->IsLoaded())
 	{
 		mAnimNo = mpParent->Model()->AddAnimationSet(ANIMATION_FILE) - 1;
@@ -81,7 +80,6 @@ void CPaladinWalk::Update()
 			//mRotation.Y(mRotation.Y() - 5.0f);
 		}
 		//ˆÚ“®•ûŒü‚ÖˆÚ“®
-		//mTargetPosition = mTargetPosition + move * VELOCITY;
 		mpParent->AddTargetPosition(move * (VELOCITY / 2.0f));
 		mState = CCharacter3::EState::EWALK;
 	}
@@ -104,6 +102,4 @@ void CPaladinWalk::Update()
 	{
 		mState = CCharacter3::EState::ERUN;
 	}
-
-	//CFloatCamera::Instance()->TargetPosition(mpParent->Position() + CVector(0.0f, 2.0f, 0.0f));
 }
