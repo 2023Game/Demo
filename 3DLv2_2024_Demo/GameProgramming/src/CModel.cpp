@@ -5,6 +5,7 @@
 //CVectorのインクルード
 #include "CVector.h"
 
+#ifdef _DEBUG
 //文字列s1と文字列s2の比較
 //s1とs2が等しければ0を
 //等しくなければ0以外を返す
@@ -20,6 +21,7 @@ int strcmp(const char* s1, const char* s2)
 	//同じなら引いて0
 	return s1[i] - s2[i];
 }
+#endif
 
 #include "glut.h"
 

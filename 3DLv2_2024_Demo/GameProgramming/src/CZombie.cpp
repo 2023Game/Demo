@@ -27,7 +27,7 @@ CZombie::CZombie()
 	}
 	Init(&sModel);
 	mColBody.Matrix(&mpCombinedMatrix[3]);
-
+	//‰Šúó‘Ôİ’è
 	mpState = mpWalk = new CZombieWalk(this);
 	mpWalk->Start();
 	mState = mpWalk->State();

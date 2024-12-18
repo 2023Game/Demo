@@ -61,32 +61,9 @@ CTexture* CApplication::Texture()
 void CApplication::Start()
 {
 	//カメラの設定
-	//CFloatCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 2.5f, -15.0f, 180.0f);
 	CCamera::Instance()->Set(CVector(-1.0f, 2.0f, 0.0f), 7.5f, -10.0f, 180.0f);
 
-	//mKnight.Load("res\\knight\\knight_low.x");
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//1:移動
-	//mKnight.SeparateAnimationSet(0, 1530, 1830, "idle1");//2:待機
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//3:ダミー
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//4:ダミー
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//5:ダミー
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//6:ダミー
-	//mKnight.SeparateAnimationSet(0, 440, 520, "attack1");//7:Attack1
-	//mKnight.SeparateAnimationSet(0, 520, 615, "attack2");//8:Attack2
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//9:ダミー
-	//mKnight.SeparateAnimationSet(0, 10, 80, "walk");//10:ダミー
-	//mKnight.SeparateAnimationSet(0, 1160, 1260, "death1");//11:ダウン
-
-	//3Dモデルファイルの読み込み
-//	mModelX.Load(MODEL_FILE);
-	//キャラクターにモデルを設定
-//	mXPlayer.Init(&mModelX);
-
 	mFont.Load("FontG.png", 1, 4096 / 64);
-
-	//mXEnemy.Init(&mKnight);
-	//mXEnemy.Position(CVector(7.0f, 0.0f, 0.0f));
-	//mXEnemy.ChangeAnimation(2, true, 200);
 
 	new CMap();
 
@@ -94,10 +71,9 @@ void CApplication::Start()
 
 	new CZombie(CVector(1.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
-
+	// シャドウマップ
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
-
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.4f };  //影の色
 	float lightPos[] = { 0.0f,80.0f,0.0f };  //光源の位置
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, gRender, shadowColor, lightPos);
@@ -105,12 +81,8 @@ void CApplication::Start()
 
 void CApplication::Update()
 {
-
-
 	CTaskManager::Instance()->Update();
 
-
-	//CFloatCamera::Instance()->LookAt();
 	CCamera::Instance()->LookAt();
 
 	//モデルビュー行列の取得
@@ -123,13 +95,13 @@ void CApplication::Update()
 
 	//衝突処理
 	CTaskManager::Instance()->Collision();
-//	CCollisionManager::Instance()->Collision();
-
+	//シャドウマップの描画
 	mShadowMap.Render();
-	//CTaskManager::Instance()->Render();
 
+#ifdef _DEBUG
 	//コライダの描画
 	CCollisionManager::Instance()->Render();
+#endif
 
 	//2D描画開始
 	CCamera::Start(0, 800, 0, 600);

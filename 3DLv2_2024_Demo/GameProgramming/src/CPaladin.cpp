@@ -9,10 +9,9 @@
 #include "CCamera.h"
 
 #define PALADIN_MODEL_PATH "res\\paladin\\paladin.x"
+
 //追加のアニメーションセット
-
 //#define ANIMATION_ATTACKSP1 "res\\paladin\\SwordAndShieldAttack.x"
-
 
 CModelX CPaladin::sModel;
 
@@ -38,11 +37,11 @@ CPaladin::CPaladin()
 	Init(&sModel);
 	mColBody.Matrix(&mpCombinedMatrix[3]);
 	mColSword.Matrix(&mpCombinedMatrix[50]);
-	ChangeAnimation(0, true, 221);
-	mState = EState::EIDLE;
+	// 初期状態設定
 	mpState = mpIdle = new CPaladinIdle(this);
 	mpState->Start();
-
+	mState = mpState->State();
+	// 状態追加
 	mpWalk = new CPaladinWalk(this);
 	mpAttack = new CPaladinAttack(this);
 	mpJump = new CPaladinJump(this);
