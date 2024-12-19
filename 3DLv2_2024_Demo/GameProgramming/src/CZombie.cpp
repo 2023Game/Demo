@@ -19,6 +19,7 @@ CZombie::CZombie()
 		CVector(0.0f, -90.0f, 0.0f),
 		CVector(0.0f, 70.0f, 0.0f), 
 		0.175f)
+	, mpTarget(nullptr)
 {
 	if (sModel.IsLoaded() == false)
 	{

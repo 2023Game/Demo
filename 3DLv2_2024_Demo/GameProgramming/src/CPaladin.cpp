@@ -20,9 +20,9 @@ CPaladin::CPaladin()
 	, mColBody(
 		this,
 		nullptr,
-		CVector(0.0f, -55.0f, 0.0f),
-		CVector(0.0f, 40.0f, 0.0f),
-		0.4f)
+		CVector(0.0f, -75.0f, 0.0f),
+		CVector(0.0f, 60.0f, 0.0f),
+		0.2f)
 	, mColSword(
 		this,
 		nullptr,

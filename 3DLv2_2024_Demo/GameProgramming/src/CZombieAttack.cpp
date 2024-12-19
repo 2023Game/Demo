@@ -5,7 +5,6 @@
 #define ANIMATION_SIZE 251
 
 CZombieAttack::CZombieAttack(CZombie* parent)
-	: mpTarget(nullptr)
 {
 	mpParent = parent;
 	if (mpParent->Model()->IsLoaded())
@@ -17,29 +16,29 @@ CZombieAttack::CZombieAttack(CZombie* parent)
 void CZombieAttack::Start()
 {
 	mpParent->ChangeAnimation(mAnimNo, true, ANIMATION_SIZE);
-	//mpParent->AnimationFrame(0.3f);
+	mpParent->AnimationFrame(0.125f);
 	mState = CCharacter3::EState::EATTACK;
 }
 
 void CZombieAttack::Update()
 {
-	if (mpTarget != nullptr)
+	if (mpParent->Target() != nullptr)
 	{
-		mpParent->TargetPosition(mpTarget->Position());
+		mpParent->TargetPosition(mpParent->Target()->Position());
 
 		// プレイヤーの方へ向かせる
-		CVector toPlayer = mpTarget->Position() - mpParent->Position();
-		float dot = toPlayer.Dot(mpParent->MatrixRotate().VectorX());
-		if (dot > 0.0f)
-		{
-			CVector y = mpParent->Rotation();
-			y.Y(y.Y() + 1.1f);
-			mpParent->Rotation(y);
-		}
-		else if (dot < 0.0f)
+		CVector toPlayer = mpParent->Target()->Position() - mpParent->Position();
+		CVector cross = toPlayer.Cross(mpParent->MatrixRotate().VectorZ());
+		if (cross.Y() > 0.0f)
 		{
 			CVector y = mpParent->Rotation();
 			y.Y(y.Y() - 1.1f);
+			mpParent->Rotation(y);
+		}
+		else
+		{
+			CVector y = mpParent->Rotation();
+			y.Y(y.Y() + 1.1f);
 			mpParent->Rotation(y);
 		}
 	}
@@ -78,7 +77,8 @@ void CZombieAttack::Collision(CCollider* m, CCollider* o)
 					// プレイヤーのポインタ取得
 					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
 					{
-						mpTarget = o->Parent();
+						//mpTarget = o->Parent();
+						mpParent->Position(mpParent->Position() + adjust);
 					}
 					break;
 				}

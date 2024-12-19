@@ -15,7 +15,16 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	void Collision();
 	static CModelX* Model() { return &sModel; }
+	CCharacter3* Target()
+	{
+		return mpTarget;
+	}
+	void Target(CCharacter3* target)
+	{
+		mpTarget = target;
+	}
 private:
+	CCharacter3* mpTarget;
 	CColliderCapsule mColBody;	//‘Ì
 	static CModelX sModel;
 	// Status

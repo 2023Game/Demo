@@ -13,7 +13,6 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	//void Render();
 private:
-	CCharacter3* mpTarget;
 	CZombie* mpParent;
 	CInput mInput;
 };
