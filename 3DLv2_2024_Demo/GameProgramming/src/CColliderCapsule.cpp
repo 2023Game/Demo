@@ -1,11 +1,11 @@
 #include "CColliderCapsule.h"
 
-CColliderCapsule::CColliderCapsule(CCharacter3* parent, CMatrix* matrix, const CVector& v0, const CVector& v1, float radius)
+CColliderCapsule::CColliderCapsule(CCharacter3* parent, CMatrix* matrix, const CVector& v0, const CVector& v1, float radius, ETag tag)
 {
-	Set(parent, matrix, v0, v1, radius);
+	Set(parent, matrix, v0, v1, radius, tag);
 }
 
-void CColliderCapsule::Set(CCharacter3* parent, CMatrix* matrix, const CVector& v0, const CVector& v1, float radius)
+void CColliderCapsule::Set(CCharacter3* parent, CMatrix* matrix, const CVector& v0, const CVector& v1, float radius, ETag tag)
 {
 	mType = CCollider::EType::ECAPSULE;
 	mpParent = parent;
@@ -13,6 +13,7 @@ void CColliderCapsule::Set(CCharacter3* parent, CMatrix* matrix, const CVector& 
 	mSp = v0;
 	mEp = v1;
 	mRadius = radius;
+	mTag = tag;
 }
 
 void CColliderCapsule::Update()

@@ -28,7 +28,8 @@ CPaladin::CPaladin()
 		nullptr,
 		CVector(10.0f, 15.0f, 5.0f),
 		CVector(80.0f, 25.0f, 10.0f),
-		0.1f)
+		0.1f,
+		CCollider::ETag::ESWORD)
 {
 	if (sModel.IsLoaded() == false)
 	{

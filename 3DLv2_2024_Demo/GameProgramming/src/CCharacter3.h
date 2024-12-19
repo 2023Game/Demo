@@ -61,6 +61,14 @@ public:
 	{
 		mTargetPosition = mTargetPosition + v;
 	}
+	void TargetPosition(const CVector& v)
+	{
+		mTargetPosition = v;
+	}
+	CVector TargetPosition()
+	{
+		return mTargetPosition;
+	}
 	void VelocityG(float v)
 	{
 		mVelocityG = v;

@@ -3,6 +3,7 @@
 #include "CZombieWalk.h"
 #include "CZombieHit.h"
 #include "CZombieDeath.h"
+#include "CZombieAttack.h"
 
 #define MODEL_PATH "res\\WorldZombie\\world_war_zombie.x"
 //追加のアニメーションセット
@@ -29,11 +30,12 @@ CZombie::CZombie()
 	mColBody.Matrix(&mpCombinedMatrix[3]);
 	//初期状態設定
 	mpState = mpWalk = new CZombieWalk(this);
-	mpWalk->Start();
-	mState = mpWalk->State();
+	mpState->Start();
+	mState = mpState->State();
 	// Status 追加
 	mpHit = new CZombieHit(this);
 	mpDeath = new CZombieDeath(this);
+	mpAttack = new CZombieAttack(this);
 }
 
 CZombie::~CZombie()
@@ -60,9 +62,9 @@ void CZombie::Update()
 		mState = mpState->State();
 		switch (mState)
 		{
-		//case EState::EATTACK:
-		//	mpState = mpAttack;
-		//	break;
+		case EState::EATTACK:
+			mpState = mpAttack;
+			break;
 		case EState::EWALK:
 			mpState = mpWalk;
 			break;
@@ -123,6 +125,7 @@ void CZombie::Collision(CCollider* m, CCollider* o)
 	case CCollider::EType::ECAPSULE:
 		switch (o->Type())
 		{
+			// 地面、壁などの衝突判定
 		case CCollider::EType::ETRIANGLE:
 			if (CCollider::CollisionCapsuleTriangle(m, o, &adjust))
 			{

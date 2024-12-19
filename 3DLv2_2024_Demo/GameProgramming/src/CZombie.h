@@ -23,6 +23,7 @@ private:
 	CState* mpWalk;
 	CState* mpHit;
 	CState* mpDeath;
+	CState* mpAttack;
 };
 
 #define VELOCITY 0.015f

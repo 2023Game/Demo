@@ -38,26 +38,26 @@ void CZombieWalk::Collision(CCollider* m, CCollider* o)
 			switch (o->ParentTag())
 			{
 			case CCharacter3::ETag::EPLAYER:
-				if (o->ParentState() == CCharacter3::EState::EATTACK
-					|| o->Tag() == CCollider::ETag::ESWORD )
+				switch (o->Tag())
 				{
-					//if (mCntNoDame > 0) return;
+				case CCollider::ETag::ESWORD:
+					if (o->ParentState() == CCharacter3::EState::EATTACK)
+					{
+						if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+						{
+							if (mState != CCharacter3::EState::EHIT)
+							{
+								mState = CCharacter3::EState::EHIT;
+							}
+						}
+					}
+					break;
+				case CCollider::ETag::EBODY:
 					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
 					{
-						if (mState != CCharacter3::EState::EHIT)
-						{
-							//mCntNoDame = 60;
-							mState = CCharacter3::EState::EHIT;
-							//ChangeAnimation(1, false, 121);
-							//AnimationFrame(0.3f);
-						}
-						//else if (mState == CCharacter3::EState::EHIT)
-						//{
-						//	mState = CCharacter3::EState::EDEATH;
-						//	ChangeAnimation(2, false, 178);
-						//	AnimationFrame(0.3f);
-						//}
+						mState = CCharacter3::EState::EATTACK;
 					}
+					break;
 				}
 			}
 			break;
