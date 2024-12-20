@@ -360,6 +360,8 @@ size_t CModelX::AddAnimationSet(const char* file)
 	buf[size] = '\0';
 	fclose(fp);	//ファイルをクローズする
 
+	//CModelXFrame* p = mFrame[0];
+
 	//文字列の最後まで繰り返し
 	while (*mpPointer != '\0') {
 		GetToken();	//単語の取得
@@ -371,6 +373,27 @@ size_t CModelX::AddAnimationSet(const char* file)
 		else if (strcmp(mToken, "AnimationSet") == 0) {
 			new CAnimationSet(this);
 		}
+		////単語がFrameの場合
+		//else if (strcmp(mToken, "Frame") == 0) {
+		//	//フレーム名取得
+		//	GetToken();
+		//	if (strchr(mToken, '{')) {
+		//		//フレーム名なし：スキップ
+		//		SkipNode();
+		//		GetToken(); //}
+		//	}
+		//	else {
+		//		//フレームが無ければ
+		//		if (FindFrame(mToken) == 0) {
+		//			//フレームを作成する
+		//			p->mChild.push_back(
+		//				new CModelXFrame(this));
+		//		}
+		//		else {
+		//			p = FindFrame(mToken);
+		//		}
+		//	}
+		//}
 	}
 	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
 	return mAnimationSet.size();

@@ -15,6 +15,7 @@
 
 #include "CMap.h"
 #include "CZombie.h"
+#include "main.h"
 
 //クラスのstatic変数
 CTexture CApplication::mTexture;
@@ -104,7 +105,7 @@ void CApplication::Update()
 #endif
 
 	//2D描画開始
-	CCamera::Start(0, 800, 0, 600);
+	CCamera::Start(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT);
 
 	mFont.Draw(20, 20, 10, 12, "3D PROGRAMMING");
 

@@ -13,4 +13,5 @@ public:
 private:
 	CPaladin* mpParent;
 	CInput mInput;
+	int mCount;
 };

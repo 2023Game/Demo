@@ -98,6 +98,10 @@ public:
 	{
 		return mpState;
 	}
+	const CVector& Adjust()
+	{
+		return mAdjust;
+	}
 protected:
 	CState* mpState;
 	CVector mAdjust;
