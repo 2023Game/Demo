@@ -43,14 +43,11 @@ void CZombieHit::Collision(CCollider* m, CCollider* o)
 				if (o->ParentState() == CCharacter3::EState::EATTACK
 					|| o->Tag() == CCollider::ETag::ESWORD )
 				{
-					//if (mCntNoDame > 0) return;
 					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
 					{
 						if (mState == CCharacter3::EState::EHIT)
 						{
-							mState = CCharacter3::EState::EDEATH;
-							//ChangeAnimation(2, false, 178);
-							//AnimationFrame(0.3f);
+							//mState = CCharacter3::EState::EDEATH;
 						}
 					}
 				}

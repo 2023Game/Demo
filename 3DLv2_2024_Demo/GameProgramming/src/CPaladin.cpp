@@ -6,6 +6,7 @@
 #include "CPaladinAttack.h"
 #include "CPaladinJump.h"
 #include "CPaladinRun.h"
+#include "CPaladinDamage.h"
 #include "CCamera.h"
 
 #define PALADIN_MODEL_PATH "res\\paladin\\paladin.x"
@@ -47,6 +48,7 @@ CPaladin::CPaladin()
 	mpAttack = new CPaladinAttack(this);
 	mpJump = new CPaladinJump(this);
 	mpRun = new CPaladinRun(this);
+	mpDamage = new CPaladinDamage(this);
 }
 
 CPaladin::~CPaladin()
@@ -55,6 +57,8 @@ CPaladin::~CPaladin()
 	delete mpWalk;
 	delete mpAttack;
 	delete mpJump;
+	delete mpRun;
+	delete mpDamage;
 }
 
 CPaladin::CPaladin(const CVector& pos, const CVector& rot, const CVector& scale)
@@ -74,6 +78,9 @@ void CPaladin::Update()
 		mState = mpState->State();
 		switch (mState)
 		{
+		case EState::EDAMAGE:
+			mpState = mpDamage;
+			break;
 		case EState::ERUN:
 			mpState = mpRun;
 			break;

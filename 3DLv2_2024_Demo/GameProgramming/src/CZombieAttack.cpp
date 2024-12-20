@@ -3,6 +3,7 @@
 
 #define ANIMATION_FILE "res\\WorldZombie\\Zombie Neck Bite.fbx.x"
 #define ANIMATION_SIZE 251
+#define TURN_ROT 2.0f
 
 CZombieAttack::CZombieAttack(CZombie* parent)
 {
@@ -32,13 +33,13 @@ void CZombieAttack::Update()
 		if (cross.Y() > 0.0f)
 		{
 			CVector y = mpParent->Rotation();
-			y.Y(y.Y() - 1.1f);
+			y.Y(y.Y() - TURN_ROT);
 			mpParent->Rotation(y);
 		}
 		else
 		{
 			CVector y = mpParent->Rotation();
-			y.Y(y.Y() + 1.1f);
+			y.Y(y.Y() + TURN_ROT);
 			mpParent->Rotation(y);
 		}
 	}
@@ -74,11 +75,11 @@ void CZombieAttack::Collision(CCollider* m, CCollider* o)
 					}
 					break;
 				case CCollider::ETag::EBODY:
-					// プレイヤーのポインタ取得
 					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
 					{
-						//mpTarget = o->Parent();
+						// プレイヤーにめり込まない
 						mpParent->Position(mpParent->Position() + adjust);
+						o->Parent()->PState()->State(CCharacter3::EState::EDAMAGE);
 					}
 					break;
 				}

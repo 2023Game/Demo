@@ -189,6 +189,9 @@
     <ClCompile Include="src\CZombieAttack.cpp">
       <Filter>ソース ファイル\Character\Zombie</Filter>
     </ClCompile>
+    <ClCompile Include="src\CPaladinDamage.cpp">
+      <Filter>ソース ファイル\Character\Paladin</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CSound.h">
@@ -343,6 +346,9 @@
     </ClInclude>
     <ClInclude Include="src\CZombieAttack.h">
       <Filter>ソース ファイル\Character\Zombie</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CPaladinDamage.h">
+      <Filter>ソース ファイル\Character\Paladin</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

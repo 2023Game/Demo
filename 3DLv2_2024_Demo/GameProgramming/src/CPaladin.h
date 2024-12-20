@@ -21,12 +21,13 @@ private:
 	CColliderCapsule mColSword;
 	//CInput mInput;
 
-	CState* mpState;
+	//CState* mpState;
 	CState* mpIdle;
 	CState* mpWalk;
 	CState* mpAttack;
 	CState* mpJump;
 	CState* mpRun;
+	CState* mpDamage;
 };
 
 #define VELOCITY 0.2f

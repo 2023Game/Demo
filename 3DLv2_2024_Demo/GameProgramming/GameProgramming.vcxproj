@@ -35,6 +35,7 @@
     <ClCompile Include="src\CMyShader.cpp" />
     <ClCompile Include="src\CPaladin.cpp" />
     <ClCompile Include="src\CPaladinAttack.cpp" />
+    <ClCompile Include="src\CPaladinDamage.cpp" />
     <ClCompile Include="src\CPaladinIdle.cpp" />
     <ClCompile Include="src\CPaladinJump.cpp" />
     <ClCompile Include="src\CPaladinRun.cpp" />
@@ -86,6 +87,7 @@
     <ClInclude Include="src\CMyShader.h" />
     <ClInclude Include="src\CPaladin.h" />
     <ClInclude Include="src\CPaladinAttack.h" />
+    <ClInclude Include="src\CPaladinDamage.h" />
     <ClInclude Include="src\CPaladinIdle.h" />
     <ClInclude Include="src\CPaladinJump.h" />
     <ClInclude Include="src\CPaladinRun.h" />
@@ -124,7 +126,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">

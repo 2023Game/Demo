@@ -1,4 +1,6 @@
 #pragma once
+#include "CCharacter3.h"
+
 // 状態クラスの基本クラス
 class CState
 {

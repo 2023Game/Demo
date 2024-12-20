@@ -28,7 +28,7 @@ private:
 	CColliderCapsule mColBody;	//‘Ì
 	static CModelX sModel;
 	// Status
-	CState* mpState;
+	//CState* mpState;
 	CState* mpWalk;
 	CState* mpHit;
 	CState* mpDeath;

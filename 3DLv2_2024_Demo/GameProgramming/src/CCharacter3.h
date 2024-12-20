@@ -5,6 +5,10 @@
 //モデルクラスのインクルード
 #include "CModel.h"
 #include "CTask.h"
+
+//状態クラス
+class CState;
+
 //コライダクラスの宣言
 class CCollider;
 
@@ -30,6 +34,7 @@ public:
 		EHIT,
 		EDEATH,
 		EJUMP,
+		EDAMAGE,
 	};
 	//衝突処理
 	virtual void Collision(CCollider* m, CCollider* o) {}
@@ -56,6 +61,10 @@ public:
 	EState State()
 	{
 		return mState;
+	}
+	EState State(EState state)
+	{
+		return mState = state;
 	}
 	void AddTargetPosition(const CVector& v)
 	{
@@ -85,7 +94,12 @@ public:
 	{
 		return mSpeed;
 	}
+	CState* PState()
+	{
+		return mpState;
+	}
 protected:
+	CState* mpState;
 	CVector mAdjust;
 	bool mGrounded;
 	CVector mTargetPosition;

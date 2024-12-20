@@ -11,6 +11,7 @@ CCharacter3::CCharacter3()
 	, mVelocityG(0.0f)
 	, mSpeed(0.0f)
 	, mGrounded(false)
+	, mpState(nullptr)
 {
 	//タスクリストに追加
 //	CApplication::TaskManager()->Add(this);
