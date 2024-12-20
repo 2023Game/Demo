@@ -20,6 +20,12 @@ void CPaladinAttack::Start()
 
 void CPaladinAttack::Update()
 {
+	//ˆÚ“®‚³‚¹‚È‚¢
+	CVector adjust = mpParent->Adjust();
+	adjust.Y(0.0f);
+	adjust = adjust * -1.0f;
+	mpParent->AddTargetPosition(adjust);
+
 	if (mpParent->IsAnimationFinished())
 	{
 		mState = CCharacter3::EState::EIDLE;
