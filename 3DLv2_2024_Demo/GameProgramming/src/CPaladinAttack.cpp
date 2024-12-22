@@ -5,7 +5,8 @@
 
 CPaladinAttack::CPaladinAttack(CPaladin* parent)
 {
-	mpParent = parent;
+	mpParent =
+		parent;
 	if (mpParent->Model()->IsLoaded())
 	{
 		mAnimNo = mpParent->Model()->AddAnimationSet(ANIMATION_FILE) - 1;
@@ -25,6 +26,12 @@ void CPaladinAttack::Update()
 	adjust.Y(0.0f);
 	adjust = adjust * -1.0f;
 	mpParent->AddTargetPosition(adjust);
+
+	//ソードの有効範囲設定
+	if(0.41f < mpParent->AnimationFrame())
+		mpParent->ColSword().Enable(true);
+	if(0.5f < mpParent->AnimationFrame())
+		mpParent->ColSword().Enable(false);
 
 	if (mpParent->IsAnimationFinished())
 	{

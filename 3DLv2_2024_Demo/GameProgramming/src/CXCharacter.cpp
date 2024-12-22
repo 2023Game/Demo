@@ -5,6 +5,11 @@ void CXCharacter::AnimationFrame(float per)
 	mAnimationFrame = mAnimationFrameSize * per;
 }
 
+float CXCharacter::AnimationFrame()
+{
+	return mAnimationFrame / mAnimationFrameSize;
+}
+
 CXCharacter::CXCharacter()
 	: mpCombinedMatrix(nullptr)
 {

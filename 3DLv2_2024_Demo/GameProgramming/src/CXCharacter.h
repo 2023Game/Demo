@@ -7,7 +7,10 @@
 
 class CXCharacter : public CCharacter3 {
 public:
+	// アニメーション位置の設定(0.0～1.0)
 	void AnimationFrame(float per);
+	// アニメーション位置の取得
+	float AnimationFrame();
 	virtual ~CXCharacter() {
 		SAFE_DELETE_ARRAY(mpCombinedMatrix);
 	}

@@ -7,11 +7,12 @@
 
 #define TURN_V 5.0f	//回転速度
 #define TURN_MOUSE_SENSE  0.25f //マウスの回転感度
+#define COLLIDER_RADIUS 0.5f //カメラコライダの大きさ
 
 CActionCamera* CActionCamera::spInstance = nullptr;
 
 CActionCamera::CActionCamera()
-	: mColSphere(this, nullptr, CVector(), 0.3f)
+	: mColSphere(this, nullptr, CVector(), COLLIDER_RADIUS)
 {
 	spInstance = this;
 }

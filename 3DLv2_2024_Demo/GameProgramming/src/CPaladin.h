@@ -15,6 +15,7 @@ public:
 	void Collision(CCollider* m, CCollider* o);
 	void Collision();
 	static CModelX* Model() { return &sModel; }
+	CColliderCapsule& ColSword() { return mColSword; }
 private:
 	static CModelX sModel;
 	CColliderCapsule mColBody;	//‘Ì

@@ -41,7 +41,8 @@ void CZombieWalk::Collision(CCollider* m, CCollider* o)
 				switch (o->Tag())
 				{
 				case CCollider::ETag::ESWORD:
-					if (o->ParentState() == CCharacter3::EState::EATTACK)
+					if (//o->ParentState() == CCharacter3::EState::EATTACK
+						o->Enable())
 					{
 						if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
 						{
@@ -56,7 +57,7 @@ void CZombieWalk::Collision(CCollider* m, CCollider* o)
 				case CCollider::ETag::EBODY:
 					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
 					{
-						// プレイヤーに当たっていると、攻撃する
+						// プレイヤーに当たっていると攻撃する
 						mState = CCharacter3::EState::EATTACK;
 						mpParent->Target(o->Parent());
 					}

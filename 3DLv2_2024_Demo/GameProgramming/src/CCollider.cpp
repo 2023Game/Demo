@@ -2,14 +2,14 @@
 #include "CCollisionManager.h"
 #include "CColliderLine.h"
 
-bool CollisionTriangleLine2(const CVector& tv0, const CVector& tv1, const CVector& tv2, const CVector& lv0, const CVector& lv1, CVector* adjust)
+bool CollisionTriangleLine2(const CVector& v0, const CVector& v1, const CVector& v2, const CVector& sv, const CVector& ev, CVector* adjust)
 {
 	//面の法線を、外積を正規化して求める
-	CVector normal = (tv1 - tv0).Cross(tv2 - tv0).Normalize();
+	CVector normal = (v1 - v0).Cross(v2 - v0).Normalize();
 	//三角の頂点から線分始点へのベクトルを求める
-	CVector v0sv = lv0 - tv0;
+	CVector v0sv = sv - v0;
 	//三角の頂点から線分終点へのベクトルを求める
-	CVector v0ev = lv1 - tv0;
+	CVector v0ev = ev - v0;
 	//線分が面と交差しているか内積で確認する
 	float dots = v0sv.Dot(normal);
 	float dote = v0ev.Dot(normal);
@@ -24,26 +24,26 @@ bool CollisionTriangleLine2(const CVector& tv0, const CVector& tv1, const CVecto
 	//面と線分の交点を求める
 	//交点の計算
 	float per = (abs(dots) / (abs(dots) + abs(dote)));
-	CVector cross = lv0 + (lv1 - lv0) * per;
+	CVector cross = sv + (ev - sv) * per;
 
 	//交点が三角形内なら衝突している
 	//頂点1頂点2ベクトルと頂点1交点ベクトルとの外積を求め、
 	//法線との内積がマイナスなら、三角形の外
-	if ((tv1 - tv0).Cross(cross - tv0).Dot(normal) < 0.0f) {
+	if ((v1 - v0).Cross(cross - v0).Dot(normal) < 0.0f) {
 		//衝突してない
 		*adjust = CVector(0.0f, 0.0f, 0.0f);
 		return false;
 	}
 	//頂点2頂点3ベクトルと頂点2交点ベクトルとの外積を求め、
 	//法線との内積がマイナスなら、三角形の外
-	if ((tv2 - tv1).Cross(cross - tv1).Dot(normal) < 0.0f) {
+	if ((v2 - v1).Cross(cross - v1).Dot(normal) < 0.0f) {
 		//衝突してない
 		*adjust = CVector(0.0f, 0.0f, 0.0f);
 		return false;
 	}
 	//頂点3頂点1ベクトルと頂点3交点ベクトルとの外積を求め、
 	//法線との内積がマイナスなら、三角形の外
-	if ((tv0 - tv2).Cross(cross - tv2).Dot(normal) < 0.0f) {
+	if ((v0 - v2).Cross(cross - v2).Dot(normal) < 0.0f) {
 		//衝突してない
 		*adjust = CVector(0.0f, 0.0f, 0.0f);
 		return false;
@@ -53,12 +53,12 @@ bool CollisionTriangleLine2(const CVector& tv0, const CVector& tv1, const CVecto
 	if (dots < 0.0f) {
 		//始点が裏面
 		//*adjust = normal * -dots;
-		*adjust = (lv1 - lv0) * per;
+		*adjust = (ev - sv) * per;
 	}
 	else {
 		//終点が裏面
 		//*adjust = normal * -dote;
-		*adjust = (lv0 - lv1) * (1.0f - per);
+		*adjust = (sv - ev) * (1.0f - per);
 	}
 	return true;
 }

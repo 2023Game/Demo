@@ -2,8 +2,10 @@
 
 #define ANIMATION_FILE "res\\paladin\\Dodging.fbx.x"
 #define ANIMATION_SIZE 141
+#define DASSHUTSU_POINT 5 //ダメージから脱出するキー押下回数
 
 CPaladinDamage::CPaladinDamage(CPaladin* parent)
+	: mCount(0)
 {
 	mpParent = parent;
 	if (mpParent->Model()->IsLoaded())
@@ -40,11 +42,15 @@ void CPaladinDamage::Update()
 	if (mInput.KeyDown('S')) {
 		flg = true;
 	}
+	if (mInput.Key(VK_LBUTTON))
+	{
+		flg = true;
+	}
 	if (flg)
 	{
 		mCount++;
 	}
-	if (mCount > 5)
+	if (mCount >= DASSHUTSU_POINT)
 	{
 		mState = CCharacter3::EState::EATTACK;
 		mCount = 0;
@@ -53,9 +59,6 @@ void CPaladinDamage::Update()
 	//{
 	//	mState = CCharacter3::EState::EJUMP;
 	//}
-	//if (mInput.Key(VK_LBUTTON))
-	//{
-	//	mState = CCharacter3::EState::EATTACK;
-	//}
+
 }
 
