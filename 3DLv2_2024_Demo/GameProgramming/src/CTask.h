@@ -29,6 +29,7 @@ protected:
 private:
 	CTask* mpNext;//次のポインタ
 	CTask* mpPrev;//前のポインタ
+	CTask* mpParent; //親ポインタ
 };
 
 #endif
