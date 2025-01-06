@@ -397,14 +397,14 @@ bool CCollider::CollisionCapsuleTriangle(CCollider* m, CCollider* t, CVector* a)
 	//v[2] = t->mV[2];// **t->mpMatrix;
 	//面の法線を、外積を正規化して求める
 	//CVector normal = (v[1] - v[0]).Cross(v[2] - v[0]).Normalize();
-	CVector r = ((m->V(0) - m->V(1)).Normalize()) * m->mRadius;
-	sv = m->V(0) + r;
-	ev = m->V(1) - r;
+	//CVector r = ((m->V(0) - m->V(1)).Normalize()) * m->mRadius;
+	//sv = m->V(0) + r;
+	//ev = m->V(1) - r;
 
-	if (CollisionTriangleLine2(t->mV[0], t->mV[1], t->mV[2], sv, ev, a))
-	{
-		return true;
-	}
+	//if (CollisionTriangleLine2(t->mV[0], t->mV[1], t->mV[2], sv, ev, a))
+	//{
+	//	return true;
+	//}
 
 	//線コライダをワールド座標で作成
 	sv = m->V(0) + t->mV[3] * m->mRadius;
@@ -416,6 +416,15 @@ bool CCollider::CollisionCapsuleTriangle(CCollider* m, CCollider* t, CVector* a)
 
 	sv = m->V(1) + t->mV[3] * m->mRadius;
 	ev = m->V(1) - t->mV[3] * m->mRadius;
+	if (CollisionTriangleLine2(t->mV[0], t->mV[1], t->mV[2], sv, ev, a))
+	{
+		return true;
+	}
+
+	CVector r = ((m->V(0) - m->V(1)).Normalize()) * m->mRadius;
+	sv = m->V(0) + r;
+	ev = m->V(1) - r;
+
 	if (CollisionTriangleLine2(t->mV[0], t->mV[1], t->mV[2], sv, ev, a))
 	{
 		return true;
