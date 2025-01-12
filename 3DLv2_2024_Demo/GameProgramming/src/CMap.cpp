@@ -6,7 +6,7 @@
 
 //#define POSITION 0.0f,1.0f,0.0f
 //#define POSITION 0.0f,-12.0f,0.0f
-#define POSITION 45.0f,12.0f,0.0f
+#define POSITION 45.5f,12.0f,0.0f
 #define ROTATION 0.0f,0.0f,0.0f
 #define SCALE 1.0f,1.0f,1.0f
 

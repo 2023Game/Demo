@@ -5,6 +5,7 @@
 
 #define ANIMATION_FILE "res\\paladin\\Paladin WProp J Nordstrom@Sword And Shield Walk.fbx.x"
 #define ANIMATION_SIZE 33
+#define OMEGA 7.5f
 
 CPaladinWalk::CPaladinWalk(CPaladin* parent)
 {
@@ -62,20 +63,20 @@ void CPaladinWalk::Update()
 		//外積がプラスは左回転
 		if (cross > MARGIN) {
 			CVector rot = mpParent->Rotation();
-			rot.Y(rot.Y() + 5.0f);
+			rot.Y(rot.Y() + OMEGA);
 			mpParent->Rotation(rot);
 		}
 		//外積がマイナスは右回転
 		else if (cross < -MARGIN) {
 			CVector rot = mpParent->Rotation();
-			rot.Y(rot.Y() - 5.0f);
+			rot.Y(rot.Y() - OMEGA);
 			mpParent->Rotation(rot);
 			//mRotation.Y(mRotation.Y() - 5.0f);
 		}
 		//前後の向きが同じとき内積は1.0
 		else if (dot < 1.0f - MARGIN) {
 			CVector rot = mpParent->Rotation();
-			rot.Y(rot.Y() - 5.0f);
+			rot.Y(rot.Y() - OMEGA);
 			mpParent->Rotation(rot);
 			//mRotation.Y(mRotation.Y() - 5.0f);
 		}

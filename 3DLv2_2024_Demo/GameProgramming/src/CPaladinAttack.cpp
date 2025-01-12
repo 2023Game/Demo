@@ -28,10 +28,15 @@ void CPaladinAttack::Update()
 	mpParent->AddTargetPosition(adjust);
 
 	//ソードの有効範囲設定
-	if(0.41f < mpParent->AnimationFrame())
-		mpParent->ColSword().Enable(true);
-	if(0.5f < mpParent->AnimationFrame())
+	float animatioFrame = mpParent->AnimationFrame();
+
+	if (0.5f < animatioFrame)
 		mpParent->ColSword().Enable(false);
+	else if (0.41f < animatioFrame)
+	{
+		mpParent->ColSword().Enable(true);
+		mpParent->AnimationFrame(animatioFrame - 0.01);
+	}
 
 	if (mpParent->IsAnimationFinished())
 	{

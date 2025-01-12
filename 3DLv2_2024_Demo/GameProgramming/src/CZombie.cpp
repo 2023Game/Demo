@@ -135,6 +135,12 @@ void CZombie::Collision(CCollider* m, CCollider* o)
 				mAdjust = mAdjust + adjust;
 			}
 			break;
+		case CCollider::EType::ECAPSULE:
+			if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+			{
+				mAdjust = mAdjust + adjust;
+			}
+			break;
 		}
 		break;
 	}
