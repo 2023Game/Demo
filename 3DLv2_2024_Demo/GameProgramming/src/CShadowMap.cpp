@@ -28,7 +28,9 @@ void CShadowMap::Init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	/* 書き込むポリゴンのテクスチャ座標値のＲとテクスチャとの比較を行うようにする */
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	/* もしＲの値がテクスチャの値以下なら真（つまり日向） */
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 
 #ifdef USE_SHADOW_SHADER
@@ -36,12 +38,6 @@ void CShadowMap::Init()
 	/* 比較の結果を輝度値として得る */
 	//glTexParameteri(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
 #else
-	/* 書き込むポリゴンのテクスチャ座標値のＲとテクスチャとの比較を行うようにする */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_R_TO_TEXTURE);
-
-	/* もしＲの値がテクスチャの値以下なら真（つまり日向） */
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-
 	/* 固定シェーダー使用時*/
 
 	/*比較の結果をアルファ値として得る*/
