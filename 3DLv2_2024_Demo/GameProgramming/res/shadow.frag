@@ -36,7 +36,8 @@ void main() {
 		texColor = texture(Sampler, TexCoord0);
 	}
 	//デプステクスチャの値を取得
-	float shd = shadow2DProj(DepthTexture, TexCoord1).r;
+	float shd = textureProj(DepthTexture, TexCoord1);
+	//float shd = shadow2DProj(DepthTexture, TexCoord1).r;
 	//float shd = texture(DepthTexture, TexCoord1.xy).r + 0.0000025;
 	//値が0は影にする
 	if(shd == 0.0) 

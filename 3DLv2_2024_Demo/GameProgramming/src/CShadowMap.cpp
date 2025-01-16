@@ -28,6 +28,9 @@ void CShadowMap::Init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+
 #ifdef USE_SHADOW_SHADER
 	msShadow = true;
 	/* ”äŠr‚ÌŒ‹‰Ê‚ð‹P“x’l‚Æ‚µ‚Ä“¾‚é */
