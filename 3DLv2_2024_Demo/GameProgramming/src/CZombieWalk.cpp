@@ -50,6 +50,7 @@ void CZombieWalk::Collision(CCollider* m, CCollider* o)
 							if (mState != CCharacter3::EState::EHIT)
 							{
 								mState = CCharacter3::EState::EHIT;
+								mpParent->Target(o->Parent());
 							}
 						}
 					}

@@ -70,13 +70,27 @@ void CZombieAttack::Collision(CCollider* m, CCollider* o)
 					{
 						if (o->ParentState() == CCharacter3::EState::EATTACK)
 						{
-							mState = CCharacter3::EState::EHIT;
+							//mState = CCharacter3::EState::EHIT;
 						}
 						else
 						{
 							// プレイヤーにめり込まない
 							mpParent->Position(mpParent->Position() + adjust);
 							o->Parent()->PState()->State(CCharacter3::EState::EDAMAGE);
+						}
+					}
+					break;
+				case CCollider::ETag::ESWORD:
+					if (o->Enable())
+					{
+						if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+						{
+							// プレイヤーの攻撃が当たっている
+							if (mState != CCharacter3::EState::EHIT)
+							{
+								mState = CCharacter3::EState::EHIT;
+								mpParent->Target(o->Parent());
+							}
 						}
 					}
 					break;

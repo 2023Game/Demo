@@ -24,7 +24,8 @@ void CZombieHit::Update()
 {
 	if (mpParent->IsAnimationFinished())
 	{
-		mState = CCharacter3::EState::EWALK;
+		//mState = CCharacter3::EState::EWALK;
+		mState = CCharacter3::EState::EATTACK;
 	}
 }
 
