@@ -153,10 +153,13 @@ void CCollisionManager::Remove(CTask* remove)
 	}
 	else
 	{
-		if (remove->mpParent->mpPrev == remove)
-			remove->mpParent->mpPrev = nullptr;
-		if (remove->mpParent->mpNext == remove)
-			remove->mpParent->mpNext = nullptr;
+		if (remove->mpParent != nullptr)
+		{
+			if (remove->mpParent->mpPrev == remove)
+				remove->mpParent->mpPrev = nullptr;
+			if (remove->mpParent->mpNext == remove)
+				remove->mpParent->mpNext = nullptr;
+		}
 	}
 	remove->mpParent = remove->mpPrev = remove->mpNext = nullptr;
 }
