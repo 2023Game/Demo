@@ -153,12 +153,21 @@ void CCollisionManager::Remove(CTask* remove)
 	}
 	else
 	{
-		if (remove->mpParent != nullptr)
+		//削除ノードがルートの場合
+		if (remove->mpParent == remove)
 		{
-			if (remove->mpParent->mpPrev == remove)
-				remove->mpParent->mpPrev = nullptr;
-			if (remove->mpParent->mpNext == remove)
-				remove->mpParent->mpNext = nullptr;
+			//ルートを初期値にする
+			CCollisionManager::Instance()->mRoot.mpPrev = nullptr;
+		}
+		else
+		{
+			if (remove->mpParent != nullptr)
+			{
+				if (remove->mpParent->mpPrev == remove)
+					remove->mpParent->mpPrev = nullptr;
+				if (remove->mpParent->mpNext == remove)
+					remove->mpParent->mpNext = nullptr;
+			}
 		}
 	}
 	remove->mpParent = remove->mpPrev = remove->mpNext = nullptr;
