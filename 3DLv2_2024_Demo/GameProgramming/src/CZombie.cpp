@@ -28,12 +28,13 @@ CZombie::CZombie()
 		sModel.AddAnimationSet(ANIMATION_WALK); //0
 	}
 	Init(&sModel);
+	//コライダの行列を設定
 	mColBody.Matrix(&mpCombinedMatrix[3]);
 	//初期状態設定
 	mpState = mpWalk = new CZombieWalk(this);
 	mpState->Start();
 	mState = mpState->State();
-	// Status 追加
+	// 状態の追加
 	mpHit = new CZombieHit(this);
 	mpDeath = new CZombieDeath(this);
 	mpAttack = new CZombieAttack(this);

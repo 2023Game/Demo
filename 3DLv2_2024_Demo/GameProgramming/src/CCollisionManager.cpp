@@ -1,7 +1,6 @@
 #include "CCollisionManager.h"
 #include "CCollider.h"
 
-#define COLLISION_RANGE 100 //衝突判定範囲
 
 //マネージャのインスタンス
 CCollisionManager* CCollisionManager::mpInstance = nullptr;
@@ -43,7 +42,7 @@ void CCollisionManager::Collision(CCollider* m, CCollider* o, int low, int high)
 void CCollisionManager::Collision(CCollider* c)
 {
 	//ルートノードから衝突判定開始
-	Collision(c, COLLISION_RANGE);
+	Collision(c, COLLISIONRANGE);
 }
 
 void CCollisionManager::Collision(CCollider* c, int range)

@@ -66,19 +66,19 @@ void CZombieAttack::Collision(CCollider* m, CCollider* o)
 				switch (o->Tag())
 				{
 				case CCollider::ETag::EBODY:
-					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
-					{
-						if (o->ParentState() == CCharacter3::EState::EATTACK)
-						{
-							//mState = CCharacter3::EState::EHIT;
-						}
-						else
-						{
-							// プレイヤーにめり込まない
-							mpParent->Position(mpParent->Position() + adjust);
-							o->Parent()->PState()->State(CCharacter3::EState::EDAMAGE);
-						}
-					}
+					//if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+					//{
+					//	if (o->ParentState() == CCharacter3::EState::EATTACK)
+					//	{
+					//		mState = CCharacter3::EState::EHIT;
+					//	}
+					//	else
+					//	{
+					//		// プレイヤーにめり込まない
+					//		mpParent->Position(mpParent->Position() + adjust);
+					//		o->Parent()->PState()->State(CCharacter3::EState::EDAMAGE);
+					//	}
+					//}
 					break;
 				case CCollider::ETag::ESWORD:
 					if (o->Enable())

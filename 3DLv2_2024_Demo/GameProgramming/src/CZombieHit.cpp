@@ -31,30 +31,30 @@ void CZombieHit::Update()
 
 void CZombieHit::Collision(CCollider* m, CCollider* o)
 {
-	//CVector adjust;
-	//switch (m->Type())
-	//{
-	//case CCollider::EType::ECAPSULE:
-	//	switch (o->Type())
-	//	{
-	//	case CCollider::EType::ECAPSULE:
-	//		switch (o->ParentTag())
-	//		{
-	//		case CCharacter3::ETag::EPLAYER:
-	//			if (o->ParentState() == CCharacter3::EState::EATTACK
-	//				&& o->Tag() == CCollider::ETag::ESWORD
-	//				&& o->Enable() )
-	//			{
-	//				if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
-	//				{
-	//					if (mState == CCharacter3::EState::EHIT)
-	//					{
-	//						mState = CCharacter3::EState::EDEATH;
-	//					}
-	//				}
-	//			}
-	//		}
-	//		break;
-	//	}
-	//}
+	CVector adjust;
+	switch (m->Type())
+	{
+	case CCollider::EType::ECAPSULE:
+		switch (o->Type())
+		{
+		case CCollider::EType::ECAPSULE:
+			switch (o->ParentTag())
+			{
+			case CCharacter3::ETag::EPLAYER:
+				if (o->ParentState() == CCharacter3::EState::EATTACK
+					&& o->Tag() == CCollider::ETag::ESWORD
+					&& o->Enable() )
+				{
+					if (CCollider::CollisionCapsuleCapsule(m, o, &adjust))
+					{
+						if (mState == CCharacter3::EState::EHIT)
+						{
+							mState = CCharacter3::EState::EDEATH;
+						}
+					}
+				}
+			}
+			break;
+		}
+	}
 }
