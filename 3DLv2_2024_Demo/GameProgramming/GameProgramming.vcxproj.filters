@@ -192,6 +192,12 @@
     <ClCompile Include="src\CPaladinDamage.cpp">
       <Filter>ソース ファイル\Character\Paladin</Filter>
     </ClCompile>
+    <ClCompile Include="src\CTree.cpp">
+      <Filter>ソース ファイル\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CTreeManager.cpp">
+      <Filter>ソース ファイル\Task</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CSound.h">
@@ -349,6 +355,12 @@
     </ClInclude>
     <ClInclude Include="src\CPaladinDamage.h">
       <Filter>ソース ファイル\Character\Paladin</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CTree.h">
+      <Filter>ソース ファイル\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CTreeManager.h">
+      <Filter>ソース ファイル\Task</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

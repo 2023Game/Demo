@@ -23,6 +23,7 @@
     <ClCompile Include="src\CColliderMesh.cpp" />
     <ClCompile Include="src\CColliderTriangle.cpp" />
     <ClCompile Include="src\CCollisionManager.cpp" />
+    <ClCompile Include="src\CTreeManager.cpp" />
     <ClCompile Include="src\CEffect.cpp" />
     <ClCompile Include="src\CEnemy.cpp" />
     <ClCompile Include="src\CEnemy3.cpp" />
@@ -49,6 +50,7 @@
     <ClCompile Include="src\CTexture.cpp" />
     <ClCompile Include="src\CInput.cpp" />
     <ClCompile Include="src\CTransform.cpp" />
+    <ClCompile Include="src\CTree.cpp" />
     <ClCompile Include="src\CTriangle.cpp" />
     <ClCompile Include="src\CUi.cpp" />
     <ClCompile Include="src\CVector.cpp" />
@@ -75,6 +77,7 @@
     <ClInclude Include="src\CColliderMesh.h" />
     <ClInclude Include="src\CColliderTriangle.h" />
     <ClInclude Include="src\CCollisionManager.h" />
+    <ClInclude Include="src\CTreeManager.h" />
     <ClInclude Include="src\CEffect.h" />
     <ClInclude Include="src\CEnemy.h" />
     <ClInclude Include="src\CEnemy3.h" />
@@ -102,6 +105,7 @@
     <ClInclude Include="src\CTexture.h" />
     <ClInclude Include="src\CInput.h" />
     <ClInclude Include="src\CTransform.h" />
+    <ClInclude Include="src\CTree.h" />
     <ClInclude Include="src\CTriangle.h" />
     <ClInclude Include="src\CUi.h" />
     <ClInclude Include="src\CVector.h" />

@@ -1,12 +1,14 @@
 #ifndef CTASK_H
 #define CTASK_H
+#include "CTree.h"
+
 class CTaskManager;
 class CCollisionManager;
 /*
 タスククラス
 タスクリストの要素
 */
-class CTask {
+class CTask : public CTree {
 	friend CTaskManager;
 	friend CCollisionManager;
 public:
@@ -24,7 +26,7 @@ public:
 	bool Enable() { return mEnabled; }
 	bool Enable(bool enable) { return mEnabled = enable; }
 protected:
-	int mPriority;	//優先度
+	//int mPriority;	//優先度
 	bool mEnabled;	//有効フラグ
 private:
 	CTask* mpNext;//次のポインタ
