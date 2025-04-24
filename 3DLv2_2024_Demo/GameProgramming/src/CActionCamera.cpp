@@ -131,10 +131,11 @@ void CActionCamera::LookAt()
 		mUp.X(), mUp.Y(), mUp.Z());
 	//モデルビュー行列の取得
 	glGetFloatv(GL_MODELVIEW_MATRIX, mModelView.M());
-
-	//float x, y;
-	//mInput.GetMousePos(&x, &y);
-	//printf("%f,%f\n", x, y);
+	// 逆行列の作成
+	mModelViewInverse = mModelView.Transpose();
+	mModelViewInverse.M(0, 3, 0);
+	mModelViewInverse.M(1, 3, 0);
+	mModelViewInverse.M(2, 3, 0);
 }
 
 void CActionCamera::TargetPosition(const CVector& pos)

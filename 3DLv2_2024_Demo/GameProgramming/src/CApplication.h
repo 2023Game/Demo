@@ -57,7 +57,7 @@ private:
 	//CColliderTriangle mColliderTriangle2;
 
 	//モデルビューの逆行列
-	static CMatrix mModelViewInverse;
+	//static CMatrix mModelViewInverse;
 
 	//C5モデル
 	CModel mModelC5;
@@ -95,7 +95,7 @@ public:
 	~CApplication();
 	static CUi* Ui();	//UIクラスのインスタンスを取得
 	//モデルビュー行列の取得
-	static const CMatrix& ModelViewInverse();
+	//static const CMatrix& ModelViewInverse();
 	//static CTaskManager* TaskManager();
 
 	static CTexture* Texture();

@@ -38,6 +38,7 @@ public:
 	void Render() {}
 	void TargetPosition(const CVector& pos);
 	void Collision(CCollider* m, CCollider* o);
+	CMatrix& ModelViewInverse() { return mModelViewInverse; }
 protected:
 	CCollider mColSphere;
 	CColliderLine mColLine;
@@ -59,6 +60,8 @@ protected:
 	CVector mUp;
 	//モデルビュー行列
 	CMatrix mModelView;
+	//モデルビュー逆行列
+	CMatrix mModelViewInverse;
 	//入力クラス
 	CInput mInput;
 };
