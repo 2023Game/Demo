@@ -275,7 +275,7 @@ void CModelX::Load(char* file) {
 	//スキンマトリックスのエリア作成
 	mpSkinningMatrix = new CMatrix[mFrame.size()];
 	//シェーダー読み込み
-	mShader.Load("res\\shadow.vert", "res\\shadow.frag");
+	mShader.Load("res\\shadow330.vert", "res\\shadow330.frag");
 
 }
 
