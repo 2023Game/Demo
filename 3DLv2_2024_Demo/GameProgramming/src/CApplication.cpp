@@ -47,13 +47,6 @@ void gRender()
 	CTaskManager::Instance()->Render();
 }
 
-//CMatrix CApplication::mModelViewInverse;
-//
-//const CMatrix& CApplication::ModelViewInverse()
-//{
-//	return mModelViewInverse;
-//}
-
 CTexture* CApplication::Texture()
 {
 	return &mTexture;
@@ -107,14 +100,6 @@ void CApplication::Update()
 	CTaskManager::Instance()->Update();
 
 	CCamera::Instance()->LookAt();
-
-	////モデルビュー行列の取得
-	//glGetFloatv(GL_MODELVIEW_MATRIX, mModelViewInverse.M());
-	////逆行列の取得
-	//mModelViewInverse = mModelViewInverse.Transpose();
-	//mModelViewInverse.M(0, 3, 0);
-	//mModelViewInverse.M(1, 3, 0);
-	//mModelViewInverse.M(2, 3, 0);
 
 	//衝突処理
 	CTaskManager::Instance()->Collision();

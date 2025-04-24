@@ -35,15 +35,8 @@
 class CApplication
 {
 private:
+	// シャドウマップ
 	CShadowMap mShadowMap;
-
-	//CActionCamera
-	//CActionCamera mActionCamera;
-
-//	CModelX mKnight;
-//	CXEnemy mXEnemy;
-	//キャラクタのインスタンス
-//	CXPlayer mXPlayer;
 
 	CMatrix mMatrix;
 	CModelX mModelX;
@@ -52,18 +45,8 @@ private:
 	//モデルからコライダを生成
 	CColliderMesh mColliderMesh;
 
-	//三角コライダの作成
-	//CColliderTriangle mColliderTriangle;
-	//CColliderTriangle mColliderTriangle2;
-
-	//モデルビューの逆行列
-	//static CMatrix mModelViewInverse;
-
 	//C5モデル
 	CModel mModelC5;
-
-	//static CTaskManager mTaskManager;
-	//CPlayer mPlayer;
 
 	CModel mBackGround; //背景モデル
 	CModel mModel;
@@ -80,23 +63,16 @@ private:
 		EOVER,	//ゲームオーバー
 	};
 	EState mState;
-//	CCharacter mRectangle;
 	CPlayer* mpPlayer;
 	static CTexture mTexture;
 	CEnemy* mpEnemy;
-//	CBullet* mpBullet;
 	CInput mInput;
 	CFont mFont;
 
-	//CCharacterのポインタの可変長配列
-//	std::vector<CCharacter*> mCharacters;
 public:
 	static CPaladin* mspPaladin;
 	~CApplication();
 	static CUi* Ui();	//UIクラスのインスタンスを取得
-	//モデルビュー行列の取得
-	//static const CMatrix& ModelViewInverse();
-	//static CTaskManager* TaskManager();
 
 	static CTexture* Texture();
 	//最初に一度だけ実行するプログラム
