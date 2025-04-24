@@ -16,6 +16,8 @@ public:
 	void Collision(CCollider* m, CCollider* o, int low, int high);
 	void Collision(CCollider* c);
 	void Collision(CCollider* c, int range);
+	void Render();
+	void Render(CTree* task);
 private:
 	//デフォルトコンストラクタ
 	CCollisionManager() {};

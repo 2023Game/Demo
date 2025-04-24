@@ -22,9 +22,8 @@
 
 // コンストラクタ
 CTreeManager::CTreeManager()
-	: mIsShowCollider(false)
-	, mpRoot(nullptr)
 {
+	mRoot.mPriority = -1;
 }
 
 // デストラクタ
@@ -35,7 +34,10 @@ CTreeManager::~CTreeManager()
 
 void CTreeManager::Add(CTree* add)
 {
-	if (mpRoot == nullptr)
+	// ルートから追加開始
+	Add(&mRoot, add);
+
+	/*if (mpRoot == nullptr)
 	{
 		mpRoot = add;
 		add->mpParentNode = mpRoot;
@@ -43,47 +45,56 @@ void CTreeManager::Add(CTree* add)
 	else
 	{
 		Add(mpRoot, add);
-	}
+	}*/
 }
 
 void CTreeManager::Add(CTree* parent, CTree* add)
 {
+	//優先度同じ　左へ追加
 	if (add->mPriority == parent->mPriority)
 	{
 		if (parent->mpLeft == nullptr)
 		{
+			// 左が無い時は、左へ追加
 			add->mpParentNode = parent;
 			parent->mpLeft = add;
 		}
 		else
 		{
+			// 左がある時は、親と左の間へ追加
 			add->mpLeft = parent->mpLeft;
 			parent->mpLeft->mpParentNode = add;
 			parent->mpLeft = add;
 			add->mpParentNode = parent;
 		}
 	}
+	//優先度低い　左へ追加
 	else if (add->mPriority < parent->mPriority)
 	{
 		if (parent->mpLeft == nullptr)
 		{
+			// 左が無い時は、左へ追加
 			add->mpParentNode = parent;
 			parent->mpLeft = add;
 		}
 		else
 		{
+			// 左がある時は、左へ移動
 			Add(parent->mpLeft, add);
 		}
 	}
+	//優先度高い　右へ追加
 	else
 	{
 		if (parent->mpRight == nullptr)
 		{
+			// 右が無い時は、右へ追加
 			add->mpParentNode = parent;
 			parent->mpRight = add;
 		}
 		else
 		{
+			// 右があるときは、右へ移動
 			Add(parent->mpRight, add);
 		}
 	}
@@ -150,6 +161,7 @@ void CTreeManager::Remove(CTree* remove)
 		//最大値がすぐ左
 		if (move == remove->mpLeft)
 		{
+			// Moveメソッド設定用に準備
 			remove->mpLeft = move->mpLeft;
 		}
 		//最大値が左ではない場合
@@ -173,6 +185,7 @@ void CTreeManager::Remove(CTree* remove)
 		//最小値がすぐ右の場合
 		if (move == remove->mpRight)
 		{
+			// Moveメソッド設定用に準備
 			remove->mpRight = move->mpRight;
 		}
 		//最小値がすぐ右でない場合
@@ -191,15 +204,15 @@ void CTreeManager::Remove(CTree* remove)
 	//子ノードがない時
 	else
 	{
-		//削除ノードがルートの場合
-		if (remove->mpParentNode == remove)
-		{
-			//ルートを初期値にする
-			//CTreeManager::Instance()->mpRoot = nullptr;
-			mpRoot = nullptr;
-		}
-		//削除ノードがルート以外の場合
-		else
+		////削除ノードがルートの場合
+		//if (remove->mpParentNode == remove)
+		//{
+		//	//ルートを初期値にする
+		//	//CTreeManager::Instance()->mpRoot = nullptr;
+		//	mpRoot = nullptr;
+		//}
+		////削除ノードがルート以外の場合
+		//else
 		{
 			if (remove->mpParentNode != nullptr)
 			{
@@ -239,16 +252,16 @@ CTree* CTreeManager::Min(CTree* task)
 void CTreeManager::Move(CTree* remove, CTree* move)
 {
 	// 親の更新
-	//ルートノードは、親ポインタを自身のポインタにしている
-	if (remove->mpParentNode == remove)
-	{
-		// 削除ノードがルートの場合
-		//ルートを移動ノードにして、移動ノードの親を自身のポインタにする
-		//CTreeManager::Instance()->mpRoot = move;
-		mpRoot = move;
-		move->mpParentNode = move;
-	}
-	else
+	////ルートノードは、親ポインタを自身のポインタにしている
+	//if (remove->mpParentNode == remove)
+	//{
+	//	// 削除ノードがルートの場合
+	//	//ルートを移動ノードにして、移動ノードの親を自身のポインタにする
+	//	//CTreeManager::Instance()->mpRoot = move;
+	//	mpRoot = move;
+	//	move->mpParentNode = move;
+	//}
+	//else
 	{
 		//削除ノードの親の左が、削除ノードの場合
 		if (remove->mpParentNode->mpLeft == remove)
@@ -283,19 +296,19 @@ void CTreeManager::Move(CTree* remove, CTree* move)
 	move->mpRight = remove->mpRight;
 }
 
-void CTreeManager::Render()
-{
-	Render(mpRoot);
-}
-
-void CTreeManager::Render(CTree* task)
-{
-	if (task == nullptr) return;
-	Render(task->mpLeft);
-	((CTask*)task)->Render();
-	Render(task->mpRight);
-}
-
+//void CTreeManager::Render()
+//{
+//	Render(mRoot.mpRight);
+//}
+//
+//void CTreeManager::Render(CTree* task)
+//{
+//	if (task == nullptr) return;
+//	Render(task->mpLeft);
+//	((CTask*)task)->Render();
+//	Render(task->mpRight);
+//}
+//
 //void CTreeManager::UpdateAllNode(CTree* t)
 //{
 //	if (t->mpLeft)

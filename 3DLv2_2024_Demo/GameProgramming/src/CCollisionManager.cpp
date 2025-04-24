@@ -53,9 +53,21 @@ void CCollisionManager::Collision(CCollider* c, int range)
 	int high = c->mPriority + range;
 
 	//ルートノードから衝突判定開始
-	Collision(c, (CCollider*)mpRoot, low, high);
+	Collision(c, (CCollider*)&Root(), low, high);
 }
 
+void CCollisionManager::Render()
+{
+	Render(Root().mpRight);
+}
+
+void CCollisionManager::Render(CTree* task)
+{
+	if (task == nullptr) return;
+	Render(task->mpLeft);
+	((CTask*)task)->Render();
+	Render(task->mpRight);
+}
 
 /*
 void CCollisionManager::Collision(CCollider* m, CTask* o, int low, int high)

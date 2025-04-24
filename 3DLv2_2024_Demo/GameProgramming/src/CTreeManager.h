@@ -1,9 +1,9 @@
 #pragma once
 //#include <list>
-#include "CCollider.h"
+#include "CTree.h"
 
 /// <summary>
-/// 衝突処理の管理クラス
+/// 2文探索木の管理クラス
 /// </summary>
 class CTreeManager
 {
@@ -43,10 +43,10 @@ public:
 	/// </summary>
 	//void CollisionAll();
 
-	// 全コライダーを描画
-	void Render();
+	//// 全コライダーを描画
+	//void Render();
 
-	void Render(CTree* task);
+	//void Render(CTree* task);
 
 	//２分探索化
 
@@ -54,11 +54,11 @@ public:
 	void Add(CTree* add);
 	void Add(CTree* parent, CTree* add);
 
-	//colliderの衝突判定を行う
-	void Collision(CTree* collider);
-	void Collision(CTree* collider, int range);
-	//oが下限～上限の範囲ならmとoの衝突判定を行う
-	void Collision(CTree* m, CTree* o, int low, int high);
+	////colliderの衝突判定を行う
+	//void Collision(CTree* collider);
+	//void Collision(CTree* collider, int range);
+	////oが下限～上限の範囲ならmとoの衝突判定を行う
+	//void Collision(CTree* m, CTree* o, int low, int high);
 
 	//
 	//CCollider* CollisionTrigger(CTree* collider);
@@ -76,20 +76,14 @@ public:
 	void Move(CTree* dest, CTree* src);
 	//void UpdateAllNode(CTree* t);
 
-	//2分探索木
-	CTree* mpRoot;
+	//2分探索木のルート
+	CTree& Root() { return mRoot; }
 	// コンストラクタ
 	CTreeManager();
 	// デストラクタ
 	~CTreeManager();
-
 private:
-	// マネージャのインスタンス
-	//static CTreeManager* mpInstance;
-	// コライダーのリスト
-	//std::list<CCollider*> mColliderList;
-	// コライダーを描画するかどうか
-	bool mIsShowCollider;
-
+	//2分探索木のルート
+	CTree mRoot;
 };
 
