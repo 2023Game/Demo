@@ -1,5 +1,6 @@
 #include "CZombieDeath.h"
 #include "CCamera.h"
+#include "CTaskManager.h"
 
 #define ANIMATION_FILE "res\\WorldZombie\\Zombie Death.x"
 #define ANIMATION_SIZE 178
@@ -22,7 +23,10 @@ void CZombieDeath::Start()
 
 void CZombieDeath::Update()
 {
-
+	if (mpParent->IsAnimationFinished())
+	{
+		CTaskManager::Instance()->DeleteTrees().push_back(mpParent);
+	}
 }
 
 

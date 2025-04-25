@@ -1,6 +1,6 @@
 #ifndef CCOLLISIONMANAGER_H
 #define CCOLLISIONMANAGER_H
-
+#include <list>
 #include "CTreeManager.h"
 #include "CCollider.h"
 
@@ -10,6 +10,8 @@
 class CCollisionManager : public CTreeManager
 {
 public:
+	std::list<CCollider*>& DeleteTrees() { return mDeleteTrees; };
+	void Delete();
 	//インスタンスの取得
 	static CCollisionManager* Instance();
 	void Collision(CCollider* m, CCollider* o, int low, int high);
@@ -18,6 +20,7 @@ public:
 	void Render();
 	void Render(CTree* task);
 private:
+	std::list<CCollider*> mDeleteTrees;
 	//デフォルトコンストラクタ
 	CCollisionManager() {};
 	//マネージャのインスタンス

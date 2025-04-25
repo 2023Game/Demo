@@ -23,11 +23,11 @@ public:
 	virtual void Update() {}
 	//描画
 	virtual void Render() {}
-	bool Enable() { return mEnabled; }
-	bool Enable(bool enable) { return mEnabled = enable; }
-protected:
-	//int mPriority;	//優先度
-	bool mEnabled;	//有効フラグ
+//	bool Enable() { return mEnabled; }
+//	bool Enable(bool enable) { return mEnabled = enable; }
+//protected:
+//	//int mPriority;	//優先度
+//	bool mEnabled;	//有効フラグ
 private:
 	CTask* mpNext;//次のポインタ
 	CTask* mpPrev;//前のポインタ

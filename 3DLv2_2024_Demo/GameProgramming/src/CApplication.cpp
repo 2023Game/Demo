@@ -103,6 +103,10 @@ void CApplication::Update()
 
 	//衝突処理
 	CTaskManager::Instance()->Collision();
+
+	//CCollisionManager::Instance()->Delete();
+	CTaskManager::Instance()->Delete();
+
 	//シャドウマップの描画
 	mShadowMap.Render();
 

@@ -1,7 +1,6 @@
 #include "CCollisionManager.h"
 #include "CCollider.h"
 
-
 //マネージャのインスタンス
 CCollisionManager* CCollisionManager::mpInstance = nullptr;
 //インスタンスの取得
@@ -58,13 +57,20 @@ void CCollisionManager::Collision(CCollider* c, int range)
 
 void CCollisionManager::Render()
 {
-	Render(Root().mpRight);
+	Render(Root().Right());
 }
 
 void CCollisionManager::Render(CTree* task)
 {
 	if (task == nullptr) return;
-	Render(task->mpLeft);
+	Render(task->Left());
 	((CTask*)task)->Render();
-	Render(task->mpRight);
+	Render(task->Right());
+}
+
+void CCollisionManager::Delete()
+{
+	for (auto tree : mDeleteTrees)
+		delete tree;
+	mDeleteTrees.clear();
 }

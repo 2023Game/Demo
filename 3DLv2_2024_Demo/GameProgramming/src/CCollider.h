@@ -28,6 +28,7 @@ public:
 	}
 
 	enum class ETag {
+		ENONE,
 		EBODY,	//‘Ì
 		ESWORD,	//Œ•
 	};

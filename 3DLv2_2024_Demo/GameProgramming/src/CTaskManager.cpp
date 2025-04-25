@@ -17,6 +17,64 @@ CTaskManager* CTaskManager::Instance()
 //デフォルトコンストラクタ
 CTaskManager::CTaskManager()
 {
+}
+
+CTaskManager::~CTaskManager()
+{
+}
+
+void CTaskManager::Delete()
+{
+	for (auto tree : mDeleteTrees)
+		delete tree;
+	mDeleteTrees.clear();
+}
+
+void CTaskManager::Update() 
+{
+	Update(Root().Right());
+}
+//更新
+void CTaskManager::Update(CTree* task)
+{
+	if (task == nullptr) return;
+	Update(task->Left());
+	Update(task->Right());
+	((CTask*)task)->Update();
+}
+
+void CTaskManager::Render() 
+{
+	Render(Root().Right());
+}
+
+//描画
+void CTaskManager::Render(CTree* task) {
+	if (task == nullptr) return;
+	Render(task->Left());
+	Render(task->Right());
+	((CTask*)task)->Render();
+}
+
+//衝突処理
+void CTaskManager::Collision()
+{
+	Collision(Root().Right());
+}
+
+void CTaskManager::Collision(CTree* task) {
+	if (task == nullptr) return;
+	Collision(task->Left());
+	Collision(task->Right());
+	((CTask*)task)->Collision();
+}
+
+
+/*
+
+//デフォルトコンストラクタ
+CTaskManager::CTaskManager()
+{
 	mHead.mpNext = &mTail;
 	mTail.mpPrev = &mHead;
 }
@@ -105,3 +163,5 @@ void CTaskManager::Collision()
 		task = task->mpNext;
 	}
 }
+
+*/

@@ -1,4 +1,5 @@
 #include "CTreeManager.h"
+#include "CCollider.h"
 
 // コンストラクタ
 CTreeManager::CTreeManager()

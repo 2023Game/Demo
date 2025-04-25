@@ -1,12 +1,47 @@
 #ifndef CTASKMANAGER_H
 #define CTASKMANAGER_H
 //タスククラスのインクルード
+#include <list>
 #include "CTask.h"
+#include "CTreeManager.h"
+
+#define TASK_RANGE 100
+
+class CTaskManager : public CTreeManager
+{
+public:
+	std::list<CTask*>& DeleteTrees() { return mDeleteTrees; };
+	//インスタンスの取得
+	static CTaskManager* Instance();
+	//タスクの削除
+	void Delete();
+	//デストラクタ
+	virtual ~CTaskManager();
+	//更新
+	void Update();
+	//衝突
+	void Collision();
+	//描画
+	void Render();
+private:
+	//更新
+	void Update(CTree* task);
+	//衝突
+	void Collision(CTree* task);
+	//描画
+	void Render(CTree* task);
+
+	std::list<CTask*> mDeleteTrees;
+	//デフォルトコンストラクタ
+	CTaskManager();
+	//タスクマネージャのインスタンス
+	static CTaskManager* mpInstance;
+};
 
 /*
 タスクマネージャ
 タスクリストの管理
-*/
+
 class CTaskManager {
 public:
 	void Collision();
@@ -35,5 +70,6 @@ private:
 	//タスクマネージャのインスタンス
 	static CTaskManager* mpInstance;
 };
+*/
 
 #endif

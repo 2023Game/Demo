@@ -91,6 +91,7 @@ CCollider::CCollider()
 	, mpMatrix(&mMatrix)
 	, mType(EType::ESPHERE)
 	, mRadius(0)
+	, mTag(ETag::ENONE)
 {
 	//コリジョンマネージャに追加
 	CCollisionManager::Instance()->Add(this);
