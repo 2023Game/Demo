@@ -74,3 +74,8 @@ void CCollisionManager::Delete()
 		delete tree;
 	mDeleteTrees.clear();
 }
+
+void CCollisionManager::Delete(CCollider* c)
+{
+	mDeleteTrees.push_back(c);
+}

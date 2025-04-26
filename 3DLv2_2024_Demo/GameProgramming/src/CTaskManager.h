@@ -10,11 +10,12 @@
 class CTaskManager : public CTreeManager
 {
 public:
-	std::list<CTask*>& DeleteTrees() { return mDeleteTrees; };
 	//インスタンスの取得
 	static CTaskManager* Instance();
-	//タスクの削除
+	//削除リストのタスクを削除
 	void Delete();
+	//削除リストに追加
+	void Delete(CTask* task);
 	//デストラクタ
 	virtual ~CTaskManager();
 	//更新
@@ -30,7 +31,7 @@ private:
 	void Collision(CTree* task);
 	//描画
 	void Render(CTree* task);
-
+	//削除リスト
 	std::list<CTask*> mDeleteTrees;
 	//デフォルトコンストラクタ
 	CTaskManager();

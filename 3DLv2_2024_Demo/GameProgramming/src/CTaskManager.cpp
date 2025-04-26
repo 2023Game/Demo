@@ -30,6 +30,11 @@ void CTaskManager::Delete()
 	mDeleteTrees.clear();
 }
 
+void CTaskManager::Delete(CTask* task)
+{
+	mDeleteTrees.push_back(task);
+}
+
 void CTaskManager::Update() 
 {
 	Update(Root().Right());
@@ -39,8 +44,8 @@ void CTaskManager::Update(CTree* task)
 {
 	if (task == nullptr) return;
 	Update(task->Left());
-	Update(task->Right());
 	((CTask*)task)->Update();
+	Update(task->Right());
 }
 
 void CTaskManager::Render() 
@@ -49,11 +54,12 @@ void CTaskManager::Render()
 }
 
 //•`‰æ
+//—Dæ“x‚Ì~‡‚É•`‰æ
 void CTaskManager::Render(CTree* task) {
 	if (task == nullptr) return;
-	Render(task->Left());
 	Render(task->Right());
 	((CTask*)task)->Render();
+	Render(task->Left());
 }
 
 //Õ“Ëˆ—
@@ -65,8 +71,8 @@ void CTaskManager::Collision()
 void CTaskManager::Collision(CTree* task) {
 	if (task == nullptr) return;
 	Collision(task->Left());
-	Collision(task->Right());
 	((CTask*)task)->Collision();
+	Collision(task->Right());
 }
 
 

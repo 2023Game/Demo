@@ -25,7 +25,8 @@ void CZombieDeath::Update()
 {
 	if (mpParent->IsAnimationFinished())
 	{
-		CTaskManager::Instance()->DeleteTrees().push_back(mpParent);
+		//íœ‚·‚é
+		CTaskManager::Instance()->Delete(mpParent);
 	}
 }
 
