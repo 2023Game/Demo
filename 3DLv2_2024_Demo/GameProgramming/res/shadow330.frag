@@ -40,6 +40,7 @@ void main() {
 	if(shd == 0.0) 
 	{
 		texColor = texColor * 0.4;
+		//texColor = texColor * 1.0; //シャドウマップなしの時
 		texColor.w = 1.0;
 	}
     // テクスチャをサンプリング

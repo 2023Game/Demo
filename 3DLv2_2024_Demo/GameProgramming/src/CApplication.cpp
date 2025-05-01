@@ -109,6 +109,7 @@ void CApplication::Update()
 
 	//シャドウマップの描画
 	mShadowMap.Render();
+	//gRender(); //シャドウマップ使わない
 
 #ifdef _DEBUG
 	//コライダの描画
