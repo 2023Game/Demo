@@ -23,7 +23,7 @@ private:
 	//CInput mInput;
 
 	//CState* mpState;
-	std::shared_ptr<CState> mpIdle;
+	CState* mpIdle;
 	CState* mpWalk;
 	CState* mpAttack;
 	CState* mpJump;
