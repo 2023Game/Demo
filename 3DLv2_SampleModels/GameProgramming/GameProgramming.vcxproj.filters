@@ -198,6 +198,9 @@
     <ClCompile Include="src\CTreeManager.cpp">
       <Filter>ソース ファイル\Task</Filter>
     </ClCompile>
+    <ClCompile Include="src\CStageSample.cpp">
+      <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CSound.h">
@@ -361,6 +364,9 @@
     </ClInclude>
     <ClInclude Include="src\CTreeManager.h">
       <Filter>ソース ファイル\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CStageSample.h">
+      <Filter>ソース ファイル\Game</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

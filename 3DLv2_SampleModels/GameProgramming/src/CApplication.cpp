@@ -59,33 +59,7 @@ void CApplication::Start()
 
 	mFont.Load("FontG.png", 1, 4096 / 64);
 
-	new CMap();
-
-	mspPaladin = new CPaladin(CVector(-1.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-
-	new CZombie(CVector(0.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(0.0f, 0.0f, 7.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(0.0f, 0.0f, 9.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-
-	new CZombie(CVector(-0.5f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-0.5f, 0.0f, 7.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-0.5f, 0.0f, 9.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-
-	new CZombie(CVector(-2.0f, 0.0f, 6.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-2.0f, 0.0f, 8.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-2.0f, 0.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-
-	new CZombie(CVector(-2.5f, 0.0f, 6.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-2.5f, 0.0f, 8.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-2.5f, 0.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-
-	new CZombie(CVector(-1.0f, 0.0f, 5.5f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-1.0f, 0.0f, 7.5f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-1.0f, 0.0f, 9.5f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-
-	new CZombie(CVector(-1.5f, 0.0f, 5.5f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-1.5f, 0.0f, 7.5f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CZombie(CVector(-1.5f, 0.0f, 9.5f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	mpStageSample = std::make_unique<CStageSample>();
 
 	// シャドウマップ
 #define TEXWIDTH  8192  //テクスチャ幅
@@ -121,13 +95,13 @@ void CApplication::Update()
 
 	mFont.Draw(20, 20, 10, 12, "3D PROGRAMMING");
 
-	CVector screen;
-	//Enemyの座標をスクリーン座標へ変換します
-	if (CActionCamera::Instance()->WorldToScreen(&screen, mspPaladin->Position()))
-	{
-		//変換先の座標に文字列を出力する
-		mFont.Draw(screen.X(), screen.Y() - 25, 7, 14, "PLAYER");
-	}
+	//CVector screen;
+	////Enemyの座標をスクリーン座標へ変換します
+	//if (CActionCamera::Instance()->WorldToScreen(&screen, mspPaladin->Position()))
+	//{
+	//	//変換先の座標に文字列を出力する
+	//	mFont.Draw(screen.X(), screen.Y() - 25, 7, 14, "PLAYER");
+	//}
 
 	//2Dの描画終了
 	CCamera::End();

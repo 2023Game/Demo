@@ -32,9 +32,14 @@
 
 #include "CShadowMap.h"
 
+#include "CStageSample.h"
+
+#include <memory>
+
 class CApplication
 {
 private:
+	std::unique_ptr<CStageSample> mpStageSample;
 	// シャドウマップ
 	CShadowMap mShadowMap;
 

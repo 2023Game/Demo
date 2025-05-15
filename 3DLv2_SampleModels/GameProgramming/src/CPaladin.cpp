@@ -40,9 +40,7 @@ CPaladin::CPaladin()
 	mColBody.Matrix(&mpCombinedMatrix[3]);
 	mColSword.Matrix(&mpCombinedMatrix[50]);
 	// ‰Šúó‘Ôİ’è
-	mpIdle = std::make_shared<CPaladinIdle>(this);
-	mpState = std::move(mpIdle);
-	mpIdle->Start();
+	mpState = mpIdle = new CPaladinIdle(this);
 	mpState->Start();
 	mState = mpState->State();
 	// ó‘Ô’Ç‰Á
@@ -55,7 +53,7 @@ CPaladin::CPaladin()
 
 CPaladin::~CPaladin()
 {
-	//delete mpIdle;
+	delete mpIdle;
 	delete mpWalk;
 	delete mpAttack;
 	delete mpJump;
