@@ -6,6 +6,8 @@
 #include "CModel.h"
 #include "CTask.h"
 
+#include <memory>
+
 //ó‘ÔƒNƒ‰ƒX
 class CState;
 
@@ -94,7 +96,7 @@ public:
 	{
 		return mSpeed;
 	}
-	CState* PState()
+	std::shared_ptr<CState> PState()
 	{
 		return mpState;
 	}
@@ -103,7 +105,7 @@ public:
 		return mAdjust;
 	}
 protected:
-	CState* mpState;
+	std::shared_ptr<CState> mpState;
 	CVector mAdjust;
 	bool mGrounded;
 	CVector mTargetPosition;
