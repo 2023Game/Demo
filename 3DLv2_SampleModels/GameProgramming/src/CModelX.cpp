@@ -191,6 +191,12 @@ CModelX::CModelX()
 	memset(mToken, 0, sizeof(mToken));
 }
 
+CModelX::CModelX(std::string& base)
+	: CModelX()
+{
+	mBaseDir = base;
+}
+
 void CModelX::Load(char* file) {
 	//
 	//ファイルサイズを取得する

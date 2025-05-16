@@ -40,6 +40,9 @@
     <Filter Include="ソース ファイル\Character\Zombie">
       <UniqueIdentifier>{a0e25053-6b74-45b4-8f56-f999ea83ece0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\Character\Dragon">
+      <UniqueIdentifier>{aae2b7f6-2414-4963-904c-609d9cd77216}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
@@ -200,6 +203,9 @@
     </ClCompile>
     <ClCompile Include="src\CStageSample.cpp">
       <Filter>ソース ファイル\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CDragon.cpp">
+      <Filter>ソース ファイル\Character\Dragon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -367,6 +373,9 @@
     </ClInclude>
     <ClInclude Include="src\CStageSample.h">
       <Filter>ソース ファイル\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CDragon.h">
+      <Filter>ソース ファイル\Character\Dragon</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

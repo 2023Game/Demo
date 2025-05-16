@@ -2,6 +2,7 @@
 
 #include "CPaladin.h"
 #include "CZombie.h"
+#include "CDragon.h"
 
 CModel CStageSample::msModel;
 bool CStageSample::msLoad = true;
@@ -28,5 +29,7 @@ CStageSample::CStageSample()
 	new CPaladin(CVector(-1.0f, 1.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 	new CZombie(CVector(0.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+
+	new CDragon(CVector(10.0f, 1.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 }

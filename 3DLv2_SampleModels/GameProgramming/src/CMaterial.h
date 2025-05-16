@@ -2,6 +2,7 @@
 #define CMATERIAL_H
 #include "CTexture.h"
 #include "CModelX.h"
+#include <string>
 
 #define MATERIAL_NAME_LEN 64 //名前の長さ
 
@@ -28,7 +29,7 @@ public:
 	//マテリアルを有効にする
 	void Enabled();
 	//マテリアルの名前の取得
-	char* Name();
+	const char* Name();
 	//マテリアルの名前を設定する
 	//Name(マテリアルの名前)
 	void Name(char* name);
@@ -44,14 +45,16 @@ public:
 	float mSpecular[3];
 	float mEmissive[3];
 	//テクスチャファイル名
-	char* mpTextureFilename;
+	//char* mpTextureFilename;
+	std::string mpTextureFilename;
 
 	//マテリアル毎の頂点数
 	int mVertexNum;
 	//テクスチャ
 	CTexture mTexture;
 	//マテリアル名
-	char mName[MATERIAL_NAME_LEN + 1];
+	//char mName[MATERIAL_NAME_LEN + 1];
+	std::string mName;
 	//拡散光の色RGBA
 	float mDiffuse[4];
 };

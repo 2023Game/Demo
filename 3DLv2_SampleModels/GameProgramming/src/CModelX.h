@@ -1,5 +1,6 @@
 #ifndef CMODELX_H	//インクルードガード
 #define CMODELX_H
+#include <string>
 #include <vector>		//vectorクラスのインクルード（動的配列）
 #include "CMatrix.h"	//マトリクスクラスのインクルード
 #include "CVector.h"
@@ -253,9 +254,16 @@ public:
 	char* GetToken();
 
 	CModelX();
+	CModelX(std::string& base);
 	//ファイル読み込み
 	void Load(char* file);
+	std::string& BaseDir()
+	{
+		return mBaseDir;
+	}
 private:
+	std::string mBaseDir;
+
 	//シェーダー用スキンマトリックス
 	CMatrix* mpSkinningMatrix;
 	CMyShader mShader; //シェーダーのインスタンス

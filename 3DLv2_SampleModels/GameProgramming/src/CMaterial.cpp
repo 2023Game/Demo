@@ -45,7 +45,7 @@ void CMaterial::Power(float p)
 
 
 CMaterial::CMaterial(CModelX* model)
-	: mpTextureFilename(nullptr)
+	: mVertexNum(0)
 {
 	//CModelXにマテリアルを追加する
 	model->Material().push_back(this);
@@ -53,7 +53,8 @@ CMaterial::CMaterial(CModelX* model)
 	model->GetToken(); // { ? Name
 	if (strcmp(model->Token(), "{") != 0) {
 		//{でないときはマテリアル名
-		strcpy(mName, model->Token());
+//		strcpy(mName, model->Token());
+		mName = model->Token();
 		model->GetToken(); // {
 	}
 
@@ -78,12 +79,12 @@ CMaterial::CMaterial(CModelX* model)
 		//テクスチャありの場合、テクスチャファイル名取得
 		model->GetToken(); // {
 		model->GetToken(); // filename
-		mpTextureFilename =
-			new char[strlen(model->Token()) + 1];
-		strcpy(mpTextureFilename, model->Token());
-
+		mpTextureFilename = model->BaseDir() + model->Token();
+//			new char[strlen(model->Token()) + 1];
+//		strcpy(mpTextureFilename, model->Token());
+		mpTextureFilename = model->Token();
 		//テクスチャファイルの読み込み
-		mTexture.Load(mpTextureFilename);
+		mTexture.Load(mpTextureFilename.c_str());
 
 		model->GetToken(); // }
 		model->GetToken(); // }
@@ -93,10 +94,10 @@ CMaterial::CMaterial(CModelX* model)
 
 CMaterial::~CMaterial()
 {
-	if (mpTextureFilename) {
+	/*if (mpTextureFilename) {
 		delete[] mpTextureFilename;
 	}
-	mpTextureFilename = nullptr;
+	mpTextureFilename = nullptr;*/
 }
 
 CTexture* CMaterial::Texture()
@@ -124,7 +125,7 @@ CMaterial::CMaterial()
 	, mpTextureFilename(nullptr)
 {
 	//名前を0で埋め
-	memset(mName, 0, sizeof(mName));
+//	memset(mName, 0, sizeof(mName));
 	//0で埋める
 	memset(mDiffuse, 0, sizeof(mDiffuse));
 }
@@ -146,15 +147,16 @@ void CMaterial::Enabled() {
 	}
 }
 //マテリアルの名前の取得
-char* CMaterial::Name()
+const char* CMaterial::Name()
 {
-	return mName;
+	return mName.c_str();
 }
 // マテリアルの名前を設定する
 // Name(マテリアルの名前)
 void CMaterial::Name(char* name)
 {
-	strncpy(mName, name, MATERIAL_NAME_LEN);
+//	strncpy(mName, name, MATERIAL_NAME_LEN);
+	mName = name;
 }
 //mDiffuse配列の取得
 float* CMaterial::Diffuse()
