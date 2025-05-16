@@ -5,7 +5,7 @@
 #include "CCollider.h"
 
 //Õ“Ëˆ—”ÍˆÍ‚æ‚è—£‚ê‚Ä‚¢‚éƒRƒ‰ƒCƒ_‚ÍÕ“Ëˆ—‚µ‚È‚¢
-#define COLLISIONRANGE 30
+#define COLLISIONRANGE 50
 
 class CCollisionManager : public CTreeManager
 {

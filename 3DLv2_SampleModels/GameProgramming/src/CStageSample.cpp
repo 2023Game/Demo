@@ -25,7 +25,7 @@ CStageSample::CStageSample()
 	CTransform::Update();
 	mColMesh.Set(this, &mMatrix, &msModel);
 
-	new CPaladin(CVector(-1.0f, 0.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CPaladin(CVector(-1.0f, 1.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 	new CZombie(CVector(0.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
