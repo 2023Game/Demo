@@ -3,12 +3,13 @@
 #include "CCollisionManager.h"
 #include "CCamera.h"
 
-#define PALADIN_MODEL_PATH "res\\Character\\DragonIke\\Dragon.x"
+#define MODEL_PATH "res\\Character\\DragonIke\\Dragon.x"
+#define MODEL_BASE "Character\\DragonIke\\"
 
 //追加のアニメーションセット
 //#define ANIMATION_ATTACKSP1 "res\\paladin\\SwordAndShieldAttack.x"
 
-CModelX CDragon::sModel;
+CModelX CDragon::sModel(MODEL_BASE);
 
 CDragon::CDragon()
 	: CXCharacter(CCharacter3::ETag::EENEMY)
@@ -21,7 +22,7 @@ CDragon::CDragon()
 {
 	if (sModel.IsLoaded() == false)
 	{
-		sModel.Load(PALADIN_MODEL_PATH);
+		sModel.Load(MODEL_PATH);
 	}
 	Init(&sModel);
 	mColBody.Matrix(&mpCombinedMatrix[3]);

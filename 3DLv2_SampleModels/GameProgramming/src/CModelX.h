@@ -254,7 +254,7 @@ public:
 	char* GetToken();
 
 	CModelX();
-	CModelX(std::string& base);
+	CModelX(const char* base);
 	//ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
 	void Load(char* file);
 	std::string& BaseDir()

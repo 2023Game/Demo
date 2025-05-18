@@ -82,7 +82,7 @@ CMaterial::CMaterial(CModelX* model)
 		mpTextureFilename = model->BaseDir() + model->Token();
 //			new char[strlen(model->Token()) + 1];
 //		strcpy(mpTextureFilename, model->Token());
-		mpTextureFilename = model->Token();
+//		mpTextureFilename = model->Token();
 		//テクスチャファイルの読み込み
 		mTexture.Load(mpTextureFilename.c_str());
 
@@ -122,7 +122,7 @@ void CMaterial::Disabled()
 //デフォルトコンストラクタ
 CMaterial::CMaterial()
 	:mVertexNum(0)
-	, mpTextureFilename(nullptr)
+//	, mpTextureFilename(nullptr)
 {
 	//名前を0で埋め
 //	memset(mName, 0, sizeof(mName));

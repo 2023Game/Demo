@@ -191,7 +191,7 @@ CModelX::CModelX()
 	memset(mToken, 0, sizeof(mToken));
 }
 
-CModelX::CModelX(std::string& base)
+CModelX::CModelX(const char* base)
 	: CModelX()
 {
 	mBaseDir = base;
