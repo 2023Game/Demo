@@ -18,6 +18,9 @@ bool CStageSample::msLoad = true;
 #define GASMASK_PATH "res\\\Character\\Gas mask soldier\\GasMask_Soldier_Model.x"
 #define GASMASK_BASE "Character\\Gas mask soldier\\"
 
+#define MONSTER_PATH "res\\\monster\\monster-animated-character-X.X"
+#define MONSTER_BASE "monster\\"
+
 //C:\Users\Takahashi\Desktop\Git\2023\Demo\3DLv2_SampleModels\GameProgramming\res\Character\Gas mask soldier
 
 CStageSample::CStageSample()
@@ -34,11 +37,12 @@ CStageSample::CStageSample()
 	CTransform::Update();
 	mColMesh.Set(this, &mMatrix, &msModel);
 
-	new CPaladin(CVector(-1.0f, 1.0f, 0.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CPaladin(CVector(-1.0f, 1.0f, -5.0f), CVector(0.0f, 0.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 	new CZombie(CVector(0.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 	new CModelSample(DRAGON_BASE, DRAGON_PATH, CVector(10.0f, 1.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 	new CModelSample(GASMASK_BASE, GASMASK_PATH, CVector(-10.0f, -2.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
+	new CModelSample(MONSTER_BASE, MONSTER_PATH, CVector(-10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 
 }
