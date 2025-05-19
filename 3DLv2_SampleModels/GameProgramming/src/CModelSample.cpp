@@ -1,17 +1,17 @@
-#include "CDragon.h"
+#include "CModelSample.h"
 #include "CActionCamera.h"
 #include "CCollisionManager.h"
 #include "CCamera.h"
 
-#define MODEL_PATH "res\\Character\\DragonIke\\Dragon.x"
-#define MODEL_BASE "Character\\DragonIke\\"
+#define DRAGON_PATH "res\\Character\\DragonIke\\Dragon.x"
+#define DRAGON_BASE "Character\\DragonIke\\"
 
 //追加のアニメーションセット
 //#define ANIMATION_ATTACKSP1 "res\\paladin\\SwordAndShieldAttack.x"
 
-CModelX CDragon::sModel(MODEL_BASE);
+//CModelX CModelSample::sModel;
 
-CDragon::CDragon()
+CModelSample::CModelSample()
 	: CXCharacter(CCharacter3::ETag::EENEMY)
 	, mColBody(
 		this,
@@ -20,33 +20,33 @@ CDragon::CDragon()
 		CVector(0.0f, 60.0f, 0.0f),
 		0.2f)
 {
+}
+
+CModelSample::~CModelSample()
+{
+}
+
+CModelSample::CModelSample(const char* base, const char* model, const CVector& pos, const CVector& rot, const CVector& scale)
+	: CModelSample()
+{
 	if (sModel.IsLoaded() == false)
 	{
-		sModel.Load(MODEL_PATH);
+		sModel.BaseDir(base);
+		sModel.Load(model);
 	}
 	Init(&sModel);
 	mColBody.Matrix(&mpCombinedMatrix[3]);
-
-}
-
-CDragon::~CDragon()
-{
-}
-
-CDragon::CDragon(const CVector& pos, const CVector& rot, const CVector& scale)
-	: CDragon()
-{
 	Position(pos);
 	Rotation(rot);
 	Scale(scale);
 }
 
-void CDragon::Update()
+void CModelSample::Update()
 {
 	CXCharacter::Update();
 }
 
-void CDragon::Collision(CCollider* m, CCollider* o)
+void CModelSample::Collision(CCollider* m, CCollider* o)
 {
 	CVector adjust;
 	switch (m->Type())
@@ -74,7 +74,7 @@ void CDragon::Collision(CCollider* m, CCollider* o)
 	}
 }
 
-void CDragon::Collision()
+void CModelSample::Collision()
 {
 	//CCollisionManager::Instance()->Collision(&mColBody, COLLISIONRANGE);
 }

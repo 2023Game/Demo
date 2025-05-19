@@ -256,10 +256,15 @@ public:
 	CModelX();
 	CModelX(const char* base);
 	//ƒtƒ@ƒCƒ‹“Ç‚İ‚İ
-	void Load(char* file);
+	void Load(const char* file);
 	std::string& BaseDir()
 	{
 		return mBaseDir;
+	}
+
+	void BaseDir(std::string base)
+	{
+		mBaseDir = base;
 	}
 private:
 	std::string mBaseDir;

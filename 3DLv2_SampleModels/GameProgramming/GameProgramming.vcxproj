@@ -23,7 +23,7 @@
     <ClCompile Include="src\CColliderMesh.cpp" />
     <ClCompile Include="src\CColliderTriangle.cpp" />
     <ClCompile Include="src\CCollisionManager.cpp" />
-    <ClCompile Include="src\CDragon.cpp" />
+    <ClCompile Include="src\CModelSample.cpp" />
     <ClCompile Include="src\CStageSample.cpp" />
     <ClCompile Include="src\CTreeManager.cpp" />
     <ClCompile Include="src\CEffect.cpp" />
@@ -79,7 +79,7 @@
     <ClInclude Include="src\CColliderMesh.h" />
     <ClInclude Include="src\CColliderTriangle.h" />
     <ClInclude Include="src\CCollisionManager.h" />
-    <ClInclude Include="src\CDragon.h" />
+    <ClInclude Include="src\CModelSample.h" />
     <ClInclude Include="src\CStageSample.h" />
     <ClInclude Include="src\CTreeManager.h" />
     <ClInclude Include="src\CEffect.h" />

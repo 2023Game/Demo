@@ -197,7 +197,7 @@ CModelX::CModelX(const char* base)
 	mBaseDir = base;
 }
 
-void CModelX::Load(char* file) {
+void CModelX::Load(const char* file) {
 	//
 	//ファイルサイズを取得する
 	//
