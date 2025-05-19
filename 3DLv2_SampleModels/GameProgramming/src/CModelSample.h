@@ -1,7 +1,6 @@
 #ifndef CMODELSAMPLE_H
 #define CMODELSAMPLE_H
 #include "CXCharacter.h"
-#include "CColliderCapsule.h"
 
 class CModelSample : public CXCharacter
 {
@@ -12,13 +11,9 @@ public:
 	void Update();
 	void Collision(CCollider* m, CCollider* o);
 	void Collision();
-	//static CModelX* Model() { return &sModel; }
 private:
-	/*static*/ CModelX sModel;
-	CColliderCapsule mColBody;	//‘Ì
+	CModelX mModel;
 };
-
-#define VELOCITY 0.2f
 
 #endif
 

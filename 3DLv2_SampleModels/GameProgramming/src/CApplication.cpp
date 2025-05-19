@@ -65,7 +65,7 @@ void CApplication::Start()
 #define TEXWIDTH  8192  //テクスチャ幅
 #define TEXHEIGHT  6144  //テクスチャ高さ
 	float shadowColor[] = { 0.4f, 0.4f, 0.4f, 0.4f };  //影の色
-	float lightPos[] = { 0.0f,80.0f,0.0f };  //光源の位置
+	float lightPos[] = { 0.0f,80.0f,-20.0f };  //光源の位置
 	mShadowMap.Init(TEXWIDTH, TEXHEIGHT, gRender, shadowColor, lightPos);
 }
 

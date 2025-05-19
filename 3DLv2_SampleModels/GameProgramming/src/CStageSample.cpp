@@ -15,6 +15,11 @@ bool CStageSample::msLoad = true;
 #define DRAGON_PATH "res\\Character\\DragonIke\\Dragon.x"
 #define DRAGON_BASE "Character\\DragonIke\\"
 
+#define GASMASK_PATH "res\\\Character\\Gas mask soldier\\GasMask_Soldier_Model.x"
+#define GASMASK_BASE "Character\\Gas mask soldier\\"
+
+//C:\Users\Takahashi\Desktop\Git\2023\Demo\3DLv2_SampleModels\GameProgramming\res\Character\Gas mask soldier
+
 CStageSample::CStageSample()
 {
 	if (msLoad)
@@ -34,5 +39,6 @@ CStageSample::CStageSample()
 	new CZombie(CVector(0.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 	new CModelSample(DRAGON_BASE, DRAGON_PATH, CVector(10.0f, 1.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CModelSample(GASMASK_BASE, GASMASK_PATH, CVector(-10.0f, -2.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 
 }
