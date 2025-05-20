@@ -1,6 +1,7 @@
 #ifndef CMODELSAMPLE_H
 #define CMODELSAMPLE_H
 #include "CXCharacter.h"
+#include "CFont.h"
 
 class CModelSample : public CXCharacter
 {
@@ -11,7 +12,9 @@ public:
 	void Update();
 	void Collision(CCollider* m, CCollider* o);
 	void Collision();
+	void RenderUI();
 private:
+	static CFont mFont;
 	CModelX mModel;
 };
 

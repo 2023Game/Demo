@@ -24,6 +24,7 @@ public:
 	void Collision();
 	//描画
 	void Render();
+	void RenderUI();
 private:
 	//更新
 	void Update(CTree* task);
@@ -31,6 +32,7 @@ private:
 	void Collision(CTree* task);
 	//描画
 	void Render(CTree* task);
+	void RenderUI(CTree* task);
 	//削除リスト
 	std::list<CTask*> mDeleteTrees;
 	//デフォルトコンストラクタ

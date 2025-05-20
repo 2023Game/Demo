@@ -37,6 +37,11 @@ void CXCharacter::Update()
 */
 void CXCharacter::Init(CModelX* model) {
 	mpModel = model;
+	// 合成行列退避エリアの確保
+	mpCombinedMatrix = new CMatrix[model->Frames().size()];
+	mAnimationFrameSize = 0;
+
+	if (model->AnimationSet().size() <= 0) return;
 	//最初のアニメーションにする
 	mAnimationIndex = 0;
 	//繰り返し再生する
@@ -50,9 +55,6 @@ void CXCharacter::Init(CModelX* model) {
 		Time(mAnimationFrame);
 	//アニメーションの重みを1.0（100%)にする
 	mpModel->AnimationSet()[mAnimationIndex]->Weight(1.0f);
-	// 合成行列退避エリアの確保
-	mpCombinedMatrix = new CMatrix[model->Frames().size()];
-
 }
 
 /*
@@ -84,6 +86,8 @@ void CXCharacter::ChangeAnimation(int index, bool loop, float framesize) {
  matrix：移動、回転、拡大縮小の行列
 */
 void CXCharacter::Update(CMatrix& matrix) {
+	if (mpModel->AnimationSet().size() <= 0) return;
+
 	for (size_t i = 0; i < mpModel->AnimationSet().size(); ++i)
 	{
 		mpModel->AnimationSet()[i]->Weight(0.0f);

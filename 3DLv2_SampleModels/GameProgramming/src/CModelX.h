@@ -1,6 +1,7 @@
 #ifndef CMODELX_H	//インクルードガード
 #define CMODELX_H
 #include <string>
+#include <algorithm>
 #include <vector>		//vectorクラスのインクルード（動的配列）
 #include "CMatrix.h"	//マトリクスクラスのインクルード
 #include "CVector.h"
@@ -264,6 +265,7 @@ public:
 
 	void BaseDir(std::string base)
 	{
+		std::transform(base.begin(), base.end(), base.begin(), ::toupper);
 		mBaseDir = base;
 	}
 private:

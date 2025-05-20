@@ -23,7 +23,8 @@ public:
 	virtual void Update() {}
 	//•`‰æ
 	virtual void Render() {}
-//	bool Enable() { return mEnabled; }
+	virtual void RenderUI() {}
+	//	bool Enable() { return mEnabled; }
 //	bool Enable(bool enable) { return mEnabled = enable; }
 //protected:
 //	//int mPriority;	//—Dæ“x

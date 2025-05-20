@@ -93,7 +93,9 @@ void CApplication::Update()
 	//2D描画開始
 	CCamera::Start(0, WINDOW_WIDTH, 0, WINDOW_HEIGHT);
 
-	mFont.Draw(20, 20, 10, 12, "3D PROGRAMMING");
+//	mFont.Draw(20, 20, 10, 12, "3D PROGRAMMING");
+
+	CTaskManager::Instance()->RenderUI();
 
 	//CVector screen;
 	////Enemyの座標をスクリーン座標へ変換します

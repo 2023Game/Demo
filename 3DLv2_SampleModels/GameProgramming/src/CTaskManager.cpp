@@ -48,7 +48,7 @@ void CTaskManager::Update(CTree* task)
 	Update(task->Right());
 }
 
-void CTaskManager::Render() 
+void CTaskManager::Render()
 {
 	Render(Root().Right());
 }
@@ -60,6 +60,20 @@ void CTaskManager::Render(CTree* task) {
 	Render(task->Right());
 	((CTask*)task)->Render();
 	Render(task->Left());
+}
+
+void CTaskManager::RenderUI()
+{
+	RenderUI(Root().Right());
+}
+
+//•`‰æ
+//—Dæ“x‚Ì~‡‚É•`‰æ
+void CTaskManager::RenderUI(CTree* task) {
+	if (task == nullptr) return;
+	RenderUI(task->Right());
+	((CTask*)task)->RenderUI();
+	RenderUI(task->Left());
 }
 
 //Õ“Ëˆ—
