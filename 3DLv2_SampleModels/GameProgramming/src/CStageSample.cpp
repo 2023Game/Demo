@@ -27,6 +27,9 @@ bool CStageSample::msLoad = true;
 #define VANGU_PATH "res\\Character\\Vanguard\\VanguardModel.x"
 #define VANGU_BASE "Character\\Vanguard\\"
 
+#define YUKARI_PATH "res\\Character\\Yukari\\Yukari2.x"
+#define YUKARI_BASE "Character\\Yukari\\"
+
 //C:\Users\Takahashi\Desktop\Git\2023\Demo\3DLv2_SampleModels\GameProgramming\res\Character\Gas mask soldier
 
 CStageSample::CStageSample()
@@ -52,5 +55,6 @@ CStageSample::CStageSample()
 	new CModelSample(MONSTER_BASE, MONSTER_PATH, CVector(-10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 	new CModelSample(VANGU_BASE, VANGU_PATH, CVector(0.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 	new CModelSample(SLIME_BASE, SLIME_PATH, CVector(10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CModelSample(YUKARI_BASE, YUKARI_PATH, CVector(0.0f, -2.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 
 }
