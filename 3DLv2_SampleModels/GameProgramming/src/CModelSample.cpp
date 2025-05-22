@@ -16,15 +16,33 @@ CModelSample::~CModelSample()
 {
 }
 
-CModelSample::CModelSample(const char* base, const char* model, const CVector& pos, const CVector& rot, const CVector& scale)
+CModelSample::CModelSample(std::string base, std::string model, const CVector& pos, const CVector& rot, const CVector& scale)
 	: CModelSample()
 {
 	if (mModel.IsLoaded() == false)
 	{
 		mModel.BaseDir(base);
-		mModel.Load(model);
+		mModel.Load(model.c_str());
 	}
 	Init(&mModel);
+	Position(pos);
+	Rotation(rot);
+	Scale(scale);
+}
+
+#define RESOURCE_DIR "res\\"
+
+CModelSample::CModelSample(std::string base, std::string model, std::string anim, const CVector& pos, const CVector& rot, const CVector& scale)
+	: CModelSample()
+{
+	if (mModel.IsLoaded() == false)
+	{
+		mModel.BaseDir(base);
+		mModel.Load(model.c_str());
+		mModel.AddAnimationSet((RESOURCE_DIR + base + anim).c_str());
+	}
+	Init(&mModel);
+	ChangeAnimation(mModel.AnimationSet().size() - 1, true, 60.0f);
 	Position(pos);
 	Rotation(rot);
 	Scale(scale);

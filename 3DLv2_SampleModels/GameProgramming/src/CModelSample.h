@@ -8,7 +8,8 @@ class CModelSample : public CXCharacter
 public:
 	CModelSample();
 	~CModelSample();
-	CModelSample(const char* base, const char* model, const CVector& pos, const CVector& rot, const CVector& scale);
+	CModelSample(std::string base, std::string model, const CVector& pos, const CVector& rot, const CVector& scale);
+	CModelSample(std::string base, std::string model, std::string anim, const CVector& pos, const CVector& rot, const CVector& scale);
 	void Update();
 	void Collision(CCollider* m, CCollider* o);
 	void Collision();

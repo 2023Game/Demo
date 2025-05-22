@@ -345,7 +345,7 @@ size_t CModelX::AddAnimationSet(const char* file)
 	FILE* fp;	//ファイルポインタ変数の作成
 	fp = fopen(file, "rb");	//ファイルをオープンする
 	if (fp == NULL) {	//エラーチェック
-		printf("fopen error:%s￥n", file);
+		printf("fopen error:%s\n", file);
 		return 0;
 	}
 	//ファイルの最後へ移動
