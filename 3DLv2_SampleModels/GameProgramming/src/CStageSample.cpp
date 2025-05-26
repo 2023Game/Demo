@@ -32,6 +32,7 @@ bool CStageSample::msLoad = true;
 
 #define YUKARI_PATH "res\\Character\\Yukari\\Yukari2.x"
 #define YUKARI_BASE "Character\\Yukari\\"
+#define YUKARI_ANIM "anim\\Yukari_GunWorlk79.x"
 
 #define BEARD_PATH "res\\Character\\PlayerAwa\\Beardman.x"
 #define BEARD_BASE "Character\\PlayerAwa\\"
@@ -61,7 +62,7 @@ CStageSample::CStageSample()
 	new CModelSample(MONSTER_BASE, MONSTER_PATH, CVector(-10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 	new CModelSample(VANGU_BASE, VANGU_PATH, CVector(0.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 	new CModelSample(SLIME_BASE, SLIME_PATH, SLIME_ANIM, CVector(10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CModelSample(YUKARI_BASE, YUKARI_PATH, CVector(0.0f, -2.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
+	new CModelSample(YUKARI_BASE, YUKARI_PATH, YUKARI_ANIM, CVector(0.0f, -2.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
 	new CModelSample(BEARD_BASE, BEARD_PATH, CVector(-10.0f, -2.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 }
