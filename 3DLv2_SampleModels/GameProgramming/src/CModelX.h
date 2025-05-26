@@ -47,8 +47,6 @@ public:
 	CAnimation(CModelX* model);
 	CAnimation()
 		: mKeyNum(0)
-		//, mpKey(nullptr)
-		//, mpFrameName(nullptr)
 		, mFrameIndex(0)
 	{}
 
@@ -56,7 +54,7 @@ public:
 private:
 	int mKeyNum;	//キー数（時間数）
 	//CAnimationKey* mpKey;	//キーの配列
-	std::vector<CAnimationKey> mpKey;	//キーの配列
+	std::vector<CAnimationKey> mKeys;	//キーの配列
 	std::string mpFrameName;//フレーム名
 	int mFrameIndex;	//フレーム番号
 };

@@ -426,19 +426,19 @@ void CModelX::SeparateAnimationSet(int idx, int start, int end, char* name)
 		animation->mFrameIndex = anim->mAnimation[i]->mFrameIndex;
 		animation->mKeyNum = end - start + 1;
 //		animation->mpKey = new CAnimationKey[animation->mKeyNum];//アニメーションキーの生成
-		animation->mpKey.resize(animation->mKeyNum);//アニメーションキーの生成
+		animation->mKeys.resize(animation->mKeyNum);//アニメーションキーの生成
 		animation->mKeyNum = 0;
 		for (int j = start; j <= end && j < anim->mAnimation[i]->mKeyNum; j++) {
 			if (j < anim->mAnimation[i]->mKeyNum)
 			{
-				animation->mpKey[animation->mKeyNum] = anim->mAnimation[i]->mpKey[j];
+				animation->mKeys[animation->mKeyNum] = anim->mAnimation[i]->mKeys[j];
 			}
 			else
 			{
-				animation->mpKey[animation->mKeyNum] =
-					anim->mAnimation[i]->mpKey[anim->mAnimation[i]->mKeyNum - 1];
+				animation->mKeys[animation->mKeyNum] =
+					anim->mAnimation[i]->mKeys[anim->mAnimation[i]->mKeyNum - 1];
 			}
-			animation->mpKey[animation->mKeyNum].mTime = animation->mKeyNum++;
+			animation->mKeys[animation->mKeyNum].mTime = animation->mKeyNum++;
 		}//アニメーションキーのコピー
 		as->mAnimation.push_back(animation);//アニメーションの追加
 	}
@@ -1014,32 +1014,32 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 		CAnimation* animation = mAnimation[j];
 		//キーがない場合は次のアニメーションへ
 //		if (animation->mpKey == nullptr) continue;
-		if (animation->mpKey.size() == 0) continue;
+		if (animation->mKeys.size() == 0) continue;
 		//該当するフレームの取得
 		CModelXFrame* frame = model->mFrame[animation->mFrameIndex];
 		//最初の時間より小さい場合
-		if (mTime < animation->mpKey[0].mTime) {
+		if (mTime < animation->mKeys[0].mTime) {
 			//変換行列を0コマ目の行列で更新
-			frame->mTransformMatrix += animation->mpKey[0].mMatrix * mWeight;
+			frame->mTransformMatrix += animation->mKeys[0].mMatrix * mWeight;
 		}
 		//最後の時間より大きい場合
-		else if (mTime >= animation->mpKey[animation->mKeyNum - 1].mTime) {
+		else if (mTime >= animation->mKeys[animation->mKeyNum - 1].mTime) {
 			//変換行列を最後のコマの行列で更新
-			frame->mTransformMatrix += animation->mpKey[animation->mKeyNum - 1].mMatrix * mWeight;
+			frame->mTransformMatrix += animation->mKeys[animation->mKeyNum - 1].mMatrix * mWeight;
 		}
 		else {
 			//時間の途中の場合
 			for (int k = 1; k < animation->mKeyNum; k++) {
 				//変換行列を、線形補間にて更新
-				if (mTime < animation->mpKey[k].mTime &&
-					animation->mpKey[k - 1].mTime != animation->mpKey[k].mTime) {
+				if (mTime < animation->mKeys[k].mTime &&
+					animation->mKeys[k - 1].mTime != animation->mKeys[k].mTime) {
 
-					float r = (animation->mpKey[k].mTime - mTime) /
-						(animation->mpKey[k].mTime - animation->mpKey[k - 1].mTime);
+					float r = (animation->mKeys[k].mTime - mTime) /
+						(animation->mKeys[k].mTime - animation->mKeys[k - 1].mTime);
 
 					frame->mTransformMatrix +=
-						(animation->mpKey[k - 1].mMatrix * r +
-							animation->mpKey[k].mMatrix * (1 - r)) * mWeight;
+						(animation->mKeys[k - 1].mMatrix * r +
+							animation->mKeys[k].mMatrix * (1 - r)) * mWeight;
 					break;
 				}
 			}
@@ -1088,7 +1088,7 @@ CAnimationSet::CAnimationSet(CModelX* model)
 		}
 	}
 	//終了時間設定
-	mMaxTime = mAnimation[0]->mpKey[mAnimation[0]->mKeyNum - 1].mTime;
+	mMaxTime = mAnimation[0]->mKeys[mAnimation[0]->mKeyNum - 1].mTime;
 }
 
 CAnimationSet::~CAnimationSet()
@@ -1183,12 +1183,12 @@ CAnimation::CAnimation(CModelX* model)
 				}
 				break;
 			case 4: //行列データを取得
-				mpKey.resize(mKeyNum);
+				mKeys.resize(mKeyNum);
 				for (int i = 0; i < mKeyNum; i++) {
-					mpKey[i].mTime = atof(model->GetToken()); // Time
+					mKeys[i].mTime = atof(model->GetToken()); // Time
 					model->GetToken(); // 16
 					for (int j = 0; j < 16; j++) {
-						mpKey[i].mMatrix.M()[j] = atof(model->GetToken());
+						mKeys[i].mMatrix.M()[j] = atof(model->GetToken());
 					}
 				}
 				break;
@@ -1201,16 +1201,16 @@ CAnimation::CAnimation(CModelX* model)
 	}
 
 	//行列データではない時
-	if (mpKey.size() == 0) {
+	if (mKeys.size() == 0) {
 		//時間数分キーを作成
 		//mpKey = new CAnimationKey[mKeyNum];
 		//mpKey = std::make_unique<CAnimationKey[]>(mKeyNum);
-		mpKey.resize(mKeyNum);
+		mKeys.resize(mKeyNum);
 		for (int i = 0; i < mKeyNum; i++) {
 			//時間設定
-			mpKey[i].mTime = time[2][i]; // Time
+			mKeys[i].mTime = time[2][i]; // Time
 			//行列作成 Scale * Rotation * Position
-			mpKey[i].mMatrix = key[1][i] * key[0][i] * key[2][i];
+			mKeys[i].mMatrix = key[1][i] * key[0][i] * key[2][i];
 		}
 	}
 	//確保したエリア解放
