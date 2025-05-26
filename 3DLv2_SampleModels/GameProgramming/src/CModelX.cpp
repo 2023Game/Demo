@@ -420,11 +420,13 @@ void CModelX::SeparateAnimationSet(int idx, int start, int end, char* name)
 	as->mMaxTime = end - start;
 	for (size_t i = 0; i < anim->mAnimation.size(); i++) {//既存のアニメーション分繰り返し
 		CAnimation* animation = new CAnimation();//アニメーションの生成
-		animation->mpFrameName = new char[strlen(anim->mAnimation[i]->mpFrameName) + 1];
-		strcpy(animation->mpFrameName, anim->mAnimation[i]->mpFrameName);
+//		animation->mpFrameName = new char[strlen(anim->mAnimation[i]->mpFrameName) + 1];
+//		strcpy(animation->mpFrameName, anim->mAnimation[i]->mpFrameName);
+		animation->mpFrameName = anim->mAnimation[i]->mpFrameName;
 		animation->mFrameIndex = anim->mAnimation[i]->mFrameIndex;
 		animation->mKeyNum = end - start + 1;
-		animation->mpKey = new CAnimationKey[animation->mKeyNum];//アニメーションキーの生成
+//		animation->mpKey = new CAnimationKey[animation->mKeyNum];//アニメーションキーの生成
+		animation->mpKey.resize(animation->mKeyNum);//アニメーションキーの生成
 		animation->mKeyNum = 0;
 		for (int j = start; j <= end && j < anim->mAnimation[i]->mKeyNum; j++) {
 			if (j < anim->mAnimation[i]->mKeyNum)
@@ -1011,7 +1013,8 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 		//フレームを取得する
 		CAnimation* animation = mAnimation[j];
 		//キーがない場合は次のアニメーションへ
-		if (animation->mpKey == nullptr) continue;
+//		if (animation->mpKey == nullptr) continue;
+		if (animation->mpKey.size() == 0) continue;
 		//該当するフレームの取得
 		CModelXFrame* frame = model->mFrame[animation->mFrameIndex];
 		//最初の時間より小さい場合
@@ -1099,10 +1102,10 @@ CAnimationSet::~CAnimationSet()
 }
 
 CAnimation::CAnimation(CModelX* model)
-	: mpFrameName(nullptr)
-	, mFrameIndex(0)
+	//: mpFrameName(nullptr)
+	: mFrameIndex(0)
 	, mKeyNum(0)
-	, mpKey(nullptr)
+	//, mpKey(nullptr)
 {
 	model->GetToken(); // { or Animation Name
 	if (strchr(model->Token(), '{')) {
@@ -1114,8 +1117,9 @@ CAnimation::CAnimation(CModelX* model)
 	}
 
 	model->GetToken(); //FrameName
-	mpFrameName = new char[strlen(model->Token()) + 1];
-	strcpy(mpFrameName, model->Token());
+//	mpFrameName = new char[strlen(model->Token()) + 1];
+//	strcpy(mpFrameName, model->Token());
+	mpFrameName = model->Token();
 	mFrameIndex =
 		model->FindFrame(model->Token())->Index();
 	model->GetToken(); // }
@@ -1179,7 +1183,7 @@ CAnimation::CAnimation(CModelX* model)
 				}
 				break;
 			case 4: //行列データを取得
-				mpKey = new CAnimationKey[mKeyNum];
+				mpKey.resize(mKeyNum);
 				for (int i = 0; i < mKeyNum; i++) {
 					mpKey[i].mTime = atof(model->GetToken()); // Time
 					model->GetToken(); // 16
@@ -1197,9 +1201,11 @@ CAnimation::CAnimation(CModelX* model)
 	}
 
 	//行列データではない時
-	if (mpKey == nullptr) {
+	if (mpKey.size() == 0) {
 		//時間数分キーを作成
-		mpKey = new CAnimationKey[mKeyNum];
+		//mpKey = new CAnimationKey[mKeyNum];
+		//mpKey = std::make_unique<CAnimationKey[]>(mKeyNum);
+		mpKey.resize(mKeyNum);
 		for (int i = 0; i < mKeyNum; i++) {
 			//時間設定
 			mpKey[i].mTime = time[2][i]; // Time
@@ -1214,15 +1220,15 @@ CAnimation::CAnimation(CModelX* model)
 	}
 
 #ifdef _DEBUG
-	//printf("Animation:%s\n", mpFrameName);
-	//mpKey[0].mMatrix.Print();
+//	printf("Animation:%s\n", mpFrameName.c_str());
+//	mpKey[0].mMatrix.Print();
 #endif
 }
 
 CAnimation::~CAnimation()
 {
-	SAFE_DELETE_ARRAY(mpFrameName);
-	SAFE_DELETE_ARRAY(mpKey);
+//	SAFE_DELETE_ARRAY(mpFrameName);
+//	SAFE_DELETE_ARRAY(mpKey);
 }
 
 std::vector<CAnimationSet*>& CModelX::AnimationSet()

@@ -1,7 +1,8 @@
 #ifndef CMODELX_H	//インクルードガード
 #define CMODELX_H
 #include <string>
-#include <algorithm>
+#include <algorithm>	//toupper
+#include <memory>		//smart pointer
 #include <vector>		//vectorクラスのインクルード（動的配列）
 #include "CMatrix.h"	//マトリクスクラスのインクルード
 #include "CVector.h"
@@ -46,16 +47,17 @@ public:
 	CAnimation(CModelX* model);
 	CAnimation()
 		: mKeyNum(0)
-		, mpKey(nullptr)
-		, mpFrameName(nullptr)
+		//, mpKey(nullptr)
+		//, mpFrameName(nullptr)
 		, mFrameIndex(0)
 	{}
 
 	~CAnimation();
 private:
 	int mKeyNum;	//キー数（時間数）
-	CAnimationKey* mpKey;	//キーの配列
-	char* mpFrameName;//フレーム名
+	//CAnimationKey* mpKey;	//キーの配列
+	std::vector<CAnimationKey> mpKey;	//キーの配列
+	std::string mpFrameName;//フレーム名
 	int mFrameIndex;	//フレーム番号
 };
 
