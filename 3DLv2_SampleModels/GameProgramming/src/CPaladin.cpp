@@ -21,8 +21,8 @@ CPaladin::CPaladin()
 	, mColBody(
 		this,
 		nullptr,
-		CVector(0.0f, -75.0f, 0.0f),
-		CVector(0.0f, 60.0f, 0.0f),
+		CVector(0.0f, 10.0f, 0.0f),
+		CVector(0.0f, 135.0f, 0.0f),
 		0.2f)
 	, mColSword(
 		this,
@@ -37,7 +37,7 @@ CPaladin::CPaladin()
 		sModel.Load(PALADIN_MODEL_PATH);
 	}
 	Init(&sModel);
-	mColBody.Matrix(&mpCombinedMatrix[3]);
+	mColBody.Matrix(&mpCombinedMatrix[2]);
 	mColSword.Matrix(&mpCombinedMatrix[50]);
 	// èâä˙èÛë‘ê›íË
 	mpState = mpIdle = new CPaladinIdle(this);

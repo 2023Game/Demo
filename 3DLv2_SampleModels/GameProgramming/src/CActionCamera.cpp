@@ -115,7 +115,7 @@ void CActionCamera::Update2()
 	{
 		glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	}
-#else if
+#else
 	glfwSetInputMode(mInput.Window(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 #endif
 }
