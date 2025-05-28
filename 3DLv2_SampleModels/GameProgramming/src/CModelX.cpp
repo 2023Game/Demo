@@ -38,10 +38,10 @@ void CModelX::AnimateFrame() {
 		if (animSet->mWeight == 0) continue;
 		//フレーム分（Animation分）繰り返す
 		for (size_t j = 0;
-			j < animSet->Animation().size(); j++)
+			j < animSet->Animations().size(); j++)
 		{
-			CAnimation* animation =
-				animSet->Animation()[j];
+			std::shared_ptr<CAnimation> animation =
+				animSet->Animations()[j];
 			//該当するフレームの変換行列をゼロクリアする
 			memset(
 				&mFrame[animation->mFrameIndex]
@@ -415,32 +415,33 @@ void CModelX::SeparateAnimationSet(int idx, int start, int end, char* name)
 {
 	CAnimationSet* anim = mAnimationSet[idx];//分割するアニメーションセットを確定
 	CAnimationSet* as = new CAnimationSet();//アニメーションセットの生成
-	as->mpName = new char[strlen(name) + 1];
-	strcpy(as->mpName, name);
+	as->mName = name;
+//	as->mpName = new char[strlen(name) + 1];
+//	strcpy(as->mpName, name);
 	as->mMaxTime = end - start;
-	for (size_t i = 0; i < anim->mAnimation.size(); i++) {//既存のアニメーション分繰り返し
-		CAnimation* animation = new CAnimation();//アニメーションの生成
+	for (size_t i = 0; i < anim->mAnimations.size(); i++) {//既存のアニメーション分繰り返し
+		std::shared_ptr<CAnimation> animation = std::make_shared<CAnimation>();//アニメーションの生成
 //		animation->mpFrameName = new char[strlen(anim->mAnimation[i]->mpFrameName) + 1];
 //		strcpy(animation->mpFrameName, anim->mAnimation[i]->mpFrameName);
-		animation->mpFrameName = anim->mAnimation[i]->mpFrameName;
-		animation->mFrameIndex = anim->mAnimation[i]->mFrameIndex;
+		animation->mFrameName = anim->mAnimations[i]->mFrameName;
+		animation->mFrameIndex = anim->mAnimations[i]->mFrameIndex;
 		animation->mKeyNum = end - start + 1;
 //		animation->mpKey = new CAnimationKey[animation->mKeyNum];//アニメーションキーの生成
 		animation->mKeys.resize(animation->mKeyNum);//アニメーションキーの生成
 		animation->mKeyNum = 0;
-		for (int j = start; j <= end && j < anim->mAnimation[i]->mKeyNum; j++) {
-			if (j < anim->mAnimation[i]->mKeyNum)
+		for (int j = start; j <= end && j < anim->mAnimations[i]->mKeyNum; j++) {
+			if (j < anim->mAnimations[i]->mKeyNum)
 			{
-				animation->mKeys[animation->mKeyNum] = anim->mAnimation[i]->mKeys[j];
+				animation->mKeys[animation->mKeyNum] = anim->mAnimations[i]->mKeys[j];
 			}
 			else
 			{
 				animation->mKeys[animation->mKeyNum] =
-					anim->mAnimation[i]->mKeys[anim->mAnimation[i]->mKeyNum - 1];
+					anim->mAnimations[i]->mKeys[anim->mAnimations[i]->mKeyNum - 1];
 			}
 			animation->mKeys[animation->mKeyNum].mTime = animation->mKeyNum++;
 		}//アニメーションキーのコピー
-		as->mAnimation.push_back(animation);//アニメーションの追加
+		as->mAnimations.push_back(animation);//アニメーションの追加
 	}
 	mAnimationSet.push_back(as);//アニメーションセットの追加
 
@@ -1009,9 +1010,9 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 	//重みが0は飛ばす
 	if (mWeight == 0) return;
 	//フレーム分（Animation分）繰り返す
-	for (size_t j = 0; j < mAnimation.size(); j++) {
+	for (size_t j = 0; j < mAnimations.size(); j++) {
 		//フレームを取得する
-		CAnimation* animation = mAnimation[j];
+		std::shared_ptr<CAnimation> animation = mAnimations[j];
 		//キーがない場合は次のアニメーションへ
 //		if (animation->mpKey == nullptr) continue;
 		if (animation->mKeys.size() == 0) continue;
@@ -1048,9 +1049,9 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 
 }
 
-std::vector<CAnimation*>& CAnimationSet::Animation()
+std::vector<std::shared_ptr<CAnimation>>& CAnimationSet::Animations()
 {
-	return mAnimation;
+	return mAnimations;
 }
 
 
@@ -1068,36 +1069,36 @@ void CAnimationSet::Weight(float weight)
 CAnimationSet
 */
 CAnimationSet::CAnimationSet(CModelX* model)
-	: mpName(nullptr)
-	, mTime(0)
+	: mTime(0)
 	, mWeight(0)
 	, mMaxTime(0)
 {
 	model->mAnimationSet.push_back(this);
 	model->GetToken();	// Animation Name
 	//アニメーションセット名を退避
-	mpName = new char[strlen(model->Token()) + 1];
-	strcpy(mpName, model->Token());
+	mName = model->Token();
+//	mpName = new char[strlen(model->Token()) + 1];
+//	strcpy(mpName, model->Token());
 	model->GetToken(); // {
 	while (!model->EOT()) {
 		model->GetToken(); // } or Animation
 		if (strchr(model->Token(), '}'))break;
 		if (strcmp(model->Token(), "Animation") == 0) {
 			//Animation要素読み込み
-			mAnimation.push_back(new CAnimation(model));
+			mAnimations.push_back(std::make_shared<CAnimation>(model));
 		}
 	}
 	//終了時間設定
-	mMaxTime = mAnimation[0]->mKeys[mAnimation[0]->mKeyNum - 1].mTime;
+	mMaxTime = mAnimations[0]->mKeys[mAnimations[0]->mKeyNum - 1].mTime;
 }
 
 CAnimationSet::~CAnimationSet()
 {
-	SAFE_DELETE_ARRAY(mpName);
+	//SAFE_DELETE_ARRAY(mpName);
 	//アニメーション要素の削除
-	for (size_t i = 0; i < mAnimation.size(); i++) {
+	/*for (size_t i = 0; i < mAnimations.size(); i++) {
 		delete mAnimation[i];
-	}
+	}*/
 
 }
 
@@ -1119,7 +1120,7 @@ CAnimation::CAnimation(CModelX* model)
 	model->GetToken(); //FrameName
 //	mpFrameName = new char[strlen(model->Token()) + 1];
 //	strcpy(mpFrameName, model->Token());
-	mpFrameName = model->Token();
+	mFrameName = model->Token();
 	mFrameIndex =
 		model->FindFrame(model->Token())->Index();
 	model->GetToken(); // }

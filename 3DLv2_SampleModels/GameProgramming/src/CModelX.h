@@ -55,7 +55,7 @@ private:
 	int mKeyNum;	//キー数（時間数）
 	//CAnimationKey* mpKey;	//キーの配列
 	std::vector<CAnimationKey> mKeys;	//キーの配列
-	std::string mpFrameName;//フレーム名
+	std::string mFrameName;//フレーム名
 	int mFrameIndex;	//フレーム番号
 };
 
@@ -69,7 +69,7 @@ public:
 	float Time();
 	float MaxTime();
 	void AnimateMatrix(CModelX* model);
-	std::vector<CAnimation*>& Animation();
+	std::vector<std::shared_ptr<CAnimation>>& Animations();
 
 	void Time(float time);  //時間の設定
 	void Weight(float weight);  //重みの設定
@@ -80,7 +80,6 @@ public:
 		: mTime(0.0f)
 		, mWeight(0.0f)
 		, mMaxTime(0.0f)
-		, mpName(nullptr)
 	{}
 
 private:
@@ -89,10 +88,10 @@ private:
 	float mMaxTime;	//最大時間
 
 	//アニメーション
-	std::vector<CAnimation*> mAnimation;
+	std::vector<std::shared_ptr<CAnimation>> mAnimations;
 
 	//アニメーションセット名
-	char* mpName;
+	std::string mName;
 };
 
 /*
