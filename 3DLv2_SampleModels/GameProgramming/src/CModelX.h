@@ -8,6 +8,8 @@
 #include "CVector.h"
 #include "CMyShader.h" //シェーダーのインクルード
 
+using namespace std;
+
 class CModelX;			// CModelXクラスの宣言
 class CModelXFrame;		// CModelXFrameクラスの宣言
 class CMesh;			// CMeshクラスの宣言
@@ -54,8 +56,8 @@ public:
 private:
 	int mKeyNum;	//キー数（時間数）
 	//CAnimationKey* mpKey;	//キーの配列
-	std::vector<CAnimationKey> mKeys;	//キーの配列
-	std::string mFrameName;//フレーム名
+	vector<CAnimationKey> mKeys;	//キーの配列
+	string mFrameName;//フレーム名
 	int mFrameIndex;	//フレーム番号
 };
 
@@ -69,7 +71,7 @@ public:
 	float Time();
 	float MaxTime();
 	void AnimateMatrix(CModelX* model);
-	std::vector<std::shared_ptr<CAnimation>>& Animations();
+	vector<shared_ptr<CAnimation>>& Animations();
 
 	void Time(float time);  //時間の設定
 	void Weight(float weight);  //重みの設定
@@ -88,10 +90,10 @@ private:
 	float mMaxTime;	//最大時間
 
 	//アニメーション
-	std::vector<std::shared_ptr<CAnimation>> mAnimations;
+	vector<shared_ptr<CAnimation>> mAnimations;
 
 	//アニメーションセット名
-	std::string mName;
+	string mName;
 };
 
 /*
@@ -108,7 +110,7 @@ public:
 	const int& FrameIndex();
 	const CMatrix& Offset();
 private:
-	char* mpFrameName;	//フレーム名
+	string mFrameName;	//フレーム名
 	int mFrameIndex;	//フレーム番号
 	int mIndexNum;	//頂点番号数
 	int* mpIndex;	//頂点番号配列
@@ -240,7 +242,7 @@ public:
 	void AnimateFrame();
 	std::vector<CAnimationSet*>& AnimationSet();
 	//フレーム名に該当するフレームのアドレスを返す
-	CModelXFrame* FindFrame(char* name);
+	CModelXFrame* FindFrame(const string& name);
 
 	bool EOT(); // トークンが無くなったらtrue
 	void Render();

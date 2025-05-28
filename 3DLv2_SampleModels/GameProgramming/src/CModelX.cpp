@@ -10,13 +10,13 @@
  FindFrame(フレーム名)
  フレーム名に該当するフレームのアドレスを返す
 */
-CModelXFrame* CModelX::FindFrame(char* name) {
+CModelXFrame* CModelX::FindFrame(const string& name) {
 	//イテレータの作成
 	std::vector<CModelXFrame*>::iterator itr;
 	//先頭から最後まで繰り返す
 	for (itr = mFrame.begin(); itr != mFrame.end(); itr++) {
 		//名前が一致したか？
-		if (strcmp(name, (*itr)->mpName) == 0) {
+		if (strcmp(name.c_str(), (*itr)->mpName) == 0) {
 			//一致したらそのアドレスを返す
 			return *itr;
 		}
@@ -254,7 +254,7 @@ void CModelX::Load(const char* file) {
 			}
 			else {
 				//フレームが無ければ
-				if (FindFrame(mToken) == 0) {
+				if (FindFrame(string(mToken)) == 0) {
 					//フレームを作成する
 					p->mChild.push_back(
 						new CModelXFrame(this));
@@ -561,7 +561,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 			}
 			else {
 				//フレームが無ければ
-				if (model->FindFrame(model->mToken) == 0) {
+				if (model->FindFrame(string(model->mToken)) == 0) {
 					//フレームを作成し、子フレームの配列に追加
 					mChild.push_back(new CModelXFrame(model));
 				}
@@ -743,7 +743,7 @@ void CMesh::SetSkinWeightFrameIndex(CModelX* model)
 	//スキンウェイト分繰り返し
 	for (size_t i = 0; i < mSkinWeights.size(); i++) {
 		//フレーム名のフレームを取得する
-		CModelXFrame* frame = model->FindFrame(mSkinWeights[i]->mpFrameName);
+		CModelXFrame* frame = model->FindFrame(mSkinWeights[i]->mFrameName);
 		//フレーム番号を設定する
 		mSkinWeights[i]->mFrameIndex = frame->Index();
 	}
@@ -947,8 +947,7 @@ CSkinWeights
 スキンウェイトの読み込み
 */
 CSkinWeights::CSkinWeights(CModelX* model)
-	: mpFrameName(nullptr)
-	, mFrameIndex(0)
+	: mFrameIndex(0)
 	, mIndexNum(0)
 	, mpIndex(nullptr)
 	, mpWeight(nullptr)
@@ -956,8 +955,9 @@ CSkinWeights::CSkinWeights(CModelX* model)
 	model->GetToken();	// {
 	model->GetToken();	// FrameName
 	//フレーム名エリア確保、設定
-	mpFrameName = new char[strlen(model->Token()) + 1];
-	strcpy(mpFrameName, model->Token());
+	mFrameName = model->Token();
+	//mpFrameName = new char[strlen(model->Token()) + 1];
+	//strcpy(mpFrameName, model->Token());
 
 	//頂点番号数取得
 	mIndexNum = atoi(model->GetToken());
@@ -990,7 +990,6 @@ CSkinWeights::CSkinWeights(CModelX* model)
 
 CSkinWeights::~CSkinWeights()
 {
-	SAFE_DELETE_ARRAY(mpFrameName);
 	SAFE_DELETE_ARRAY(mpIndex);
 	SAFE_DELETE_ARRAY(mpWeight);
 }
@@ -1122,7 +1121,7 @@ CAnimation::CAnimation(CModelX* model)
 //	strcpy(mpFrameName, model->Token());
 	mFrameName = model->Token();
 	mFrameIndex =
-		model->FindFrame(model->Token())->Index();
+		model->FindFrame(string(model->Token()))->Index();
 	model->GetToken(); // }
 
 	//キーの配列を保存しておく配列
