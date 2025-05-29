@@ -3,6 +3,8 @@
 
 #include "CShader.h"
 #include <vector>
+#include <memory>
+using namespace std;
 
 class CModelX;
 class CMaterial;
@@ -16,6 +18,7 @@ class CMyShader : public CShader {
 	//•`‰æˆ—
 	void Render(CModelX* model, CMesh* mesh, CMatrix* pCombinedMatrix);
 	void Render(const GLuint vertexBufferId, const std::vector<CMaterial*>* materials, const float skinMatrix[], int matrixSize);
+	void Render(const GLuint vertexBufferId, const std::vector<shared_ptr<CMaterial>>* materials, const float skinMatrix[], int matrixSize);
 public:
 	//•`‰æˆ—
 	void Render(const CModel& model, const CMatrix& matrix);

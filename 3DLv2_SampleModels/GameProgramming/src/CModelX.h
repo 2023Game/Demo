@@ -155,11 +155,11 @@ protected:
 	CVector* mpAnimateVertex;  //アニメーション用頂点
 	CVector* mpAnimateNormal;  //アニメーション用法線
 	//スキンウェイト
-	std::vector<CSkinWeights*> mSkinWeights;
+	std::vector<shared_ptr<CSkinWeights>> mSkinWeights;
 	int mMaterialNum;	//マテリアル数
 	int mMaterialIndexNum;//マテリアル番号数（面数）
 	int* mpMaterialIndex;	  //マテリアル番号
-	std::vector<CMaterial*> mMaterial;//マテリアルデータ
+	std::vector<shared_ptr<CMaterial>> mMaterials;//マテリアルデータ
 
 	int mNormalNum;	//法線数
 	CVector* mpNormal;//法線ベクトル
@@ -229,9 +229,9 @@ public:
 
 	void AnimateVertex(CMatrix*);
 	//マテリアル配列の取得
-	std::vector<CMaterial*>& Material();
+	std::vector<shared_ptr<CMaterial>>& Materials();
 	//マテリアルの検索
-	CMaterial* FindMaterial(char* name);
+	shared_ptr<CMaterial> FindMaterial(char* name);
 
 	//頂点にアニメーションを適用
 	void AnimateVertex();
@@ -277,7 +277,7 @@ private:
 	CMyShader mShader; //シェーダーのインスタンス
 
 	bool mLoaded;
-	std::vector<CMaterial*> mMaterial;  //マテリアル配列
+	std::vector<shared_ptr<CMaterial>> mMaterials;  //マテリアル配列
 	//アニメーションセットの配列
 	std::vector<CAnimationSet*> mAnimationSet;
 	std::vector<CModelXFrame*> mFrame;  //フレームの配列

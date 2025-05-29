@@ -97,9 +97,9 @@ CModelX::~CModelX()
 		delete mAnimationSet[i];
 	}
 	//マテリアルの解放
-	for (size_t i = 0; i < mMaterial.size(); i++) {
-		delete mMaterial[i];
-	}
+	/*for (size_t i = 0; i < mMaterials.size(); i++) {
+		delete mMaterials[i];
+	}*/
 	SAFE_DELETE_ARRAY(mpSkinningMatrix);
 }
 
@@ -302,9 +302,9 @@ void CModelX::AnimateVertex() {
 
 
 #include <ctype.h>	//isspace関数の宣言
-std::vector<CMaterial*>& CModelX::Material()
+std::vector<shared_ptr<CMaterial>>& CModelX::Materials()
 {
-	return mMaterial;
+	return mMaterials;
 }
 /*
 * IsDelimiter(c)
@@ -460,19 +460,27 @@ void CModelX::AnimateVertex(CMatrix* mat)
 	}
 }
 
-CMaterial* CModelX::FindMaterial(char* name)
+shared_ptr<CMaterial> CModelX::FindMaterial(char* name)
 {
-	//マテリアル配列のイテレータ作成
-	std::vector<CMaterial*>::iterator itr;
-	//マテリアル配列を先頭から順に検索
-	for (itr = mMaterial.begin(); itr != mMaterial.end(); itr++) {
-		//名前が一致すればマテリアルのポインタを返却
-		if (strcmp(name, (*itr)->Name()) == 0) {
-			return *itr;
+	for (auto itr : mMaterials)
+	{
+		if (strcmp(name, (itr)->Name()) == 0) {
+			return itr;
 		}
 	}
-	//無い時はnullptrを返却
 	return nullptr;
+
+	////マテリアル配列のイテレータ作成
+	//std::vector<shared_ptr<CMaterial>>::iterator itr;
+	////マテリアル配列を先頭から順に検索
+	//for (itr = mMaterials.begin(); itr != mMaterials.end(); itr++) {
+	//	//名前が一致すればマテリアルのポインタを返却
+	//	if (strcmp(name, (*itr)->Name()) == 0) {
+	//		return *itr;
+	//	}
+	//}
+	////無い時はnullptrを返却
+	//return nullptr;
 }
 
 CModelXFrame::CModelXFrame()
@@ -647,7 +655,7 @@ void CMesh::CreateVertexBuffer()
 		}
 		int k = 0;
 		//マテリアル番号の昇順に面の頂点を設定
-		for (size_t i = 0; i < mMaterial.size(); i++) {
+		for (size_t i = 0; i < mMaterials.size(); i++) {
 			int w = k;
 			for (int j = 0; j < mMaterialIndexNum; j++) {
 				if (mpMaterialIndex[j] == i) {
@@ -662,7 +670,7 @@ void CMesh::CreateVertexBuffer()
 			}
 			//マテリアル毎の頂点数を追加する
 			mMaterialVertexCount.push_back(k - w);
-			mMaterial[i]->mVertexNum = k - w;
+			mMaterials[i]->mVertexNum = k - w;
 		}
 		//頂点バッファの作成
 		glGenBuffers(1, &mMyVertexBufferId);
@@ -767,10 +775,10 @@ void CMesh::Render()
 	/* 頂点のインデックスの場所を指定して図形を描画する */
 	for (int i = 0; i < mFaceNum; i++) {
 		//マテリアルを適用する
-		mMaterial[mpMaterialIndex[i]]->Enabled();
+		mMaterials[mpMaterialIndex[i]]->Enabled();
 		glDrawElements(GL_TRIANGLES, 3,
 			GL_UNSIGNED_INT, (mpVertexIndex + i * 3));
-		mMaterial[mpMaterialIndex[i]]->Disabled();
+		mMaterials[mpMaterialIndex[i]]->Disabled();
 	}
 
 	/* 頂点データ，法線データの配列を無効にする */
@@ -801,10 +809,10 @@ CMesh::~CMesh() {
 	SAFE_DELETE_ARRAY(mpNormal);
 	SAFE_DELETE_ARRAY(mpMaterialIndex);
 	//スキンウェイトの削除
-	for (size_t i = 0; i < mSkinWeights.size(); i++)
+	/*for (size_t i = 0; i < mSkinWeights.size(); i++)
 	{
 		delete mSkinWeights[i];
-	}
+	}*/
 	SAFE_DELETE_ARRAY(mpAnimateVertex);
 	SAFE_DELETE_ARRAY(mpAnimateNormal);
 	SAFE_DELETE_ARRAY(mpTextureCoords);
@@ -896,12 +904,12 @@ void CMesh::Init(CModelX* model) {
 			for (int i = 0; i < mMaterialNum; i++) {
 				model->GetToken();	// Material
 				if (strcmp(model->Token(), "Material") == 0) {
-					mMaterial.push_back(new CMaterial(model));
+					mMaterials.push_back(make_shared<CMaterial>(model));
 				}
 				else {
 					// {  既出
 					model->GetToken();	//MaterialName
-					mMaterial.push_back(
+					mMaterials.push_back(
 						model->FindMaterial(model->Token()));
 					model->GetToken();	// }
 				}
@@ -912,7 +920,7 @@ void CMesh::Init(CModelX* model) {
 		//SkinWeightsのとき
 		else if (strcmp(model->Token(), "SkinWeights") == 0) {
 			//CSkinWeightsクラスのインスタンスを作成し、配列に追加
-			mSkinWeights.push_back(new CSkinWeights(model));
+			mSkinWeights.push_back(make_shared<CSkinWeights>(model));
 		}
 		//テクスチャ座標の時
 		else if (strcmp(model->Token(), "MeshTextureCoords") == 0) {

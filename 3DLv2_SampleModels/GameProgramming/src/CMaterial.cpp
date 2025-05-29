@@ -1,6 +1,7 @@
 #include "CMaterial.h"
 //memset,strncpyのインクルード
 #include <string.h>
+#include <memory>
 #include "glut.h"
 /*
 * strncpy(char* str1, const char* str2, int len)
@@ -48,7 +49,7 @@ CMaterial::CMaterial(CModelX* model)
 	: mVertexNum(0)
 {
 	//CModelXにマテリアルを追加する
-	model->Material().push_back(this);
+	model->Materials().push_back(shared_from_this());
 
 	model->GetToken(); // { ? Name
 	if (strcmp(model->Token(), "{") != 0) {

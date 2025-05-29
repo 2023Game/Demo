@@ -3,6 +3,7 @@
 #include "CTexture.h"
 #include "CModelX.h"
 #include <string>
+#include <memory>
 
 #define MATERIAL_NAME_LEN 64 //名前の長さ
 
@@ -10,7 +11,7 @@
 マテリアルクラス
 マテリアルのデータを扱う
 */
-class CMaterial {
+class CMaterial : public std::enable_shared_from_this <CMaterial> {
 	friend CMyShader;
 public:
 	void Specular(float r, float g, float b);
