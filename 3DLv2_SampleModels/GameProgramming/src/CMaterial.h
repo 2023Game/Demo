@@ -11,7 +11,7 @@
 マテリアルクラス
 マテリアルのデータを扱う
 */
-class CMaterial : public std::enable_shared_from_this <CMaterial> {
+class CMaterial {
 	friend CMyShader;
 public:
 	void Specular(float r, float g, float b);

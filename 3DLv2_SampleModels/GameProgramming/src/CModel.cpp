@@ -262,7 +262,7 @@ void CModel::Load(char* obj, char* mtl) {
 void CModel::Render()
 {
 	//可変長配列の要素数だけ繰り返し
-	for (int i = 0; i < mTriangles.size(); i++) {
+	for (size_t i = 0; i < mTriangles.size(); i++) {
 		//マテリアルの適用
 		mpMaterials[mTriangles[i].MaterialIdx()]->Enabled();
 		//可変長配列に添え字でアクセスする
@@ -274,7 +274,7 @@ void CModel::Render()
 
 CModel::~CModel()
 {
-	for (int i = 0; i < mpMaterials.size(); i++)
+	for (size_t i = 0; i < mpMaterials.size(); i++)
 	{
 		delete mpMaterials[i];
 	}
@@ -296,9 +296,9 @@ void CModel::CreateVertexBuffer()
 		return;
 	mpVertexes = new CVertex[mTriangles.size() * 3];
 	int idx = 0;
-	for (int i = 0; i < mpMaterials.size(); i++)
+	for (size_t i = 0; i < mpMaterials.size(); i++)
 	{
-		for (int j = 0; j < mTriangles.size(); j++)
+		for (size_t j = 0; j < mTriangles.size(); j++)
 		{
 			if (i == mTriangles[j].MaterialIdx())
 			{

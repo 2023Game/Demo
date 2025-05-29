@@ -49,7 +49,7 @@ CMaterial::CMaterial(CModelX* model)
 	: mVertexNum(0)
 {
 	//CModelX‚Éƒ}ƒeƒŠƒAƒ‹‚ð’Ç‰Á‚·‚é
-	model->Materials().push_back(shared_from_this());
+	//model->Materials().push_back(this);
 
 	model->GetToken(); // { ? Name
 	if (strcmp(model->Token(), "{") != 0) {

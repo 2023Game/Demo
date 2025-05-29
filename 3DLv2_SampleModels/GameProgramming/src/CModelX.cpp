@@ -10,17 +10,26 @@
  FindFrame(フレーム名)
  フレーム名に該当するフレームのアドレスを返す
 */
-CModelXFrame* CModelX::FindFrame(const string& name) {
+shared_ptr<CModelXFrame> CModelX::FindFrame(const string& name) {
 	//イテレータの作成
-	std::vector<CModelXFrame*>::iterator itr;
+//	std::vector<CModelXFrame*>::iterator itr;
 	//先頭から最後まで繰り返す
-	for (itr = mFrame.begin(); itr != mFrame.end(); itr++) {
+	for (auto frame : mFrames) {
 		//名前が一致したか？
-		if (strcmp(name.c_str(), (*itr)->mpName) == 0) {
+		//if (strcmp(name.c_str(), (*itr)->mpName) == 0) {
+		if (name == frame->mName) {
 			//一致したらそのアドレスを返す
-			return *itr;
+			return frame;
 		}
 	}
+	//for (itr = mFrame.begin(); itr != mFrame.end(); itr++) {
+	//	//名前が一致したか？
+	//	//if (strcmp(name.c_str(), (*itr)->mpName) == 0) {
+	//	if (name == (*itr)->mName) {
+	//		//一致したらそのアドレスを返す
+	//		return *itr;
+	//	}
+	//}
 	//一致するフレームが無い場合はnullptrを返す
 	return nullptr;
 }
@@ -44,7 +53,7 @@ void CModelX::AnimateFrame() {
 				animSet->Animations()[j];
 			//該当するフレームの変換行列をゼロクリアする
 			memset(
-				&mFrame[animation->mFrameIndex]
+				&mFrames[animation->mFrameIndex]
 				->mTransformMatrix,
 				0, sizeof(CMatrix));
 		}
@@ -76,9 +85,12 @@ Render
 全てのフレームの描画処理を呼び出す
 */
 void CModelX::Render() {
-	for (size_t i = 0; i < mFrame.size(); i++) {
-		mFrame[i]->Render();
+	for (auto frame : mFrames) {
+		frame->Render();
 	}
+	//for (size_t i = 0; i < mFrame.size(); i++) {
+	//	mFrame[i]->Render();
+	//}
 }
 
 char* CModelX::Token()
@@ -88,10 +100,10 @@ char* CModelX::Token()
 
 CModelX::~CModelX()
 {
-	if (mFrame.size() > 0)
+	/*if (mFrame.size() > 0)
 	{
 		delete mFrame[0];
-	}
+	}*/
 	for (size_t i = 0; i < mAnimationSet.size(); i++)
 	{
 		delete mAnimationSet[i];
@@ -125,9 +137,9 @@ void CModelX::SkipNode() {
 	}
 }
 
-std::vector<CModelXFrame*>& CModelX::Frames()
+std::vector<shared_ptr<CModelXFrame>>& CModelX::Frames()
 {
-	return mFrame;
+	return mFrames;
 }
 
 /*
@@ -173,12 +185,18 @@ char* CModelX::GetToken() {
 void CModelX::SetSkinWeightFrameIndex()
 {
 	//フレーム数分繰り返し
-	for (size_t i = 0; i < mFrame.size(); i++) {
+	for (auto frame : mFrames) {
 		//メッシュがあれば
-		if (mFrame[i]->mpMesh != nullptr) {
-			mFrame[i]->mpMesh->SetSkinWeightFrameIndex(this);
+		if (frame->mpMesh != nullptr) {
+			frame->mpMesh->SetSkinWeightFrameIndex(this);
 		}
-	}
+	}	
+	//for (size_t i = 0; i < mFrame.size(); i++) {
+	//	//メッシュがあれば
+	//	if (mFrame[i]->mpMesh != nullptr) {
+	//		mFrame[i]->mpMesh->SetSkinWeightFrameIndex(this);
+	//	}
+	//}
 }
 
 
@@ -225,12 +243,13 @@ void CModelX::Load(const char* file) {
 	fclose(fp);	//ファイルをクローズする
 
 	//ダミールートフレームの作成
-	CModelXFrame* p = new CModelXFrame();
+//	CModelXFrame* p = new CModelXFrame();
+	shared_ptr<CModelXFrame> p = make_shared<CModelXFrame>();
 	//名前なし
-	p->mpName = new char[1];
-	p->mpName[0] = '\0';
+	/*p->mName = new char[1];
+	p->pName[0] = '\0';*/
 	//フレーム配列に追加
-	mFrame.push_back(p);
+	mFrames.push_back(p);
 
 	//文字列の最後まで繰り返し
 	while (*mpPointer != '\0') {
@@ -256,8 +275,9 @@ void CModelX::Load(const char* file) {
 				//フレームが無ければ
 				if (FindFrame(string(mToken)) == 0) {
 					//フレームを作成する
-					p->mChild.push_back(
-						new CModelXFrame(this));
+					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(this);
+					mFrames.push_back(mf);
+					p->mChildren.push_back(mf);
 				}
 			}
 		}
@@ -273,13 +293,18 @@ void CModelX::Load(const char* file) {
 	mLoaded = true; //読み込み済
 
 	//頂点バッファの作成
-	for (size_t i = 0; i < mFrame.size(); i++) {
-		if (mFrame[i]->mpMesh != nullptr) {
-			mFrame[i]->mpMesh->CreateVertexBuffer();
+	for (auto frame : mFrames) {
+		if (frame->mpMesh != nullptr) {
+			frame->mpMesh->CreateVertexBuffer();
 		}
 	}
+	/*for (size_t i = 0; i < mFrames.size(); i++) {
+		if (mFrames[i]->mpMesh != nullptr) {
+			mFrames[i]->mpMesh->CreateVertexBuffer();
+		}
+	}*/
 	//スキンマトリックスのエリア作成
-	mpSkinningMatrix = new CMatrix[mFrame.size()];
+	mpSkinningMatrix = new CMatrix[mFrames.size()];
 	//シェーダー読み込み
 	mShader.Load("res\\shadow330.vert", "res\\shadow330.frag");
 
@@ -291,13 +316,20 @@ AnimateVertex
 */
 void CModelX::AnimateVertex() {
 	//フレーム数分繰り返し
-	for (size_t i = 0; i < mFrame.size(); i++) {
+	for (auto frame : mFrames) {
 		//メッシュに面があれば
-		if (mFrame[i]->mpMesh != nullptr) {
+		if (frame->mpMesh != nullptr) {
 			//頂点をアニメーションで更新する
-			mFrame[i]->mpMesh->AnimateVertex(this);
+			frame->mpMesh->AnimateVertex(this);
 		}
 	}
+	//for (size_t i = 0; i < mFrames.size(); i++) {
+	//	//メッシュに面があれば
+	//	if (mFrames[i]->mpMesh != nullptr) {
+	//		//頂点をアニメーションで更新する
+	//		mFrames[i]->mpMesh->AnimateVertex(this);
+	//	}
+	//}
 }
 
 
@@ -450,14 +482,22 @@ void CModelX::SeparateAnimationSet(int idx, int start, int end, char* name)
 void CModelX::AnimateVertex(CMatrix* mat)
 {
 	//フレーム数分繰り返し
-	for (size_t i = 0; i < mFrame.size(); i++) {
+	for (auto frame : mFrames) {
 		//メッシュがあれば
-		if (mFrame[i]->mpMesh) {
+		if (frame->mpMesh) {
 			//頂点をアニメーションで更新する
-			mFrame[i]->
+			frame->
 				mpMesh->AnimateVertex(mat);
 		}
-	}
+	}	
+	//for (size_t i = 0; i < mFrame.size(); i++) {
+	//	//メッシュがあれば
+	//	if (mFrame[i]->mpMesh) {
+	//		//頂点をアニメーションで更新する
+	//		mFrame[i]->
+	//			mpMesh->AnimateVertex(mat);
+	//	}
+	//}
 }
 
 shared_ptr<CMaterial> CModelX::FindMaterial(char* name)
@@ -485,7 +525,6 @@ shared_ptr<CMaterial> CModelX::FindMaterial(char* name)
 
 CModelXFrame::CModelXFrame()
 	: mpMesh(nullptr)
-	, mpName(nullptr)
 	, mIndex(0)
 {}
 
@@ -503,9 +542,12 @@ void CModelXFrame::AnimateCombined(CMatrix* parent) {
 	//自分の変換行列に、親からの変換行列を掛ける
 	mCombinedMatrix = mTransformMatrix * (*parent);
 	//子フレームの合成行列を作成する
-	for (size_t i = 0; i < mChild.size(); i++) {
-		mChild[i]->AnimateCombined(&mCombinedMatrix);
+	for (auto child : mChildren) {
+		child->AnimateCombined(&mCombinedMatrix);
 	}
+	/*for (size_t i = 0; i < mChildren.size(); i++) {
+		mChild[i]->AnimateCombined(&mCombinedMatrix);
+	}*/
 #ifdef _DEBUG
 	//printf("Frame::%s\n", mpName);
 	//mCombinedMatrix.Print();
@@ -534,22 +576,22 @@ void CModelXFrame::Render() {
  子フレームに追加する
 */
 CModelXFrame::CModelXFrame(CModelX* model)
-	: mpName(nullptr)
-	, mIndex(0)
+	: mIndex(0)
 	, mpMesh(nullptr)
 {
 	//現在のフレーム配列の要素数を取得し設定する
-	mIndex = model->mFrame.size();
+	mIndex = model->mFrames.size();
 	//CModelXのフレーム配列に追加する
-	model->mFrame.push_back(this);
+	//model->mFrames.push_back(this);
 	//変換行列を単位行列にする
 	mTransformMatrix.Identity();
 	//次の単語（フレーム名の予定）を取得する
 	//model->GetToken(); // frame name
 	//フレーム名分エリアを確保する
-	mpName = new char[strlen(model->mToken) + 1];
+	mName = model->mToken;
+//	mpName = new char[strlen(model->mToken) + 1];
 	//フレーム名をコピーする
-	strcpy(mpName, model->mToken);
+//	strcpy(mpName, model->mToken);
 	//次の単語（{の予定）を取得する
 	model->GetToken();  // {
 	//文字が無くなったら終わり
@@ -571,7 +613,9 @@ CModelXFrame::CModelXFrame(CModelX* model)
 				//フレームが無ければ
 				if (model->FindFrame(string(model->mToken)) == 0) {
 					//フレームを作成し、子フレームの配列に追加
-					mChild.push_back(new CModelXFrame(model));
+					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(model);
+					model->Frames().push_back(mf);
+					mChildren.push_back(mf);
 				}
 			}
 		}
@@ -601,12 +645,12 @@ CModelXFrame::CModelXFrame(CModelX* model)
 CModelXFrame::~CModelXFrame()
 {
 	//子フレームを全て解放する
-	std::vector<CModelXFrame*>::iterator itr;
+	/*std::vector<CModelXFrame*>::iterator itr;
 	for (itr = mChild.begin(); itr != mChild.end(); itr++) {
 		delete* itr;
-	}
+	}*/
 	//名前のエリアを解放する
-	SAFE_DELETE_ARRAY(mpName);
+	//SAFE_DELETE_ARRAY(mpName);
 
 	if (mpMesh != nullptr)
 	{
@@ -751,7 +795,7 @@ void CMesh::SetSkinWeightFrameIndex(CModelX* model)
 	//スキンウェイト分繰り返し
 	for (size_t i = 0; i < mSkinWeights.size(); i++) {
 		//フレーム名のフレームを取得する
-		CModelXFrame* frame = model->FindFrame(mSkinWeights[i]->mFrameName);
+		shared_ptr<CModelXFrame> frame = model->FindFrame(mSkinWeights[i]->mFrameName);
 		//フレーム番号を設定する
 		mSkinWeights[i]->mFrameIndex = frame->Index();
 	}
@@ -904,7 +948,9 @@ void CMesh::Init(CModelX* model) {
 			for (int i = 0; i < mMaterialNum; i++) {
 				model->GetToken();	// Material
 				if (strcmp(model->Token(), "Material") == 0) {
-					mMaterials.push_back(make_shared<CMaterial>(model));
+					shared_ptr<CMaterial> sp = make_shared<CMaterial>(model);
+					model->Materials().push_back(sp);
+					mMaterials.push_back(sp);
 				}
 				else {
 					// {  既出
@@ -1024,7 +1070,7 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 //		if (animation->mpKey == nullptr) continue;
 		if (animation->mKeys.size() == 0) continue;
 		//該当するフレームの取得
-		CModelXFrame* frame = model->mFrame[animation->mFrameIndex];
+		shared_ptr<CModelXFrame> frame = model->mFrames[animation->mFrameIndex];
 		//最初の時間より小さい場合
 		if (mTime < animation->mKeys[0].mTime) {
 			//変換行列を0コマ目の行列で更新

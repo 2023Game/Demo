@@ -191,9 +191,10 @@ private:
 	CMatrix mCombinedMatrix;	//合成行列
 
 	CMesh* mpMesh;	//Meshデータ
-	std::vector<CModelXFrame*> mChild;  //子フレームの配列
+	std::vector<shared_ptr<CModelXFrame>> mChildren;  //子フレームの配列
+//	std::vector<CModelXFrame*> mChild;  //子フレームの配列
 	CMatrix mTransformMatrix;  //変換行列
-	char* mpName;   //フレーム名前
+	string mName;   //フレーム名前
 	int mIndex;  //フレーム番号
 };
 
@@ -238,11 +239,11 @@ public:
 	//スキンウェイトのフレーム番号設定
 	void SetSkinWeightFrameIndex();
 
-	std::vector<CModelXFrame*>& Frames();
+	std::vector<shared_ptr<CModelXFrame>>& Frames();
 	void AnimateFrame();
 	std::vector<CAnimationSet*>& AnimationSet();
 	//フレーム名に該当するフレームのアドレスを返す
-	CModelXFrame* FindFrame(const string& name);
+	shared_ptr<CModelXFrame> FindFrame(const string& name);
 
 	bool EOT(); // トークンが無くなったらtrue
 	void Render();
@@ -280,7 +281,7 @@ private:
 	std::vector<shared_ptr<CMaterial>> mMaterials;  //マテリアル配列
 	//アニメーションセットの配列
 	std::vector<CAnimationSet*> mAnimationSet;
-	std::vector<CModelXFrame*> mFrame;  //フレームの配列
+	std::vector<shared_ptr<CModelXFrame>> mFrames;  //フレームの配列
 	//cが区切り文字ならtrueを返す
 	bool IsDelimiter(char c);
 

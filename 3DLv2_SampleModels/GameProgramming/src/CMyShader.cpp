@@ -8,10 +8,10 @@
 #include "CShadowMap.h"
 
 void CMyShader::Render(CModelX* model, CMatrix* pCombinedMatrix) {
-	for (size_t i = 0; i < model->mFrame.size(); i++) {
-		if (model->mFrame[i]->mpMesh != nullptr) {
+	for (size_t i = 0; i < model->mFrames.size(); i++) {
+		if (model->mFrames[i]->mpMesh != nullptr) {
 			//面のあるメッシュは描画する
-			Render(model, model->mFrame[i]->mpMesh, pCombinedMatrix);
+			Render(model, model->mFrames[i]->mpMesh, pCombinedMatrix);
 		}
 	}
 }
@@ -30,7 +30,7 @@ void CMyShader::Render(CModelX* model, CMesh* mesh, CMatrix* pCombinedMatrix)
 	Render(mesh->mMyVertexBufferId,
 		&(mesh->mMaterials),
 		model->mpSkinningMatrix[0].M(),
-		model->mFrame.size());
+		model->mFrames.size());
 		//mesh->mSkinWeights.size());
 
 	return;
@@ -247,6 +247,46 @@ void CMyShader::Render(const GLuint vertexBufferId, const std::vector<shared_ptr
 マテリアルの値をシェーダーに設定する
 */
 void CMyShader::SetShader(CMaterial* material) {
+	//	float mColorRGBA[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	int AmbientId = glGetUniformLocation(GetProgram(), "Ambient");  //カラー設定
+	glUniform4fv(AmbientId, 1, (GLfloat*)material->mDiffuse);
+
+	int DiffuseId = glGetUniformLocation(GetProgram(), "Diffuse");  //カラー設定
+	glUniform4fv(DiffuseId, 1, (GLfloat*)material->mDiffuse);
+
+	//int ColorRGAB_ID = glGetUniformLocation(getProgram(), "ColorRGBA");  //カラー設定　重ねてカラーの表示
+	//glUniform4fv(ColorRGAB_ID, 1, (GLfloat*)mColorRGBA);
+
+	int PowId = glGetUniformLocation(GetProgram(), "Pow");  //強さを設定
+	glUniform1f(PowId, material->mPower);
+
+	int SpecularId = glGetUniformLocation(GetProgram(), "Specular");  //カラー設定
+	glUniform3fv(SpecularId, 1, (GLfloat*)material->mSpecular);
+
+	int EmissiveId = glGetUniformLocation(GetProgram(), "Emissive");  //カラー設定
+	glUniform3fv(EmissiveId, 1, (GLfloat*)material->mEmissive);
+	GLint samplerId = glGetUniformLocation(GetProgram(), "Sampler");
+	GLint textureFlg = glGetUniformLocation(GetProgram(), "TextureFlg");
+	//if (material->mTextureId > 0) {
+	if (material->mTexture.Id() > 0) {
+		//テクスチャあり
+		//テクスチャを使用可能にする
+		glEnable(GL_TEXTURE_2D);
+		//テクスチャをバインドする
+		glBindTexture(GL_TEXTURE_2D, material->mTexture.Id());
+
+		glUniform1i(samplerId, 0);//GL_TEXTURE0を適用
+		glUniform1i(textureFlg, 0);//GL_TEXTURE0を適用
+	}
+	else
+	{
+		//テクスチャなし
+		glUniform1i(textureFlg, -1);//GL_TEXTURE1を適用
+	}
+}
+
+void CMyShader::SetShader(shared_ptr<CMaterial> material)
+{
 	//	float mColorRGBA[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	int AmbientId = glGetUniformLocation(GetProgram(), "Ambient");  //カラー設定
 	glUniform4fv(AmbientId, 1, (GLfloat*)material->mDiffuse);
