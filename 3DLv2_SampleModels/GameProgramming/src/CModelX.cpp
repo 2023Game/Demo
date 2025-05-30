@@ -249,7 +249,8 @@ void CModelX::Load(const char* file) {
 	/*p->mName = new char[1];
 	p->pName[0] = '\0';*/
 	//フレーム配列に追加
-	mFrames.push_back(p);
+	AddFrame(p);
+	//mFrames.push_back(p);
 
 	//文字列の最後まで繰り返し
 	while (*mpPointer != '\0') {
@@ -276,7 +277,8 @@ void CModelX::Load(const char* file) {
 				if (FindFrame(string(mToken)) == 0) {
 					//フレームを作成する
 					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(this);
-					mFrames.push_back(mf);
+					AddFrame(mf);
+					//mFrames.push_back(mf);
 					p->mChildren.push_back(mf);
 				}
 			}
@@ -364,7 +366,13 @@ bool CModelX::IsDelimiter(char c)
 	return false;
 }
 
-void CModelX::RenderShader(CMatrix* pCombinedMatrix) 
+void CModelX::AddFrame(shared_ptr<CModelXFrame>& frame)
+{
+	frame->mIndex = mFrames.size();
+	mFrames.push_back(frame);
+}
+
+void CModelX::RenderShader(CMatrix* pCombinedMatrix)
 {
 	mShader.Render(this, pCombinedMatrix);
 }
@@ -580,7 +588,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 	, mpMesh(nullptr)
 {
 	//現在のフレーム配列の要素数を取得し設定する
-	mIndex = model->mFrames.size();
+	//mIndex = model->mFrames.size();
 	//CModelXのフレーム配列に追加する
 	//model->mFrames.push_back(this);
 	//変換行列を単位行列にする
@@ -614,7 +622,8 @@ CModelXFrame::CModelXFrame(CModelX* model)
 				if (model->FindFrame(string(model->mToken)) == 0) {
 					//フレームを作成し、子フレームの配列に追加
 					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(model);
-					model->Frames().push_back(mf);
+					model->AddFrame(mf);
+//					model->Frames().push_back(mf);
 					mChildren.push_back(mf);
 				}
 			}

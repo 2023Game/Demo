@@ -211,6 +211,7 @@ class CModelX {
 	friend CAnimation;
 	friend CMyShader;
 public:
+	void AddFrame(shared_ptr<CModelXFrame>& frame);
 	//シェーダーを使った描画
 	void RenderShader(CMatrix* m);
 
