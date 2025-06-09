@@ -261,7 +261,10 @@ void CModelX::Load(const char* file) {
 		}
 		//Material ‚Ì
 		else if (strcmp(mToken, "Material") == 0) {
-			new CMaterial(this);
+			shared_ptr<CMaterial> sp = make_shared<CMaterial>(this);
+			//model->Materials().push_back(sp);
+			mMaterials.push_back(sp);
+			//new CMaterial(this);
 		}
 		//’PŒê‚ªFrame‚Ìê‡
 		else if (strcmp(mToken, "Frame") == 0) {
