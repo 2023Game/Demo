@@ -230,14 +230,17 @@ void CModelX::Load(const char* file) {
 	//ファイルサイズの取得
 	int size = ftell(fp);
 	//ファイルサイズ+1バイト分の領域を確保
-	char* buf = mpPointer = new char[size + 1];
+	shared_ptr<char[]> buf(new char[size + 1]);// make_shared<char[]>(new char[size + 1]);
+	mpPointer = buf.get();
+
+//	char* buf = mpPointer = new char[size + 1];
 	//
 	//ファイルから3Dモデルのデータを読み込む
 	//
 	//ファイルの先頭へ移動
 	fseek(fp, 0L, SEEK_SET);
 	//確保した領域にファイルサイズ分データを読み込む
-	fread(buf, size, 1, fp);
+	fread(buf.get(), size, 1, fp);
 	//最後に\0を設定する（文字列の終端）
 	buf[size] = '\0';
 	fclose(fp);	//ファイルをクローズする
@@ -292,7 +295,7 @@ void CModelX::Load(const char* file) {
 		}
 	}
 
-	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
+//	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
 	//スキンウェイトのフレーム番号設定
 	SetSkinWeightFrameIndex();
 	mLoaded = true; //読み込み済
@@ -397,14 +400,15 @@ size_t CModelX::AddAnimationSet(const char* file)
 	int size = ftell(fp);
 
 	//ファイルサイズ+1バイト分の領域を確保
-	char* buf = mpPointer = new char[size + 1];
+	shared_ptr<char[]> buf(new char[size + 1]);// make_shared<char[]>(new char[size + 1]);
+	mpPointer = buf.get();
 	//
-//ファイルから3Dモデルのデータを読み込む
-//
-//ファイルの先頭へ移動
+	//ファイルから3Dモデルのデータを読み込む
+	//
+	//ファイルの先頭へ移動
 	fseek(fp, 0L, SEEK_SET);
 	//確保した領域にファイルサイズ分データを読み込む
-	fread(buf, size, 1, fp);
+	fread(buf.get(), size, 1, fp);
 	//最後に\0を設定する（文字列の終端）
 	buf[size] = '\0';
 	fclose(fp);	//ファイルをクローズする
@@ -444,7 +448,7 @@ size_t CModelX::AddAnimationSet(const char* file)
 		//	}
 		//}
 	}
-	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
+//	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
 	return mAnimationSet.size();
 }
 

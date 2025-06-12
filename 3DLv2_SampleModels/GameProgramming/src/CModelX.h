@@ -262,18 +262,18 @@ public:
 	CModelX(const char* base);
 	//ファイル読み込み
 	void Load(const char* file);
-	std::string& BaseDir()
+	string& BaseDir()
 	{
 		return mBaseDir;
 	}
 
-	void BaseDir(std::string base)
+	void BaseDir(string base)
 	{
 		std::transform(base.begin(), base.end(), base.begin(), ::toupper);
 		mBaseDir = base;
 	}
 private:
-	std::string mBaseDir;
+	string mBaseDir;
 
 	//シェーダー用スキンマトリックス
 	CMatrix* mpSkinningMatrix;
