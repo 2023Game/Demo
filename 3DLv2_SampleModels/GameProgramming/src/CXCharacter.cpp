@@ -1,5 +1,18 @@
 #include "CXCharacter.h"
 
+CMatrix* CXCharacter::CombinedMatrix(const std::string& name)
+{
+
+	for (size_t i = 0; i < mpModel->Frames().size(); i++)
+	{
+		if (name == mpModel->Frames()[i]->Name())
+		{
+			return &mpCombinedMatrix[i];
+		}
+	}
+	return nullptr;
+}
+
 void CXCharacter::AnimationFrame(float per)
 {
 	mAnimationFrame = mAnimationFrameSize * per;

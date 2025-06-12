@@ -37,8 +37,10 @@ CPaladin::CPaladin()
 		sModel.Load(PALADIN_MODEL_PATH);
 	}
 	Init(&sModel);
-	mColBody.Matrix(&mpCombinedMatrix[2]);
-	mColSword.Matrix(&mpCombinedMatrix[50]);
+	mColBody.Matrix(CombinedMatrix("Armature"));//Armature
+	mColSword.Matrix(CombinedMatrix("Armature_mixamorig_RightHandIndex1"));//"Paladin_J_Nordstrom_Sword"
+//	mColBody.Matrix(&mpCombinedMatrix[2]);//Armature
+//	mColSword.Matrix(&mpCombinedMatrix[50]);//"Paladin_J_Nordstrom_Sword"
 	// ‰Šúó‘Ôİ’è
 	mpState = mpIdle = new CPaladinIdle(this);
 	mpState->Start();

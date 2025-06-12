@@ -7,7 +7,7 @@
 CModel CStageSample::msModel;
 bool CStageSample::msLoad = true;
 
-#define POSITION 0.5f, 0.0f,0.0f
+#define POSITION 0.5f, 1.0f,0.0f
 #define ROTATION 0.0f,0.0f,0.0f
 #define SCALE 1.0f,1.0f,1.0f
 #define CMAP_GROUND "res\\sky.obj","res\\sky.mtl"
@@ -57,12 +57,12 @@ CStageSample::CStageSample()
 
 	new CZombie(CVector(0.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
-	new CModelSample(DRAGON_BASE, DRAGON_PATH, DRAGON_ANIM, CVector(10.0f, 1.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CModelSample(GASMASK_BASE, GASMASK_PATH, GASMASK_ANIM, CVector(-10.0f, -2.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
-	new CModelSample(MONSTER_BASE, MONSTER_PATH, CVector(-10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
-	new CModelSample(VANGU_BASE, VANGU_PATH, CVector(0.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
-	new CModelSample(SLIME_BASE, SLIME_PATH, SLIME_ANIM, CVector(10.0f, -2.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
-	new CModelSample(YUKARI_BASE, YUKARI_PATH, YUKARI_ANIM, CVector(0.0f, -2.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
-	new CModelSample(BEARD_BASE, BEARD_PATH, CVector(-10.0f, -2.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CModelSample(DRAGON_BASE, DRAGON_PATH, DRAGON_ANIM, CVector(10.0f, 3.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CModelSample(GASMASK_BASE, GASMASK_PATH, GASMASK_ANIM, CVector(-10.0f, 0.0f, 5.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
+	new CModelSample(MONSTER_BASE, MONSTER_PATH, CVector(-10.0f, 0.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
+	new CModelSample(VANGU_BASE, VANGU_PATH, CVector(0.0f, 0.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
+	new CModelSample(SLIME_BASE, SLIME_PATH, SLIME_ANIM, CVector(10.0f, 0.0f, 0.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
+	new CModelSample(YUKARI_BASE, YUKARI_PATH, YUKARI_ANIM, CVector(0.0f, 0.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(0.1f, 0.1f, 0.1f));
+	new CModelSample(BEARD_BASE, BEARD_PATH, CVector(-10.0f, 0.0f, 10.0f), CVector(0.0f, 180.0f, 0.0f), CVector(1.0f, 1.0f, 1.0f));
 
 }

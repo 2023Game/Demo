@@ -177,6 +177,7 @@ class CModelXFrame {
 	friend CAnimationSet;
 	friend CMyShader;
 public:
+	const string& Name() { return mName; }
 	CModelXFrame();
 	const CMatrix& CombinedMatrix();
 	//‡¬s—ñ‚Ìì¬
