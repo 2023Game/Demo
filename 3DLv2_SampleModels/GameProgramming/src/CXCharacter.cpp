@@ -54,20 +54,20 @@ void CXCharacter::Init(CModelX* model) {
 	mpCombinedMatrix = new CMatrix[model->Frames().size()];
 	mAnimationFrameSize = 0;
 
-	if (model->AnimationSet().size() <= 0) return;
+	if (model->AnimationSets().size() <= 0) return;
 	//最初のアニメーションにする
 	mAnimationIndex = 0;
 	//繰り返し再生する
 	mAnimationLoopFlg = true;
 	//1アニメーション目の最大フレーム数
 	mAnimationFrameSize =
-		model->AnimationSet()[0]->MaxTime();
+		model->AnimationSets()[0]->MaxTime();
 	//アニメーションのフレームを最初にする
 	mAnimationFrame = 0.0f;
-	mpModel->AnimationSet()[mAnimationIndex]->
+	mpModel->AnimationSets()[mAnimationIndex]->
 		Time(mAnimationFrame);
 	//アニメーションの重みを1.0（100%)にする
-	mpModel->AnimationSet()[mAnimationIndex]->Weight(1.0f);
+	mpModel->AnimationSets()[mAnimationIndex]->Weight(1.0f);
 }
 
 /*
@@ -81,16 +81,16 @@ void CXCharacter::ChangeAnimation(int index, bool loop, float framesize) {
 	//同じ場合は切り替えない
 	if (mAnimationIndex == index) return;
 	//今のアニメーションの重みを0.0（0%)にする
-	mpModel->AnimationSet()[mAnimationIndex]->Weight(0.0f);
+	mpModel->AnimationSets()[mAnimationIndex]->Weight(0.0f);
 	//番号、繰り返し、フレーム数を設定
-	mAnimationIndex = index % mpModel->AnimationSet().size();
+	mAnimationIndex = index % mpModel->AnimationSets().size();
 	mAnimationLoopFlg = loop;
 	mAnimationFrameSize = framesize;
 	//アニメーションのフレームを最初にする
 	mAnimationFrame = 0.0f;
-	mpModel->AnimationSet()[mAnimationIndex]->Time(mAnimationFrame);
+	mpModel->AnimationSets()[mAnimationIndex]->Time(mAnimationFrame);
 	//アニメーションの重みを1.0（100%)にする
-	mpModel->AnimationSet()[mAnimationIndex]->Weight(1.0f);
+	mpModel->AnimationSets()[mAnimationIndex]->Weight(1.0f);
 }
 
 /*
@@ -99,19 +99,19 @@ void CXCharacter::ChangeAnimation(int index, bool loop, float framesize) {
  matrix：移動、回転、拡大縮小の行列
 */
 void CXCharacter::Update(CMatrix& matrix) {
-	if (mpModel->AnimationSet().size() <= 0) return;
+	if (mpModel->AnimationSets().size() <= 0) return;
 
-	for (size_t i = 0; i < mpModel->AnimationSet().size(); ++i)
+	for (size_t i = 0; i < mpModel->AnimationSets().size(); ++i)
 	{
-		mpModel->AnimationSet()[i]->Weight(0.0f);
+		mpModel->AnimationSets()[i]->Weight(0.0f);
 	}
-	mpModel->AnimationSet()[mAnimationIndex]->Weight(1.0f);
+	mpModel->AnimationSets()[mAnimationIndex]->Weight(1.0f);
 
 	//最後まで再生する
 	if (mAnimationFrame <= mAnimationFrameSize) {
 		//アニメーションの時間を計算
-		mpModel->AnimationSet()[mAnimationIndex]->Time(
-			mpModel->AnimationSet()[mAnimationIndex]->MaxTime() *
+		mpModel->AnimationSets()[mAnimationIndex]->Time(
+			mpModel->AnimationSets()[mAnimationIndex]->MaxTime() *
 			mAnimationFrame / mAnimationFrameSize);
 		//フレームを進める
 		mAnimationFrame++;
@@ -121,12 +121,12 @@ void CXCharacter::Update(CMatrix& matrix) {
 		if (mAnimationLoopFlg) {
 			//アニメーションのフレームを最初にする
 			mAnimationFrame = 0.0f;
-			mpModel->AnimationSet()[mAnimationIndex]->
+			mpModel->AnimationSets()[mAnimationIndex]->
 				Time(mAnimationFrame);
 		}
 		else {
-			mpModel->AnimationSet()[mAnimationIndex]->
-				Time(mpModel->AnimationSet()[mAnimationIndex]->
+			mpModel->AnimationSets()[mAnimationIndex]->
+				Time(mpModel->AnimationSets()[mAnimationIndex]->
 					MaxTime());
 		}
 	}

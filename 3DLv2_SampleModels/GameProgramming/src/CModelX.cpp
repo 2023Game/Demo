@@ -41,8 +41,8 @@ AnimateFrame
 void CModelX::AnimateFrame() {
 	//アニメーションで適用されるフレームの
 	//変換行列をゼロクリアする
-	for (size_t i = 0; i < mAnimationSet.size(); i++) {
-		CAnimationSet* animSet = mAnimationSet[i];
+	for (size_t i = 0; i < mAnimationSets.size(); i++) {
+		shared_ptr<CAnimationSet> animSet = mAnimationSets[i];
 		//重みが0は飛ばす
 		if (animSet->mWeight == 0) continue;
 		//フレーム分（Animation分）繰り返す
@@ -60,8 +60,8 @@ void CModelX::AnimateFrame() {
 	}
 	//アニメーションに該当するフレームの変換行列を
 	//アニメーションのデータで設定する
-	for (size_t i = 0; i < mAnimationSet.size(); i++) {
-		CAnimationSet* animSet = mAnimationSet[i];
+	for (size_t i = 0; i < mAnimationSets.size(); i++) {
+		shared_ptr<CAnimationSet> animSet = mAnimationSets[i];
 		//重みが0は飛ばす
 		if (animSet->mWeight == 0) continue;
 		animSet->AnimateMatrix(this);
@@ -104,10 +104,10 @@ CModelX::~CModelX()
 	{
 		delete mFrame[0];
 	}*/
-	for (size_t i = 0; i < mAnimationSet.size(); i++)
+	/*for (size_t i = 0; i < mAnimationSets.size(); i++)
 	{
 		delete mAnimationSet[i];
-	}
+	}*/
 	//マテリアルの解放
 	/*for (size_t i = 0; i < mMaterials.size(); i++) {
 		delete mMaterials[i];
@@ -209,18 +209,18 @@ CModelX::CModelX()
 	memset(mToken, 0, sizeof(mToken));
 }
 
-CModelX::CModelX(const char* base)
+CModelX::CModelX(const string& base)
 	: CModelX()
 {
 	mBaseDir = base;
 }
 
-void CModelX::Load(const char* file) {
+void CModelX::Load(const string& file) {
 	//
 	//ファイルサイズを取得する
 	//
 	FILE* fp;	//ファイルポインタ変数の作成
-	fp = fopen(file, "rb");	//ファイルをオープンする
+	fp = fopen(file.c_str(), "rb");	//ファイルをオープンする
 	if (fp == NULL) {	//エラーチェック
 		printf("fopen error:%s￥n", file);
 		return;
@@ -291,7 +291,7 @@ void CModelX::Load(const char* file) {
 		}
 		//単語がAnimationSetの場合
 		else if (strcmp(mToken, "AnimationSet") == 0) {
-			new CAnimationSet(this);
+			mAnimationSets.push_back(make_shared<CAnimationSet>(this));
 		}
 	}
 
@@ -313,6 +313,8 @@ void CModelX::Load(const char* file) {
 	}*/
 	//スキンマトリックスのエリア作成
 	mpSkinningMatrix = new CMatrix[mFrames.size()];
+//	shared_ptr<CMatrix[]> skinningMatrix(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
+//	mpSkinningMatrix = skinningMatrix.get();
 	//シェーダー読み込み
 	mShader.Load("res\\shadow330.vert", "res\\shadow330.frag");
 
@@ -383,13 +385,13 @@ void CModelX::RenderShader(CMatrix* pCombinedMatrix)
 	mShader.Render(this, pCombinedMatrix);
 }
 
-size_t CModelX::AddAnimationSet(const char* file)
+size_t CModelX::AddAnimationSet(const string& file)
 {
 	//
-//ファイルサイズを取得する
-//
+	//ファイルサイズを取得する
+	//
 	FILE* fp;	//ファイルポインタ変数の作成
-	fp = fopen(file, "rb");	//ファイルをオープンする
+	fp = fopen(file.c_str(), "rb");	//ファイルをオープンする
 	if (fp == NULL) {	//エラーチェック
 		printf("fopen error:%s\n", file);
 		return 0;
@@ -400,7 +402,7 @@ size_t CModelX::AddAnimationSet(const char* file)
 	int size = ftell(fp);
 
 	//ファイルサイズ+1バイト分の領域を確保
-	shared_ptr<char[]> buf(new char[size + 1]);// make_shared<char[]>(new char[size + 1]);
+	shared_ptr<char[]> buf(new char[size + 1]);
 	mpPointer = buf.get();
 	//
 	//ファイルから3Dモデルのデータを読み込む
@@ -413,8 +415,6 @@ size_t CModelX::AddAnimationSet(const char* file)
 	buf[size] = '\0';
 	fclose(fp);	//ファイルをクローズする
 
-	//CModelXFrame* p = mFrame[0];
-
 	//文字列の最後まで繰り返し
 	while (*mpPointer != '\0') {
 		GetToken();	//単語の取得
@@ -424,32 +424,11 @@ size_t CModelX::AddAnimationSet(const char* file)
 		}
 		//単語がAnimationSetの場合
 		else if (strcmp(mToken, "AnimationSet") == 0) {
-			new CAnimationSet(this);
+			mAnimationSets.push_back(make_shared<CAnimationSet>(this));
 		}
-		////単語がFrameの場合
-		//else if (strcmp(mToken, "Frame") == 0) {
-		//	//フレーム名取得
-		//	GetToken();
-		//	if (strchr(mToken, '{')) {
-		//		//フレーム名なし：スキップ
-		//		SkipNode();
-		//		GetToken(); //}
-		//	}
-		//	else {
-		//		//フレームが無ければ
-		//		if (FindFrame(mToken) == 0) {
-		//			//フレームを作成する
-		//			p->mChild.push_back(
-		//				new CModelXFrame(this));
-		//		}
-		//		else {
-		//			p = FindFrame(mToken);
-		//		}
-		//	}
-		//}
 	}
-//	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
-	return mAnimationSet.size();
+
+	return mAnimationSets.size();
 }
 
 bool CModelX::IsLoaded()
@@ -458,10 +437,10 @@ bool CModelX::IsLoaded()
 }
 
 
-void CModelX::SeparateAnimationSet(int idx, int start, int end, char* name)
+void CModelX::SeparateAnimationSet(int idx, int start, int end, const string& name)
 {
-	CAnimationSet* anim = mAnimationSet[idx];//分割するアニメーションセットを確定
-	CAnimationSet* as = new CAnimationSet();//アニメーションセットの生成
+	shared_ptr<CAnimationSet> anim = mAnimationSets[idx];//分割するアニメーションセットを確定
+	shared_ptr<CAnimationSet> as = make_shared<CAnimationSet>();//アニメーションセットの生成
 	as->mName = name;
 //	as->mpName = new char[strlen(name) + 1];
 //	strcpy(as->mpName, name);
@@ -490,7 +469,7 @@ void CModelX::SeparateAnimationSet(int idx, int start, int end, char* name)
 		}//アニメーションキーのコピー
 		as->mAnimations.push_back(animation);//アニメーションの追加
 	}
-	mAnimationSet.push_back(as);//アニメーションセットの追加
+	mAnimationSets.push_back(as);//アニメーションセットの追加
 
 }
 
@@ -515,11 +494,11 @@ void CModelX::AnimateVertex(CMatrix* mat)
 	//}
 }
 
-shared_ptr<CMaterial> CModelX::FindMaterial(char* name)
+shared_ptr<CMaterial> CModelX::FindMaterial(const string& name)
 {
 	for (auto itr : mMaterials)
 	{
-		if (strcmp(name, (itr)->Name()) == 0) {
+		if (strcmp(name.c_str(), (itr)->Name()) == 0) {
 			return itr;
 		}
 	}
@@ -1142,7 +1121,7 @@ CAnimationSet::CAnimationSet(CModelX* model)
 	, mWeight(0)
 	, mMaxTime(0)
 {
-	model->mAnimationSet.push_back(this);
+//	model->mAnimationSets.push_back(this);
 	model->GetToken();	// Animation Name
 	//アニメーションセット名を退避
 	mName = model->Token();
@@ -1163,6 +1142,7 @@ CAnimationSet::CAnimationSet(CModelX* model)
 
 CAnimationSet::~CAnimationSet()
 {
+	mAnimations.clear();
 	//SAFE_DELETE_ARRAY(mpName);
 	//アニメーション要素の削除
 	/*for (size_t i = 0; i < mAnimations.size(); i++) {
@@ -1301,7 +1281,7 @@ CAnimation::~CAnimation()
 //	SAFE_DELETE_ARRAY(mpKey);
 }
 
-std::vector<CAnimationSet*>& CModelX::AnimationSet()
+std::vector<shared_ptr<CAnimationSet>>& CModelX::AnimationSets()
 {
-	return mAnimationSet;
+	return mAnimationSets;
 }

@@ -42,7 +42,7 @@ CModelSample::CModelSample(std::string base, std::string model, std::string anim
 		mModel.AddAnimationSet((RESOURCE_DIR + base + anim).c_str());
 	}
 	Init(&mModel);
-	ChangeAnimation(mModel.AnimationSet().size() - 1, true, 60.0f);
+	ChangeAnimation(mModel.AnimationSets().size() - 1, true, 60.0f);
 	Position(pos);
 	Rotation(rot);
 	Scale(scale);

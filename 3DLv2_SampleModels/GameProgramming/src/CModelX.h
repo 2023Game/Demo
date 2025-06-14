@@ -217,7 +217,7 @@ public:
 	void RenderShader(CMatrix* m);
 
 	//アニメーションセットの追加
-	size_t AddAnimationSet(const char* file);
+	size_t AddAnimationSet(const string& file);
 
 	bool IsLoaded();
 	/*
@@ -228,22 +228,22 @@ public:
 	name:追加するアニメーションセットの名前
 	*/
 	void CModelX::SeparateAnimationSet(
-		int idx, int start, int end, char* name);
+		int idx, int start, int end, const string& name);
 
 	void AnimateVertex(CMatrix*);
 	//マテリアル配列の取得
-	std::vector<shared_ptr<CMaterial>>& Materials();
+	vector<shared_ptr<CMaterial>>& Materials();
 	//マテリアルの検索
-	shared_ptr<CMaterial> FindMaterial(char* name);
+	shared_ptr<CMaterial> FindMaterial(const string& name);
 
 	//頂点にアニメーションを適用
 	void AnimateVertex();
 	//スキンウェイトのフレーム番号設定
 	void SetSkinWeightFrameIndex();
 
-	std::vector<shared_ptr<CModelXFrame>>& Frames();
+	vector<shared_ptr<CModelXFrame>>& Frames();
 	void AnimateFrame();
-	std::vector<CAnimationSet*>& AnimationSet();
+	vector<shared_ptr<CAnimationSet>>& AnimationSets();
 	//フレーム名に該当するフレームのアドレスを返す
 	shared_ptr<CModelXFrame> FindFrame(const string& name);
 
@@ -259,10 +259,10 @@ public:
 	char* GetToken();
 
 	CModelX();
-	CModelX(const char* base);
+	CModelX(const string& base);
 	//ファイル読み込み
-	void Load(const char* file);
-	string& BaseDir()
+	void Load(const string& file);
+	const string& BaseDir()
 	{
 		return mBaseDir;
 	}
@@ -280,10 +280,10 @@ private:
 	CMyShader mShader; //シェーダーのインスタンス
 
 	bool mLoaded;
-	std::vector<shared_ptr<CMaterial>> mMaterials;  //マテリアル配列
+	vector<shared_ptr<CMaterial>> mMaterials;  //マテリアル配列
 	//アニメーションセットの配列
-	std::vector<CAnimationSet*> mAnimationSet;
-	std::vector<shared_ptr<CModelXFrame>> mFrames;  //フレームの配列
+	vector<shared_ptr<CAnimationSet>> mAnimationSets;
+	vector<shared_ptr<CModelXFrame>> mFrames;  //フレームの配列
 	//cが区切り文字ならtrueを返す
 	bool IsDelimiter(char c);
 
