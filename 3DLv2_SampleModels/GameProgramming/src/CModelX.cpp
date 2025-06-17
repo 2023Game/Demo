@@ -10,16 +10,16 @@
  FindFrame(フレーム名)
  フレーム名に該当するフレームのアドレスを返す
 */
-shared_ptr<CModelXFrame> CModelX::FindFrame(const string& name) {
+CModelXFrame* CModelX::FindFrame(const string& name) {
 	//イテレータの作成
 //	std::vector<CModelXFrame*>::iterator itr;
 	//先頭から最後まで繰り返す
-	for (auto frame : mFrames) {
+	for (auto& frame : mFrames) {
 		//名前が一致したか？
 		//if (strcmp(name.c_str(), (*itr)->mpName) == 0) {
 		if (name == frame->mName) {
 			//一致したらそのアドレスを返す
-			return frame;
+			return frame.get();
 		}
 	}
 	//for (itr = mFrame.begin(); itr != mFrame.end(); itr++) {
@@ -85,7 +85,7 @@ Render
 全てのフレームの描画処理を呼び出す
 */
 void CModelX::Render() {
-	for (auto frame : mFrames) {
+	for (auto& frame : mFrames) {
 		frame->Render();
 	}
 	//for (size_t i = 0; i < mFrame.size(); i++) {
@@ -185,7 +185,7 @@ char* CModelX::GetToken() {
 void CModelX::SetSkinWeightFrameIndex()
 {
 	//フレーム数分繰り返し
-	for (auto frame : mFrames) {
+	for (auto& frame : mFrames) {
 		//メッシュがあれば
 		if (frame->mpMesh != nullptr) {
 			frame->mpMesh->SetSkinWeightFrameIndex(this);
@@ -282,7 +282,7 @@ void CModelX::Load(const string& file) {
 				//フレームが無ければ
 				if (FindFrame(string(mToken)) == 0) {
 					//フレームを作成する
-					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(this);
+					shared_ptr<CModelXFrame> mf = make_unique<CModelXFrame>(this);
 					AddFrame(mf);
 					//mFrames.push_back(mf);
 					p->mChildren.push_back(mf.get());
@@ -301,7 +301,7 @@ void CModelX::Load(const string& file) {
 	mLoaded = true; //読み込み済
 
 	//頂点バッファの作成
-	for (auto frame : mFrames) {
+	for (auto& frame : mFrames) {
 		if (frame->mpMesh != nullptr) {
 			frame->mpMesh->CreateVertexBuffer();
 		}
@@ -330,7 +330,7 @@ AnimateVertex
 */
 void CModelX::AnimateVertex() {
 	//フレーム数分繰り返し
-	for (auto frame : mFrames) {
+	for (auto& frame : mFrames) {
 		//メッシュに面があれば
 		if (frame->mpMesh != nullptr) {
 			//頂点をアニメーションで更新する
@@ -480,7 +480,7 @@ void CModelX::SeparateAnimationSet(int idx, int start, int end, const string& na
 void CModelX::AnimateVertex(CMatrix* mat)
 {
 	//フレーム数分繰り返し
-	for (auto frame : mFrames) {
+	for (auto& frame : mFrames) {
 		//メッシュがあれば
 		if (frame->mpMesh) {
 			//頂点をアニメーションで更新する
@@ -795,7 +795,7 @@ void CMesh::SetSkinWeightFrameIndex(CModelX* model)
 	//スキンウェイト分繰り返し
 	for (size_t i = 0; i < mSkinWeights.size(); i++) {
 		//フレーム名のフレームを取得する
-		shared_ptr<CModelXFrame> frame = model->FindFrame(mSkinWeights[i]->mFrameName);
+		CModelXFrame* frame = model->FindFrame(mSkinWeights[i]->mFrameName);
 		//フレーム番号を設定する
 		mSkinWeights[i]->mFrameIndex = frame->Index();
 	}
@@ -1070,7 +1070,7 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 //		if (animation->mpKey == nullptr) continue;
 		if (animation->mKeys.size() == 0) continue;
 		//該当するフレームの取得
-		shared_ptr<CModelXFrame> frame = model->mFrames[animation->mFrameIndex];
+		CModelXFrame* frame = model->mFrames[animation->mFrameIndex].get();
 		//最初の時間より小さい場合
 		if (mTime < animation->mKeys[0].mTime) {
 			//変換行列を0コマ目の行列で更新
