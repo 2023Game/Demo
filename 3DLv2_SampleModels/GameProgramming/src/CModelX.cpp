@@ -41,16 +41,15 @@ AnimateFrame
 void CModelX::AnimateFrame() {
 	//アニメーションで適用されるフレームの
 	//変換行列をゼロクリアする
-	for (size_t i = 0; i < mAnimationSets.size(); i++) {
-		shared_ptr<CAnimationSet> animSet = mAnimationSets[i];
+	for (auto& animationSets : mAnimationSets) {
+//		CAnimationSet* animSet = animationSets.get();
 		//重みが0は飛ばす
-		if (animSet->mWeight == 0) continue;
+		if (animationSets->mWeight == 0) continue;
 		//フレーム分（Animation分）繰り返す
-		for (size_t j = 0;
-			j < animSet->Animations().size(); j++)
+		for (auto& animation : animationSets->Animations())
 		{
-			std::shared_ptr<CAnimation> animation =
-				animSet->Animations()[j];
+//			std::shared_ptr<CAnimation> animation =
+//				animSet->Animations()[j];
 			//該当するフレームの変換行列をゼロクリアする
 			memset(
 				&mFrames[animation->mFrameIndex]
@@ -60,8 +59,9 @@ void CModelX::AnimateFrame() {
 	}
 	//アニメーションに該当するフレームの変換行列を
 	//アニメーションのデータで設定する
-	for (size_t i = 0; i < mAnimationSets.size(); i++) {
-		shared_ptr<CAnimationSet> animSet = mAnimationSets[i];
+	for (auto& animSet : mAnimationSets)
+	{
+//		shared_ptr<CAnimationSet> animSet = mAnimationSets[i];
 		//重みが0は飛ばす
 		if (animSet->mWeight == 0) continue;
 		animSet->AnimateMatrix(this);
@@ -291,7 +291,7 @@ void CModelX::Load(const string& file) {
 		}
 		//単語がAnimationSetの場合
 		else if (strcmp(mToken, "AnimationSet") == 0) {
-			mAnimationSets.push_back(make_shared<CAnimationSet>(this));
+			mAnimationSets.push_back(make_unique<CAnimationSet>(this));
 		}
 	}
 
@@ -397,7 +397,7 @@ size_t CModelX::AddAnimationSet(const string& file)
 	FILE* fp;	//ファイルポインタ変数の作成
 	fp = fopen(file.c_str(), "rb");	//ファイルをオープンする
 	if (fp == NULL) {	//エラーチェック
-		printf("fopen error:%s\n", file);
+		printf("fopen error:%s\n", file.c_str());
 		return 0;
 	}
 	//ファイルの最後へ移動
@@ -428,7 +428,7 @@ size_t CModelX::AddAnimationSet(const string& file)
 		}
 		//単語がAnimationSetの場合
 		else if (strcmp(mToken, "AnimationSet") == 0) {
-			mAnimationSets.push_back(make_shared<CAnimationSet>(this));
+			mAnimationSets.push_back(make_unique<CAnimationSet>(this));
 		}
 	}
 
@@ -443,38 +443,37 @@ bool CModelX::IsLoaded()
 
 void CModelX::SeparateAnimationSet(int idx, int start, int end, const string& name)
 {
-	shared_ptr<CAnimationSet> anim = mAnimationSets[idx];//分割するアニメーションセットを確定
+	CAnimationSet* anim = mAnimationSets[idx].get();//分割するアニメーションセットを確定
 	shared_ptr<CAnimationSet> as = make_shared<CAnimationSet>();//アニメーションセットの生成
 	as->mName = name;
 //	as->mpName = new char[strlen(name) + 1];
 //	strcpy(as->mpName, name);
 	as->mMaxTime = end - start;
-	for (size_t i = 0; i < anim->mAnimations.size(); i++) {//既存のアニメーション分繰り返し
+	for (auto& Animation : anim->mAnimations) {//既存のアニメーション分繰り返し
 		std::shared_ptr<CAnimation> animation = std::make_shared<CAnimation>();//アニメーションの生成
 //		animation->mpFrameName = new char[strlen(anim->mAnimation[i]->mpFrameName) + 1];
 //		strcpy(animation->mpFrameName, anim->mAnimation[i]->mpFrameName);
-		animation->mFrameName = anim->mAnimations[i]->mFrameName;
-		animation->mFrameIndex = anim->mAnimations[i]->mFrameIndex;
+		animation->mFrameName = Animation->mFrameName;
+		animation->mFrameIndex = Animation->mFrameIndex;
 		animation->mKeyNum = end - start + 1;
 //		animation->mpKey = new CAnimationKey[animation->mKeyNum];//アニメーションキーの生成
 		animation->mKeys.resize(animation->mKeyNum);//アニメーションキーの生成
 		animation->mKeyNum = 0;
-		for (int j = start; j <= end && j < anim->mAnimations[i]->mKeyNum; j++) {
-			if (j < anim->mAnimations[i]->mKeyNum)
+		for (int j = start; j <= end && j < Animation->mKeyNum; j++) {
+			if (j < Animation->mKeyNum)
 			{
-				animation->mKeys[animation->mKeyNum] = anim->mAnimations[i]->mKeys[j];
+				animation->mKeys[animation->mKeyNum] = Animation->mKeys[j];
 			}
 			else
 			{
 				animation->mKeys[animation->mKeyNum] =
-					anim->mAnimations[i]->mKeys[anim->mAnimations[i]->mKeyNum - 1];
+					Animation->mKeys[Animation->mKeyNum - 1];
 			}
 			animation->mKeys[animation->mKeyNum].mTime = animation->mKeyNum++;
 		}//アニメーションキーのコピー
 		as->mAnimations.push_back(animation);//アニメーションの追加
 	}
 	mAnimationSets.push_back(as);//アニメーションセットの追加
-
 }
 
 void CModelX::AnimateVertex(CMatrix* mat)
