@@ -313,8 +313,10 @@ void CModelX::Load(const string& file) {
 	}*/
 	//スキンマトリックスのエリア作成
 //	mpSkinningMatrix = new CMatrix[mFrames.size()];
-	shared_ptr<CMatrix[]> skinningMatrix(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
-	mpSkinningMatrix = skinningMatrix;
+//	shared_ptr<CMatrix[]> skinningMatrix(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
+//	mpSkinningMatrix = skinningMatrix;
+//	mpSkinningMatrix = make_shared<CMatrix[]>(new CMatrix[mFrames.size()]);
+	mpSkinningMatrix = shared_ptr<CMatrix[]>(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
 //	mpSkinningMatrix = skinningMatrix.get();
 	//シェーダー読み込み
 	mShader.Load("res\\shadow330.vert", "res\\shadow330.frag");
