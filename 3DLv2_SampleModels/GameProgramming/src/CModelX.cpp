@@ -316,7 +316,8 @@ void CModelX::Load(const string& file) {
 //	shared_ptr<CMatrix[]> skinningMatrix(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
 //	mpSkinningMatrix = skinningMatrix;
 //	mpSkinningMatrix = make_shared<CMatrix[]>(new CMatrix[mFrames.size()]);
-	mpSkinningMatrix = shared_ptr<CMatrix[]>(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
+//	mpSkinningMatrix = shared_ptr<CMatrix[]>(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
+	mpSkinningMatrix = make_unique<CMatrix[]>(mFrames.size());
 //	mpSkinningMatrix = skinningMatrix.get();
 	//シェーダー読み込み
 	mShader.Load("res\\shadow330.vert", "res\\shadow330.frag");

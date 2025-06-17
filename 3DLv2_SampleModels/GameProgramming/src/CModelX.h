@@ -277,7 +277,7 @@ private:
 
 	//シェーダー用スキンマトリックス
 //	CMatrix* mpSkinningMatrix;
-	shared_ptr<CMatrix[]> mpSkinningMatrix;
+	unique_ptr<CMatrix[]> mpSkinningMatrix;
 	CMyShader mShader; //シェーダーのインスタンス
 
 	bool mLoaded;
