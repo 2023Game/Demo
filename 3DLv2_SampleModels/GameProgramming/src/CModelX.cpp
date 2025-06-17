@@ -112,7 +112,7 @@ CModelX::~CModelX()
 	/*for (size_t i = 0; i < mMaterials.size(); i++) {
 		delete mMaterials[i];
 	}*/
-	SAFE_DELETE_ARRAY(mpSkinningMatrix);
+	//SAFE_DELETE_ARRAY(mpSkinningMatrix);
 }
 
 /*
@@ -222,7 +222,7 @@ void CModelX::Load(const string& file) {
 	FILE* fp;	//ファイルポインタ変数の作成
 	fp = fopen(file.c_str(), "rb");	//ファイルをオープンする
 	if (fp == NULL) {	//エラーチェック
-		printf("fopen error:%s￥n", file);
+		printf("fopen error:%s￥n", file.c_str());
 		return;
 	}
 	//ファイルの最後へ移動
@@ -312,8 +312,9 @@ void CModelX::Load(const string& file) {
 		}
 	}*/
 	//スキンマトリックスのエリア作成
-	mpSkinningMatrix = new CMatrix[mFrames.size()];
-//	shared_ptr<CMatrix[]> skinningMatrix(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
+//	mpSkinningMatrix = new CMatrix[mFrames.size()];
+	shared_ptr<CMatrix[]> skinningMatrix(new CMatrix[mFrames.size()], std::default_delete<CMatrix[]>());
+	mpSkinningMatrix = skinningMatrix;
 //	mpSkinningMatrix = skinningMatrix.get();
 	//シェーダー読み込み
 	mShader.Load("res\\shadow330.vert", "res\\shadow330.frag");

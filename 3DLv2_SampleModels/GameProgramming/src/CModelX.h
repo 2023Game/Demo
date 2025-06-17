@@ -276,7 +276,8 @@ private:
 	string mBaseDir;
 
 	//シェーダー用スキンマトリックス
-	CMatrix* mpSkinningMatrix;
+//	CMatrix* mpSkinningMatrix;
+	shared_ptr<CMatrix[]> mpSkinningMatrix;
 	CMyShader mShader; //シェーダーのインスタンス
 
 	bool mLoaded;
