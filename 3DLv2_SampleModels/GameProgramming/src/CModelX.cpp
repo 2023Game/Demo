@@ -285,7 +285,7 @@ void CModelX::Load(const string& file) {
 					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(this);
 					AddFrame(mf);
 					//mFrames.push_back(mf);
-					p->mChildren.push_back(mf);
+					p->mChildren.push_back(mf.get());
 				}
 			}
 		}
@@ -614,7 +614,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(model);
 					model->AddFrame(mf);
 //					model->Frames().push_back(mf);
-					mChildren.push_back(mf);
+					mChildren.push_back(mf.get());
 				}
 			}
 		}

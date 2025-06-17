@@ -16,7 +16,7 @@ void CMyShader::Render(CModelX* model, CMatrix* pCombinedMatrix) {
 	}
 }
 
-void CMyShader::Render(CModelX* model, unique_ptr<CMesh>& mesh, CMatrix* pCombinedMatrix)
+void CMyShader::Render(CModelX* model, const unique_ptr<CMesh>& mesh, CMatrix* pCombinedMatrix)
 {
 	//スキンマトリックス生成
 	for (size_t i = 0; i < mesh->mSkinWeights.size(); i++) {

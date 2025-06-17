@@ -192,7 +192,8 @@ private:
 	CMatrix mCombinedMatrix;	//合成行列
 
 	unique_ptr<CMesh> mpMesh;	//Meshデータ
-	std::vector<shared_ptr<CModelXFrame>> mChildren;  //子フレームの配列
+	std::vector<CModelXFrame*> mChildren;  //子フレームの配列
+//	std::vector<shared_ptr<CModelXFrame>> mChildren;  //子フレームの配列
 //	std::vector<CModelXFrame*> mChild;  //子フレームの配列
 	CMatrix mTransformMatrix;  //変換行列
 	string mName;   //フレーム名前
