@@ -15,6 +15,23 @@ void CMyShader::Render(CModelX* model, CMatrix* pCombinedMatrix) {
 		}
 	}
 }
+
+void CMyShader::Render(CModelX* model, unique_ptr<CMesh>& mesh, CMatrix* pCombinedMatrix)
+{
+	//スキンマトリックス生成
+	for (size_t i = 0; i < mesh->mSkinWeights.size(); i++) {
+		//スキンメッシュの行列配列を設定する
+		model->mpSkinningMatrix[mesh->mSkinWeights[i]->mFrameIndex]
+			= mesh->mSkinWeights[i]->mOffset * pCombinedMatrix[mesh->mSkinWeights[i]->mFrameIndex];
+	}
+
+	Render(mesh->mMyVertexBufferId,
+		&(mesh->mMaterials),
+		model->mpSkinningMatrix[0].M(),
+		model->mFrames.size());
+
+	return;
+}
 /*
 メッシュの描画
 */

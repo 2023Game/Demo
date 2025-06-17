@@ -626,7 +626,8 @@ CModelXFrame::CModelXFrame(CModelX* model)
 			model->GetToken(); // }
 		}
 		else if (strcmp(model->mToken, "Mesh") == 0) {
-			mpMesh = new CMesh();
+//			mpMesh = new CMesh();
+			mpMesh = make_unique<CMesh>();
 			mpMesh->Init(model);
 		}
 		else {
@@ -651,10 +652,10 @@ CModelXFrame::~CModelXFrame()
 	//–¼‘O‚ÌƒGƒŠƒA‚ð‰ð•ú‚·‚é
 	//SAFE_DELETE_ARRAY(mpName);
 
-	if (mpMesh != nullptr)
-	{
-		delete mpMesh;
-	}
+	//if (mpMesh != nullptr)
+	//{
+	//	delete mpMesh;
+	//}
 }
 
 void CMesh::CreateVertexBuffer()
