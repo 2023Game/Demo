@@ -10,7 +10,7 @@
  FindFrame(フレーム名)
  フレーム名に該当するフレームのアドレスを返す
 */
-CModelXFrame* CModelX::FindFrame(const string& name) {
+shared_ptr <CModelXFrame> CModelX::FindFrame(const string& name) {
 	//イテレータの作成
 //	std::vector<CModelXFrame*>::iterator itr;
 	//先頭から最後まで繰り返す
@@ -19,7 +19,7 @@ CModelXFrame* CModelX::FindFrame(const string& name) {
 		//if (strcmp(name.c_str(), (*itr)->mpName) == 0) {
 		if (name == frame->mName) {
 			//一致したらそのアドレスを返す
-			return frame.get();
+			return frame;
 		}
 	}
 	//for (itr = mFrame.begin(); itr != mFrame.end(); itr++) {
@@ -794,7 +794,7 @@ void CMesh::SetSkinWeightFrameIndex(CModelX* model)
 	//スキンウェイト分繰り返し
 	for (size_t i = 0; i < mSkinWeights.size(); i++) {
 		//フレーム名のフレームを取得する
-		CModelXFrame* frame = model->FindFrame(mSkinWeights[i]->mFrameName);
+		shared_ptr <CModelXFrame> frame = model->FindFrame(mSkinWeights[i]->mFrameName);
 		//フレーム番号を設定する
 		mSkinWeights[i]->mFrameIndex = frame->Index();
 	}

@@ -246,7 +246,7 @@ public:
 	void AnimateFrame();
 	vector<shared_ptr<CAnimationSet>>& AnimationSets();
 	//フレーム名に該当するフレームのアドレスを返す
-	CModelXFrame* FindFrame(const string& name);
+	shared_ptr <CModelXFrame> FindFrame(const string& name);
 
 	bool EOT(); // トークンが無くなったらtrue
 	void Render();
