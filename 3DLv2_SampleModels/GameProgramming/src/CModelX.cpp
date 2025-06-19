@@ -332,7 +332,8 @@ void CModelX::AnimateVertex() {
 	//フレーム数分繰り返し
 	for (auto& frame : mFrames) {
 		//メッシュに面があれば
-		if (frame->mpMesh != nullptr) {
+		if (frame->mpMesh) {
+			//if(frame->mpMesh->mFaceNum > 0)
 			//頂点をアニメーションで更新する
 			frame->mpMesh->AnimateVertex(this);
 		}
@@ -539,7 +540,7 @@ void CModelXFrame::AnimateCombined(CMatrix* parent) {
 	//自分の変換行列に、親からの変換行列を掛ける
 	mCombinedMatrix = mTransformMatrix * (*parent);
 	//子フレームの合成行列を作成する
-	for (auto child : mChildren) {
+	for (auto& child : mChildren) {
 		child->AnimateCombined(&mCombinedMatrix);
 	}
 	/*for (size_t i = 0; i < mChildren.size(); i++) {
@@ -672,7 +673,7 @@ void CMesh::CreateVertexBuffer()
 		unique_ptr<CVertex[]> vec = make_unique<CVertex[]>(myVertexNum);
 		for (int j = 0; j < mVertexNum; j++) {
 			//頂点座標設定
-			vec[j].mPosition = mpVertex[j];
+			vec[j].mPosition = mVertex[j];
 			//テクスチャマッピング設定
 			if (mpTextureCoords != nullptr) {
 				vec[j].mTextureCoords.X(mpTextureCoords[j * 2]);
@@ -705,11 +706,11 @@ void CMesh::CreateVertexBuffer()
 				if (mpMaterialIndex[j] == i) {
 					//頂点配列に設定し、法線を設定する
 					pmyVertex[k] = vec[mpVertexIndex[j * 3]];
-					pmyVertex[k++].mNormal = mpNormal[j * 3];
+					pmyVertex[k++].mNormal = mNormal[j * 3];
 					pmyVertex[k] = vec[mpVertexIndex[j * 3 + 1]];
-					pmyVertex[k++].mNormal = mpNormal[j * 3 + 1];
+					pmyVertex[k++].mNormal = mNormal[j * 3 + 1];
 					pmyVertex[k] = vec[mpVertexIndex[j * 3 + 2]];
-					pmyVertex[k++].mNormal = mpNormal[j * 3 + 2];
+					pmyVertex[k++].mNormal = mNormal[j * 3 + 2];
 				}
 			}
 			//マテリアル毎の頂点数を追加する
@@ -737,8 +738,10 @@ void CMesh::CreateVertexBuffer()
 void CMesh::AnimateVertex(CMatrix* mat)
 {
 	//アニメーション用の頂点エリアクリア
-	memset(mpAnimateVertex.get(), 0, sizeof(CVector) * mVertexNum);
-	memset(mpAnimateNormal.get(), 0, sizeof(CVector) * mNormalNum);
+	mAnimateVertex.assign(mVertexNum, CVector{});
+	mAnimateNormal.assign(mNormalNum, CVector{});
+//	memset(&mAnimateVertex, 0, sizeof(CVector) * mVertexNum);
+//	memset(&mAnimateNormal, 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
 	for (auto& skinWeight : mSkinWeights) {
 		//フレーム番号取得
@@ -752,21 +755,23 @@ void CMesh::AnimateVertex(CMatrix* mat)
 			//重み取得
 			float weight = skinWeight->mpWeight[j];
 			//頂点と法線を更新する
-			mpAnimateVertex[index] += mpVertex[index] * mSkinningMatrix * weight;
-			mpAnimateNormal[index] += mpNormal[index] * mSkinningMatrix * weight;
+			mAnimateVertex[index] += mVertex[index] * mSkinningMatrix * weight;
+			mAnimateNormal[index] += mNormal[index] * mSkinningMatrix * weight;
 		}
 	}
 	//法線を正規化する
 	for (int i = 0; i < mNormalNum; i++) {
-		mpAnimateNormal[i] = mpAnimateNormal[i].Normalize();
+		mAnimateNormal[i] = mAnimateNormal[i].Normalize();
 	}
 }
 
 void CMesh::AnimateVertex(CModelX* model)
 {
 	//アニメーション用の頂点エリアクリア
-	memset(mpAnimateVertex.get(), 0, sizeof(CVector) * mVertexNum);
-	memset(mpAnimateNormal.get(), 0, sizeof(CVector) * mNormalNum);
+	mAnimateVertex.assign(mVertexNum, CVector{});
+	mAnimateNormal.assign(mNormalNum, CVector{});
+//	memset(&mAnimateVertex, 0, sizeof(CVector) * mVertexNum);
+//	memset(&mAnimateNormal, 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
 	for (auto& skinWeight : mSkinWeights) {
 	//	for (size_t i = 0; i < mSkinWeights.size(); i++) {
@@ -781,13 +786,13 @@ void CMesh::AnimateVertex(CModelX* model)
 			//重み取得
 			float weight = skinWeight->mpWeight[j];
 			//頂点と法線を更新する
-			mpAnimateVertex[index] += mpVertex[index] * mSkinningMatrix * weight;
-			mpAnimateNormal[index] += mpNormal[index] * mSkinningMatrix * weight;
+			mAnimateVertex[index] += mVertex[index] * mSkinningMatrix * weight;
+			mAnimateNormal[index] += mNormal[index] * mSkinningMatrix * weight;
 		}
 	}
 	//法線を正規化する
 	for (int i = 0; i < mNormalNum; i++) {
-		mpAnimateNormal[i] = mpAnimateNormal[i].Normalize();
+		mAnimateNormal[i] = mAnimateNormal[i].Normalize();
 	}
 }
 
@@ -813,8 +818,8 @@ void CMesh::Render()
 	/* 頂点データ，法線データの場所を指定する */
 	//glVertexPointer(3, GL_FLOAT, 0, mpVertex);
 	//glNormalPointer(GL_FLOAT, 0, mpNormal);/
-	glVertexPointer(3, GL_FLOAT, 0, mpAnimateVertex.get());
-	glNormalPointer(GL_FLOAT, 0, mpAnimateNormal.get());
+	glVertexPointer(3, GL_FLOAT, 0, mAnimateVertex.data());
+	glNormalPointer(GL_FLOAT, 0, mAnimateNormal.data());
 	glTexCoordPointer(2, GL_FLOAT, 0, mpTextureCoords.get());
 
 	/* 頂点のインデックスの場所を指定して図形を描画する */
@@ -834,16 +839,16 @@ void CMesh::Render()
 //コンストラクタ
 CMesh::CMesh()
 	: mVertexNum(0)
-	, mpVertex(nullptr)
+//	, mpVertex(nullptr)
 	, mFaceNum(0)
 	, mpVertexIndex(nullptr)
 	, mNormalNum(0)
-	, mpNormal(nullptr)
+//	, mpNormal(nullptr)
 	, mMaterialNum(0)
 	, mMaterialIndexNum(0)
 	, mpMaterialIndex(nullptr)
-	, mpAnimateVertex(nullptr)
-	, mpAnimateNormal(nullptr)
+//	, mpAnimateVertex(nullptr)
+//	, mpAnimateNormal(nullptr)
 	, mpTextureCoords(nullptr)
 	, mMyVertexBufferId(0)
 {}
@@ -878,15 +883,22 @@ void CMesh::Init(CModelX* model) {
 	mVertexNum = atoi(model->GetToken());
 	//頂点数分エリア確保
 //	mpVertex = new CVector[mVertexNum];
-	mpVertex = make_unique<CVector[]>(mVertexNum);
-	mpAnimateVertex = make_unique<CVector[]>(mVertexNum);
+	//mpVertex = make_unique<CVector[]>(mVertexNum);
+	mVertex.resize(mVertexNum);
+//	mpAnimateVertex = make_unique<CVector[]>(mVertexNum);
+	mAnimateVertex.resize(mVertexNum);
 
 	//頂点数分データを取り込む
-	for (int i = 0; i < mVertexNum; i++) {
-		mpVertex[i].X(atof(model->GetToken()));
-		mpVertex[i].Y(atof(model->GetToken()));
-		mpVertex[i].Z(atof(model->GetToken()));
+	for (auto& vertex : mVertex) {
+		vertex.X(atof(model->GetToken()));
+		vertex.Y(atof(model->GetToken()));
+		vertex.Z(atof(model->GetToken()));
 	}
+	//for (int i = 0; i < mVertexNum; i++) {
+	//	mpVertex[i].X(atof(model->GetToken()));
+	//	mpVertex[i].Y(atof(model->GetToken()));
+	//	mpVertex[i].Z(atof(model->GetToken()));
+	//}
 	//面数読み込み
 	mFaceNum = atoi(model->GetToken());
 	//頂点数は1面に3頂点
@@ -918,18 +930,20 @@ void CMesh::Init(CModelX* model) {
 			mNormalNum = atoi(model->GetToken()) * 3; //FaceNum
 			int ni;
 			//頂点毎に法線データを設定する
-			mpNormal = make_unique<CVector[]>(mNormalNum);
-			mpAnimateNormal = make_unique<CVector[]>(mNormalNum);
+			mNormal.resize(mNormalNum);
+			//mpNormal = make_unique<CVector[]>(mNormalNum);
+			mAnimateNormal.resize(mNormalNum);
+			//mpAnimateNormal = make_unique<CVector[]>(mNormalNum);
 			for (int i = 0; i < mNormalNum; i += 3) {
 				model->GetToken(); // 3
 				ni = atoi(model->GetToken());
-				mpNormal[i] = pNormal[ni];
+				mNormal[i] = pNormal[ni];
 
 				ni = atoi(model->GetToken());
-				mpNormal[i + 1] = pNormal[ni];
+				mNormal[i + 1] = pNormal[ni];
 
 				ni = atoi(model->GetToken());
-				mpNormal[i + 2] = pNormal[ni];
+				mNormal[i + 2] = pNormal[ni];
 			}
 			model->GetToken();	// }
 		} // End of MeshNormals

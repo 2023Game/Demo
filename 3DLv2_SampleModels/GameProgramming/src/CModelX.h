@@ -125,6 +125,7 @@ private:
 //CMeshクラスの定義
 class CMesh {
 	friend CMyShader;
+	friend CModelX;
 public:
 	//頂点バッファの作成
 	void CreateVertexBuffer();
@@ -152,8 +153,8 @@ protected:
 	//テクスチャ座標データ
 	unique_ptr<float[]> mpTextureCoords;
 
-	unique_ptr<CVector[]> mpAnimateVertex;  //アニメーション用頂点
-	unique_ptr<CVector[]> mpAnimateNormal;  //アニメーション用法線
+	vector<CVector> mAnimateVertex;  //アニメーション用頂点
+	vector<CVector> mAnimateNormal;  //アニメーション用法線
 	//スキンウェイト
 	std::vector<shared_ptr<CSkinWeights>> mSkinWeights;
 	int mMaterialNum;	//マテリアル数
@@ -162,13 +163,14 @@ protected:
 	std::vector<shared_ptr<CMaterial>> mMaterials;//マテリアルデータ
 
 	int mNormalNum;	//法線数
-	unique_ptr<CVector[]> mpNormal;//法線ベクトル
+	vector<CVector> mNormal;//法線ベクトル
 
 	int mFaceNum;	//面数
 	unique_ptr<int[]> mpVertexIndex;	//面を構成する頂点インデックス
 	int mVertexNum;	//頂点数
 //	CVector* mpVertex;	//頂点データ
-	unique_ptr<CVector[]> mpVertex;	//頂点データ
+//	unique_ptr<CVector[]> mpVertex;	//頂点データ
+	vector<CVector> mVertex;	//頂点データ
 };
 
 //CModelXFrameクラスの定義
