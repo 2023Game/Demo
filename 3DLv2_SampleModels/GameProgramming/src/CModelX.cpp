@@ -738,8 +738,8 @@ void CMesh::CreateVertexBuffer()
 void CMesh::AnimateVertex(CMatrix* mat)
 {
 	//アニメーション用の頂点エリアクリア
-	mAnimateVertex.assign(mVertexNum, CVector{});
-	mAnimateNormal.assign(mNormalNum, CVector{});
+	mAnimateVertex.assign(mAnimateVertex.size(), CVector());
+	mAnimateNormal.assign(mAnimateNormal.size(), CVector());
 //	memset(&mAnimateVertex, 0, sizeof(CVector) * mVertexNum);
 //	memset(&mAnimateNormal, 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
@@ -768,8 +768,8 @@ void CMesh::AnimateVertex(CMatrix* mat)
 void CMesh::AnimateVertex(CModelX* model)
 {
 	//アニメーション用の頂点エリアクリア
-	mAnimateVertex.assign(mVertexNum, CVector{});
-	mAnimateNormal.assign(mNormalNum, CVector{});
+	mAnimateVertex.assign(mAnimateVertex.size(), CVector());
+	mAnimateNormal.assign(mAnimateNormal.size(), CVector());
 //	memset(&mAnimateVertex, 0, sizeof(CVector) * mVertexNum);
 //	memset(&mAnimateNormal, 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
