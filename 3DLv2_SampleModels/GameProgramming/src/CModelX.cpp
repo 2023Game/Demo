@@ -740,17 +740,17 @@ void CMesh::AnimateVertex(CMatrix* mat)
 	memset(mpAnimateVertex.get(), 0, sizeof(CVector) * mVertexNum);
 	memset(mpAnimateNormal.get(), 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
-	for (size_t i = 0; i < mSkinWeights.size(); i++) {
+	for (auto& skinWeight : mSkinWeights) {
 		//フレーム番号取得
-		int frameIndex = mSkinWeights[i]->mFrameIndex;
+		int frameIndex = skinWeight->mFrameIndex;
 		//フレーム合成行列にオフセット行列を合成
-		CMatrix mSkinningMatrix = mSkinWeights[i]->mOffset * mat[frameIndex];
+		CMatrix mSkinningMatrix = skinWeight->mOffset * mat[frameIndex];
 		//頂点数分繰り返し
-		for (int j = 0; j < mSkinWeights[i]->mIndexNum; j++) {
+		for (int j = 0; j < skinWeight->mIndexNum; j++) {
 			//頂点番号取得
-			int index = mSkinWeights[i]->mpIndex[j];
+			int index = skinWeight->mpIndex[j];
 			//重み取得
-			float weight = mSkinWeights[i]->mpWeight[j];
+			float weight = skinWeight->mpWeight[j];
 			//頂点と法線を更新する
 			mpAnimateVertex[index] += mpVertex[index] * mSkinningMatrix * weight;
 			mpAnimateNormal[index] += mpNormal[index] * mSkinningMatrix * weight;
@@ -768,17 +768,18 @@ void CMesh::AnimateVertex(CModelX* model)
 	memset(mpAnimateVertex.get(), 0, sizeof(CVector) * mVertexNum);
 	memset(mpAnimateNormal.get(), 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
-	for (size_t i = 0; i < mSkinWeights.size(); i++) {
-		//フレーム番号取得
-		int frameIndex = mSkinWeights[i]->mFrameIndex;
+	for (auto& skinWeight : mSkinWeights) {
+	//	for (size_t i = 0; i < mSkinWeights.size(); i++) {
+			//フレーム番号取得
+		int frameIndex = skinWeight->mFrameIndex;
 		//オフセット行列とフレーム合成行列を合成
-		CMatrix mSkinningMatrix = mSkinWeights[i]->mOffset * model->Frames()[frameIndex]->CombinedMatrix();
+		CMatrix mSkinningMatrix = skinWeight->mOffset * model->Frames()[frameIndex]->CombinedMatrix();
 		//頂点数分繰り返し
-		for (int j = 0; j < mSkinWeights[i]->mIndexNum; j++) {
+		for (int j = 0; j < skinWeight->mIndexNum; j++) {
 			//頂点番号取得
-			int index = mSkinWeights[i]->mpIndex[j];
+			int index = skinWeight->mpIndex[j];
 			//重み取得
-			float weight = mSkinWeights[i]->mpWeight[j];
+			float weight = skinWeight->mpWeight[j];
 			//頂点と法線を更新する
 			mpAnimateVertex[index] += mpVertex[index] * mSkinningMatrix * weight;
 			mpAnimateNormal[index] += mpNormal[index] * mSkinningMatrix * weight;
@@ -793,11 +794,11 @@ void CMesh::AnimateVertex(CModelX* model)
 void CMesh::SetSkinWeightFrameIndex(CModelX* model)
 {
 	//スキンウェイト分繰り返し
-	for (size_t i = 0; i < mSkinWeights.size(); i++) {
+	for (auto& skinWeight : mSkinWeights) {
 		//フレーム名のフレームを取得する
-		shared_ptr <CModelXFrame> frame = model->FindFrame(mSkinWeights[i]->mFrameName);
+		shared_ptr <CModelXFrame> frame = model->FindFrame(skinWeight->mFrameName);
 		//フレーム番号を設定する
-		mSkinWeights[i]->mFrameIndex = frame->Index();
+		skinWeight->mFrameIndex = frame->Index();
 	}
 }
 
