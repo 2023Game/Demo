@@ -1180,9 +1180,15 @@ CAnimation::CAnimation(CModelX* model)
 	model->GetToken(); // }
 
 	//キーの配列を保存しておく配列
-	CMatrix* key[4] = { nullptr, nullptr, nullptr, nullptr };
+	//CMatrix* key[4] = { nullptr, nullptr, nullptr, nullptr };
 	//時間の配列を保存しておく配列
-	float* time[4] = { nullptr, nullptr, nullptr, nullptr };
+	//float* time[4] = { nullptr, nullptr, nullptr, nullptr };
+
+	// キー用と時間用のスマートポインタ配列
+	//キーの配列を保存しておく配列
+	std::unique_ptr<std::unique_ptr<CMatrix[]>[]> key = std::make_unique<std::unique_ptr<CMatrix[]>[]>(4);
+	//時間の配列を保存しておく配列
+	std::unique_ptr<std::unique_ptr<float[]>[]> time = std::make_unique<std::unique_ptr<float[]>[]>(4);
 
 	while (!model->EOT()) {
 		model->GetToken(); // } or AnimationKey
@@ -1196,9 +1202,11 @@ CAnimation::CAnimation(CModelX* model)
 			switch (type) {
 			case 0: // Rotation Quaternion
 				//行列の配列を時間数分確保
-				key[type] = new CMatrix[mKeyNum];
+				//key[type] = new CMatrix[mKeyNum];
 				//時間の配列を時間数分確保
-				time[type] = new float[mKeyNum];
+				//time[type] = new float[mKeyNum];
+				key[type] = std::make_unique<CMatrix[]>(mKeyNum);
+				time[type] = std::make_unique<float[]>(mKeyNum);
 				//時間数分繰り返す
 				for (int i = 0; i < mKeyNum; i++) {
 					//時間取得
@@ -1214,8 +1222,10 @@ CAnimation::CAnimation(CModelX* model)
 				}
 				break;
 			case 1: //拡大・縮小の行列作成
-				key[type] = new CMatrix[mKeyNum];
-				time[type] = new float[mKeyNum];
+				key[type] = std::make_unique<CMatrix[]>(mKeyNum);
+				time[type] = std::make_unique<float[]>(mKeyNum);
+				//key[type] = new CMatrix[mKeyNum];
+				//time[type] = new float[mKeyNum];
 				for (int i = 0; i < mKeyNum; i++) {
 					time[type][i] = atof(model->GetToken());
 					model->GetToken(); // 3
@@ -1226,8 +1236,11 @@ CAnimation::CAnimation(CModelX* model)
 				}
 				break;
 			case 2: //移動の行列作成
-				key[type] = new CMatrix[mKeyNum];
-				time[type] = new float[mKeyNum];
+				key[type] = std::make_unique<CMatrix[]>(mKeyNum);
+				time[type] = std::make_unique<float[]>(mKeyNum);
+
+				//key[type] = new CMatrix[mKeyNum];
+				//time[type] = new float[mKeyNum];
 				for (int i = 0; i < mKeyNum; i++) {
 					time[type][i] = atof(model->GetToken());
 					model->GetToken(); // 3
@@ -1269,10 +1282,10 @@ CAnimation::CAnimation(CModelX* model)
 		}
 	}
 	//確保したエリア解放
-	for (int i = 0; i < ARRAY_SIZE(key); i++) {
-		SAFE_DELETE_ARRAY(time[i]);
-		SAFE_DELETE_ARRAY(key[i]);
-	}
+	//for (int i = 0; i < ARRAY_SIZE(key); i++) {
+	//	SAFE_DELETE_ARRAY(time[i]);
+	//	SAFE_DELETE_ARRAY(key[i]);
+	//}
 
 #ifdef _DEBUG
 //	printf("Animation:%s\n", mpFrameName.c_str());
