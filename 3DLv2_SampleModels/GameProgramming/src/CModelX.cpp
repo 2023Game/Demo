@@ -664,17 +664,17 @@ void CMesh::CreateVertexBuffer()
 		return;
 	if (mVertexNum > 0) {
 		//頂点インデックスを使わず、全ての面データを作成
-		CVertex* pmyVertex, * vec;
+		//CVertex* pmyVertex, * vec;
 		//頂点数計算
 		int myVertexNum = mFaceNum * 3;
 		//頂点数分頂点配列作成
-		pmyVertex = new CVertex[myVertexNum];
-		vec = new CVertex[mVertexNum];
+		unique_ptr<CVertex[]> pmyVertex = make_unique<CVertex[]>(myVertexNum);
+		unique_ptr<CVertex[]> vec = make_unique<CVertex[]>(myVertexNum);
 		for (int j = 0; j < mVertexNum; j++) {
 			//頂点座標設定
 			vec[j].mPosition = mpVertex[j];
 			//テクスチャマッピング設定
-			if (mpTextureCoords != NULL) {
+			if (mpTextureCoords != nullptr) {
 				vec[j].mTextureCoords.X(mpTextureCoords[j * 2]);
 				vec[j].mTextureCoords.Y(mpTextureCoords[j * 2 + 1]);
 			}
@@ -682,15 +682,16 @@ void CMesh::CreateVertexBuffer()
 		}
 		int wi = 0;
 		//スキンウェイト設定
-		for (size_t k = 0; k < mSkinWeights.size(); k++) {
-			for (int l = 0; l < mSkinWeights[k]->mIndexNum; l++) {
-				int idx = mSkinWeights[k]->mpIndex[l];
+		for (auto& skinWeight : mSkinWeights) {
+		//for (size_t k = 0; k < mSkinWeights.size(); k++) {
+			for (int l = 0; l < skinWeight->mIndexNum; l++) {
+				int idx = skinWeight->mpIndex[l];
 				for (int m = 0; m < 4; m++) {
 					if (vec[idx].mBoneIndex[m] == 0) {
 						vec[idx].mBoneIndex[m] =
-							mSkinWeights[k]->mFrameIndex;
+							skinWeight->mFrameIndex;
 						vec[idx].mBoneWeight[m] =
-							mSkinWeights[k]->mpWeight[l];
+							skinWeight->mpWeight[l];
 						break;
 					}
 				}
@@ -722,13 +723,13 @@ void CMesh::CreateVertexBuffer()
 		//バインドしたバッファにデータを転送
 		glBufferData(GL_ARRAY_BUFFER
 			, sizeof(CVertex) * myVertexNum
-			, pmyVertex, GL_STATIC_DRAW);
+			, pmyVertex.get(), GL_STATIC_DRAW);
 		//バインド解除
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		//配列解放
-		delete[] pmyVertex;
-		delete[] vec;
-		pmyVertex = nullptr;
+		//delete[] pmyVertex;
+		//delete[] vec;
+		//pmyVertex = nullptr;
 	}
 
 }
@@ -906,7 +907,7 @@ void CMesh::Init(CModelX* model) {
 			//法線データ数を取得
 			mNormalNum = atoi(model->GetToken());
 			//法線のデータを配列に取り込む
-			CVector* pNormal = new CVector[mNormalNum];
+			unique_ptr<CVector[]> pNormal = make_unique<CVector[]>(mNormalNum);
 			for (int i = 0; i < mNormalNum; i++) {
 				pNormal[i].X(atof(model->GetToken()));
 				pNormal[i].Y(atof(model->GetToken()));
@@ -929,7 +930,6 @@ void CMesh::Init(CModelX* model) {
 				ni = atoi(model->GetToken());
 				mpNormal[i + 2] = pNormal[ni];
 			}
-			delete[] pNormal;
 			model->GetToken();	// }
 		} // End of MeshNormals
 		// MeshMaterialListのとき
