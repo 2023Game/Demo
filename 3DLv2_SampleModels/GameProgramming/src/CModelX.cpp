@@ -1063,14 +1063,15 @@ void CAnimationSet::AnimateMatrix(CModelX* model)
 	//重みが0は飛ばす
 	if (mWeight == 0) return;
 	//フレーム分（Animation分）繰り返す
-	for (size_t j = 0; j < mAnimations.size(); j++) {
+	for (auto& animation : mAnimations) {
+		//for (size_t j = 0; j < mAnimations.size(); j++) {
 		//フレームを取得する
-		std::shared_ptr<CAnimation> animation = mAnimations[j];
+		//std::shared_ptr<CAnimation> animation = mAnimations[j];
 		//キーがない場合は次のアニメーションへ
 //		if (animation->mpKey == nullptr) continue;
 		if (animation->mKeys.size() == 0) continue;
 		//該当するフレームの取得
-		CModelXFrame* frame = model->mFrames[animation->mFrameIndex].get();
+		shared_ptr<CModelXFrame> frame = model->mFrames[animation->mFrameIndex];
 		//最初の時間より小さい場合
 		if (mTime < animation->mKeys[0].mTime) {
 			//変換行列を0コマ目の行列で更新
