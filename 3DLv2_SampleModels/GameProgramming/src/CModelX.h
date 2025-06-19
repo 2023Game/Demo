@@ -113,8 +113,8 @@ private:
 	string mFrameName;	//フレーム名
 	int mFrameIndex;	//フレーム番号
 	int mIndexNum;	//頂点番号数
-	int* mpIndex;	//頂点番号配列
-	float* mpWeight;	//頂点ウェイト配列
+	unique_ptr<int[]> mpIndex;	//頂点番号配列
+	unique_ptr<float[]> mpWeight;	//頂点ウェイト配列
 	CMatrix mOffset;	//オフセットマトリックス
 };
 
@@ -147,27 +147,28 @@ protected:
 	//マテリアル毎の面数
 	std::vector<int> mMaterialVertexCount;
 	//頂点バッファ識別子
-	GLuint	  mMyVertexBufferId;
+	GLuint mMyVertexBufferId;
 
 	//テクスチャ座標データ
-	float* mpTextureCoords;
+	unique_ptr<float[]> mpTextureCoords;
 
-	CVector* mpAnimateVertex;  //アニメーション用頂点
-	CVector* mpAnimateNormal;  //アニメーション用法線
+	unique_ptr<CVector[]> mpAnimateVertex;  //アニメーション用頂点
+	unique_ptr<CVector[]> mpAnimateNormal;  //アニメーション用法線
 	//スキンウェイト
 	std::vector<shared_ptr<CSkinWeights>> mSkinWeights;
 	int mMaterialNum;	//マテリアル数
 	int mMaterialIndexNum;//マテリアル番号数（面数）
-	int* mpMaterialIndex;	  //マテリアル番号
+	unique_ptr<int[]> mpMaterialIndex;	  //マテリアル番号
 	std::vector<shared_ptr<CMaterial>> mMaterials;//マテリアルデータ
 
 	int mNormalNum;	//法線数
-	CVector* mpNormal;//法線ベクトル
+	unique_ptr<CVector[]> mpNormal;//法線ベクトル
 
 	int mFaceNum;	//面数
-	int* mpVertexIndex;	//面を構成する頂点インデックス
+	unique_ptr<int[]> mpVertexIndex;	//面を構成する頂点インデックス
 	int mVertexNum;	//頂点数
-	CVector* mpVertex;	//頂点データ
+//	CVector* mpVertex;	//頂点データ
+	unique_ptr<CVector[]> mpVertex;	//頂点データ
 };
 
 //CModelXFrameクラスの定義
@@ -192,8 +193,8 @@ private:
 	CMatrix mCombinedMatrix;	//合成行列
 
 	unique_ptr<CMesh> mpMesh;	//Meshデータ
-	std::vector<CModelXFrame*> mChildren;  //子フレームの配列
-//	std::vector<shared_ptr<CModelXFrame>> mChildren;  //子フレームの配列
+//	std::vector<CModelXFrame*> mChildren;  //子フレームの配列
+	std::vector<shared_ptr<CModelXFrame>> mChildren;  //子フレームの配列
 //	std::vector<CModelXFrame*> mChild;  //子フレームの配列
 	CMatrix mTransformMatrix;  //変換行列
 	string mName;   //フレーム名前
@@ -246,7 +247,7 @@ public:
 	void AnimateFrame();
 	vector<shared_ptr<CAnimationSet>>& AnimationSets();
 	//フレーム名に該当するフレームのアドレスを返す
-	shared_ptr <CModelXFrame> FindFrame(const string& name);
+	shared_ptr<CModelXFrame> FindFrame(const string& name);
 
 	bool EOT(); // トークンが無くなったらtrue
 	void Render();

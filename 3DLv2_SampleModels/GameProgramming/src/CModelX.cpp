@@ -285,7 +285,7 @@ void CModelX::Load(const string& file) {
 					shared_ptr<CModelXFrame> mf = make_unique<CModelXFrame>(this);
 					AddFrame(mf);
 					//mFrames.push_back(mf);
-					p->mChildren.push_back(mf.get());
+					p->mChildren.push_back(mf);
 				}
 			}
 		}
@@ -613,7 +613,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(model);
 					model->AddFrame(mf);
 //					model->Frames().push_back(mf);
-					mChildren.push_back(mf.get());
+					mChildren.push_back(mf);
 				}
 			}
 		}
@@ -736,8 +736,8 @@ void CMesh::CreateVertexBuffer()
 void CMesh::AnimateVertex(CMatrix* mat)
 {
 	//アニメーション用の頂点エリアクリア
-	memset(mpAnimateVertex, 0, sizeof(CVector) * mVertexNum);
-	memset(mpAnimateNormal, 0, sizeof(CVector) * mNormalNum);
+	memset(mpAnimateVertex.get(), 0, sizeof(CVector) * mVertexNum);
+	memset(mpAnimateNormal.get(), 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
 	for (size_t i = 0; i < mSkinWeights.size(); i++) {
 		//フレーム番号取得
@@ -764,8 +764,8 @@ void CMesh::AnimateVertex(CMatrix* mat)
 void CMesh::AnimateVertex(CModelX* model)
 {
 	//アニメーション用の頂点エリアクリア
-	memset(mpAnimateVertex, 0, sizeof(CVector) * mVertexNum);
-	memset(mpAnimateNormal, 0, sizeof(CVector) * mNormalNum);
+	memset(mpAnimateVertex.get(), 0, sizeof(CVector) * mVertexNum);
+	memset(mpAnimateNormal.get(), 0, sizeof(CVector) * mNormalNum);
 	//スキンウェイト分繰り返し
 	for (size_t i = 0; i < mSkinWeights.size(); i++) {
 		//フレーム番号取得
@@ -811,16 +811,16 @@ void CMesh::Render()
 	/* 頂点データ，法線データの場所を指定する */
 	//glVertexPointer(3, GL_FLOAT, 0, mpVertex);
 	//glNormalPointer(GL_FLOAT, 0, mpNormal);/
-	glVertexPointer(3, GL_FLOAT, 0, mpAnimateVertex);
-	glNormalPointer(GL_FLOAT, 0, mpAnimateNormal);
-	glTexCoordPointer(2, GL_FLOAT, 0, mpTextureCoords);
+	glVertexPointer(3, GL_FLOAT, 0, mpAnimateVertex.get());
+	glNormalPointer(GL_FLOAT, 0, mpAnimateNormal.get());
+	glTexCoordPointer(2, GL_FLOAT, 0, mpTextureCoords.get());
 
 	/* 頂点のインデックスの場所を指定して図形を描画する */
 	for (int i = 0; i < mFaceNum; i++) {
 		//マテリアルを適用する
 		mMaterials[mpMaterialIndex[i]]->Enabled();
 		glDrawElements(GL_TRIANGLES, 3,
-			GL_UNSIGNED_INT, (mpVertexIndex + i * 3));
+			GL_UNSIGNED_INT, &mpVertexIndex[ i * 3]);
 		mMaterials[mpMaterialIndex[i]]->Disabled();
 	}
 
@@ -847,18 +847,18 @@ CMesh::CMesh()
 {}
 //デストラクタ
 CMesh::~CMesh() {
-	SAFE_DELETE_ARRAY(mpVertex);
-	SAFE_DELETE_ARRAY(mpVertexIndex);
-	SAFE_DELETE_ARRAY(mpNormal);
-	SAFE_DELETE_ARRAY(mpMaterialIndex);
+	//SAFE_DELETE_ARRAY(mpVertex);
+	//SAFE_DELETE_ARRAY(mpVertexIndex);
+	//SAFE_DELETE_ARRAY(mpNormal);
+	//SAFE_DELETE_ARRAY(mpMaterialIndex);
 	//スキンウェイトの削除
 	/*for (size_t i = 0; i < mSkinWeights.size(); i++)
 	{
 		delete mSkinWeights[i];
 	}*/
-	SAFE_DELETE_ARRAY(mpAnimateVertex);
-	SAFE_DELETE_ARRAY(mpAnimateNormal);
-	SAFE_DELETE_ARRAY(mpTextureCoords);
+	//SAFE_DELETE_ARRAY(mpAnimateVertex);
+	//SAFE_DELETE_ARRAY(mpAnimateNormal);
+	//SAFE_DELETE_ARRAY(mpTextureCoords);
 
 }
 /*
@@ -875,8 +875,9 @@ void CMesh::Init(CModelX* model) {
 	//頂点数の取得
 	mVertexNum = atoi(model->GetToken());
 	//頂点数分エリア確保
-	mpVertex = new CVector[mVertexNum];
-	mpAnimateVertex = new CVector[mVertexNum];
+//	mpVertex = new CVector[mVertexNum];
+	mpVertex = make_unique<CVector[]>(mVertexNum);
+	mpAnimateVertex = make_unique<CVector[]>(mVertexNum);
 
 	//頂点数分データを取り込む
 	for (int i = 0; i < mVertexNum; i++) {
@@ -887,7 +888,7 @@ void CMesh::Init(CModelX* model) {
 	//面数読み込み
 	mFaceNum = atoi(model->GetToken());
 	//頂点数は1面に3頂点
-	mpVertexIndex = new int[mFaceNum * 3];
+	mpVertexIndex = make_unique<int[]>(mFaceNum * 3);
 	for (int i = 0; i < mFaceNum * 3; i += 3) {
 		model->GetToken();	//頂点数読み飛ばし
 		mpVertexIndex[i] = atoi(model->GetToken());
@@ -915,8 +916,8 @@ void CMesh::Init(CModelX* model) {
 			mNormalNum = atoi(model->GetToken()) * 3; //FaceNum
 			int ni;
 			//頂点毎に法線データを設定する
-			mpNormal = new CVector[mNormalNum];
-			mpAnimateNormal = new CVector[mNormalNum];
+			mpNormal = make_unique<CVector[]>(mNormalNum);
+			mpAnimateNormal = make_unique<CVector[]>(mNormalNum);
 			for (int i = 0; i < mNormalNum; i += 3) {
 				model->GetToken(); // 3
 				ni = atoi(model->GetToken());
@@ -939,7 +940,7 @@ void CMesh::Init(CModelX* model) {
 			// FaceNum
 			mMaterialIndexNum = atoi(model->GetToken());
 			//マテリアルインデックスの作成
-			mpMaterialIndex = new int[mMaterialIndexNum];
+			mpMaterialIndex = make_unique<int[]>(mMaterialIndexNum);
 			for (int i = 0; i < mMaterialIndexNum; i++) {
 				mpMaterialIndex[i] = atoi(model->GetToken());
 			}
@@ -973,7 +974,7 @@ void CMesh::Init(CModelX* model) {
 			//テクスチャ座標数を取得
 			int textureCoordsNum = atoi(model->GetToken()) * 2;
 			//テクスチャ座標のデータを配列に取り込む
-			mpTextureCoords = new float[textureCoordsNum];
+			mpTextureCoords = make_unique<float[]>(textureCoordsNum);
 			for (int i = 0; i < textureCoordsNum; i++) {
 				mpTextureCoords[i] = atof(model->GetToken());
 			}
@@ -1017,8 +1018,8 @@ CSkinWeights::CSkinWeights(CModelX* model)
 	//頂点番号数が0を超える
 	if (mIndexNum > 0) {
 		//頂点番号と頂点ウェイトのエリア確保
-		mpIndex = new int[mIndexNum];
-		mpWeight = new float[mIndexNum];
+		mpIndex = make_unique<int[]>(mIndexNum);
+		mpWeight = make_unique<float[]>(mIndexNum);
 		//頂点番号取得
 		for (int i = 0; i < mIndexNum; i++)
 			mpIndex[i] = atoi(model->GetToken());
@@ -1043,8 +1044,8 @@ CSkinWeights::CSkinWeights(CModelX* model)
 
 CSkinWeights::~CSkinWeights()
 {
-	SAFE_DELETE_ARRAY(mpIndex);
-	SAFE_DELETE_ARRAY(mpWeight);
+	//SAFE_DELETE_ARRAY(mpIndex);
+	//SAFE_DELETE_ARRAY(mpWeight);
 }
 
 float CAnimationSet::Time()
