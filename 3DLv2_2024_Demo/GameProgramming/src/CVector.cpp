@@ -103,3 +103,12 @@ CVector CVector::operator*(const CMatrix& m) const
 	);
 }
 
+CVector4 CVector4::operator*(const CMatrix& m) const
+{
+	return CVector4(
+		X() * m.M(0, 0) + Y() * m.M(1, 0) + Z() * m.M(2, 0) + mW * m.M(3, 0),
+		X() * m.M(0, 1) + Y() * m.M(1, 1) + Z() * m.M(2, 1) + mW * m.M(3, 1),
+		X() * m.M(0, 2) + Y() * m.M(1, 2) + Z() * m.M(2, 2) + mW * m.M(3, 2),
+		X() * m.M(0, 3) + Y() * m.M(1, 3) + Z() * m.M(2, 3) + mW * m.M(3, 3)
+	);
+}

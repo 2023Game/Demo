@@ -185,6 +185,25 @@ void CActionCamera::Collision(CCollider* m, CCollider* o)
 	}
 }
 
+CVector CActionCamera::ScreenToWorld(const CVector& screen, CVector& world)
+{
+	float x = (2.0f * screen.X()) / mScreenWidth - 1.0f;
+	float y = 1.0f - (2.0f * screen.Y()) / mScreenHeight;
+	float z = -1.0f; // カメラから前方向のレイ
+
+	// NDC → 目空間
+	CVector4 rayEye = CVector4(x,y,-1.0f, 1.0f) * mProjection.Transpose();// *Vec4(x, y, -1.0f, 1.0f);
+	rayEye.Z(-1.0f);
+	rayEye.mW = 0.0f;
+
+	// 目空間 → ワールド空間
+	CVector4 w4 = rayEye * mModelViewInverse;
+	world.X(-mModelView.M(3,0)); world.Y(-mModelView.M(3, 1)); world.Z(-mModelView.M(3, 2));
+//	CVector rayDir = CVector(world.X(), world.Y(), world.Z()).Normalize();
+
+	return CVector(w4.X(), w4.Y(), w4.Z()).Normalize();
+}
+
 void CActionCamera::Eye(const CVector& pos)
 {
 	mPosition = pos;

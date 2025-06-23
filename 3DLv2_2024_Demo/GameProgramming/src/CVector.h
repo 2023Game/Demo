@@ -64,4 +64,21 @@ private:
 	//3DŠe²‚Å‚Ì’l‚ğİ’è
 	float mX, mY, mZ;
 };
+
+class CVector4 : public CVector
+{
+public:
+	CVector4(float x, float y, float z, float w)
+	{
+		X(x); Y(y); Z(z); mW = w;
+	}
+
+	//CVector * CMatrix‚ÌŒ‹‰Ê‚ğCVector‚Å•Ô‚·
+	CVector4 operator*(const CMatrix& m) const;
+
+public:
+	float mW;
+};
+
+
 #endif

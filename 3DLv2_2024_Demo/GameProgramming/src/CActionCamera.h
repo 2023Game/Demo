@@ -13,6 +13,11 @@
 */
 class CActionCamera : public CCharacter3 {
 public:
+	//スクリーン座標をワールド座標へ変換する
+	//ScreenToWorld(スクリーン座標, ワールド座標)
+	CVector ScreenToWorld(
+		const CVector& screen, CVector& world);
+
 	void Eye(const CVector& pos);
 
 	//ワールド座標をスクリーン座標へ変換する

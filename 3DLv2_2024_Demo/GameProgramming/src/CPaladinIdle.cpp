@@ -1,4 +1,5 @@
 #include "CPaladinIdle.h"
+#include "CActionCamera.h"
 
 // CPaladinIdle class
 
@@ -46,6 +47,12 @@ void CPaladinIdle::Update()
 	if (mInput.Key(VK_LBUTTON))
 	{
 		mState = CCharacter3::EState::EATTACK;
+		float x, y;
+		mInput.GetMousePos(&x, &y);
+		CVector world;
+		CVector sc(x, y, 0.0f);
+		CActionCamera::Instance()->ScreenToWorld(sc,world);
+		printf("x:%f, y:%f\n", world.X(), world.Y());
 	}
 }
 

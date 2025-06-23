@@ -92,6 +92,9 @@ void CPaladinWalk::Update()
 	if (mInput.Key(VK_LBUTTON))
 	{
 		mState = CCharacter3::EState::EATTACK;
+		float x, y;
+		mInput.GetMousePos(&x, &y);
+		printf("x:%f, y:%f\n", x, y);
 	}
 
 	if (mInput.Key(VK_SPACE))
