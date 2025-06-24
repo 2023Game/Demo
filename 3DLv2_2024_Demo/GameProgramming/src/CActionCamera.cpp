@@ -191,13 +191,32 @@ CVector CActionCamera::ScreenToWorld(const CVector& screen, CVector& world)
 	float y = 1.0f - (2.0f * screen.Y()) / mScreenHeight;
 	float z = -1.0f; // カメラから前方向のレイ
 
+	// NDC → 目空間 → ワールド空間
+	world = CVector(x, y, 1.0f) * mProjection.Transpose() * mModelView.Transpose();// *Vec4(x, y, -1.0f, 1.0f);
+	// NDC → 目空間 → ワールド空間
+	CVector dir = CVector(0.0f, 0.0f, 10000.0f) * mProjection.Transpose() * mModelView.Transpose();// *Vec4(x, y, -1.0f, 1.0f);
+
 	// NDC → 目空間
-	CVector4 rayEye = CVector4(x,y,-1.0f, 1.0f) * mProjection.Transpose();// *Vec4(x, y, -1.0f, 1.0f);
+	CVector4 rayEye = CVector4(x, y, -1.0f, 1.0f) * mProjection.Transpose();// *Vec4(x, y, -1.0f, 1.0f);
 	rayEye.Z(-1.0f);
 	rayEye.mW = 0.0f;
 
 	// 目空間 → ワールド空間
-	CVector4 w4 = rayEye * mModelViewInverse;
+	CVector4 w4 = rayEye * mModelView.Transpose();
+
+	return CVector(w4.X(), w4.Y(), w4.Z()).Normalize();
+
+
+//	return (dir - world).Normalize();
+
+
+	// NDC → 目空間
+	//CVector4 rayEye = CVector4(x,y,-1.0f, 1.0f) * mProjection.Transpose();// *Vec4(x, y, -1.0f, 1.0f);
+	rayEye.Z(-1.0f);
+	rayEye.mW = 0.0f;
+
+	// 目空間 → ワールド空間
+	//CVector4 w4 = rayEye * mModelViewInverse;
 	world.X(-mModelView.M(3,0)); world.Y(-mModelView.M(3, 1)); world.Z(-mModelView.M(3, 2));
 //	CVector rayDir = CVector(world.X(), world.Y(), world.Z()).Normalize();
 
