@@ -92,9 +92,12 @@ void CPaladinWalk::Update()
 	if (mInput.Key(VK_LBUTTON))
 	{
 		mState = CCharacter3::EState::EATTACK;
-		float x, y;
-		mInput.GetMousePos(&x, &y);
-		printf("x:%f, y:%f\n", x, y);
+		//float x, y;
+		//mInput.GetMousePos(&x, &y);
+		//CVector world;
+		//CVector sc(x, y, 0.0f);
+		//CActionCamera::Instance()->ScreenToWorld(sc, world);
+		//printf("x:%f, y:%f, z=%f\n", world.X(), world.Y(), world.Z());
 	}
 
 	if (mInput.Key(VK_SPACE))

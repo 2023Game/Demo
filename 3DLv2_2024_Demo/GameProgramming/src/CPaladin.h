@@ -8,6 +8,7 @@
 class CPaladin : public CXCharacter
 {
 public:
+	void Render();
 	CPaladin();
 	~CPaladin();
 	CPaladin(const CVector& pos, const CVector& rot, const CVector& scale);

@@ -18,6 +18,7 @@ public:
 	void Set(CCharacter3* parent, CMatrix* matrix, const CVector& v0, const CVector& v1);
 	//•`‰æ
 	void Render();
+	static void Render(const CVector& v0, const CVector& v1);
 
 	void Update();
 private:
