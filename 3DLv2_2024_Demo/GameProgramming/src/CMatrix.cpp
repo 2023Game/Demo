@@ -88,6 +88,33 @@ float* CMatrix::M() const
 	return (float*)mM[0];
 }
 
+CMatrix CMatrix::Inverse() const
+{
+	CMatrix inverse, matrix = *this;
+	const int N = 4;
+	// ガウス・ジョルダン法による計算
+	for (int i = 0; i < N; ++i) {
+		double pivot = matrix.mM[i][i];
+		if (pivot == 0) return inverse; // 正則でない場合
+
+		for (int j = 0; j < N; ++j) {
+			matrix.mM[i][j] /= pivot;
+			inverse.mM[i][j] /= pivot;
+		}
+
+		for (int k = 0; k < N; ++k) {
+			if (k != i) {
+				double factor = matrix.mM[k][i];
+				for (int j = 0; j < N; ++j) {
+					matrix.mM[k][j] -= factor * matrix.mM[i][j];
+					inverse.mM[k][j] -= factor * inverse.mM[i][j];
+				}
+			}
+		}
+	}
+	return inverse;
+}
+
 CMatrix CMatrix::operator*(const float& x) const
 {
 	CMatrix tmp;

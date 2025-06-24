@@ -9,6 +9,7 @@ class CVector;
 */
 class CMatrix {
 public:
+	CMatrix Inverse() const;
 	//*演算子のオーバーロード
 	//CMatrix * float の演算結果を返す
 	CMatrix operator*(const float& x) const;
