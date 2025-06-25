@@ -28,7 +28,7 @@ void CPaladin::Render()
 		CVector world;
 		CVector sc(x, y, 0.0f);
 		CVector dir = CActionCamera::Instance()->ScreenToWorld(sc, world);
-		printf("x:%f, y:%f, z=%f  dir(x:%f, y:%f, z=%f)\n",
+		printf("x:%f, y:%f, z:%f  dir(x:%f, y:%f, z:%f)\n",
 			world.X(), world.Y(), world.Z(),
 			dir.X(), dir.Y(), dir.Z());
 		CColliderLine::Render(world, world + dir * 10.0f);

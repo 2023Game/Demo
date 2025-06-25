@@ -95,7 +95,8 @@ CMatrix CMatrix::Inverse() const
 	// ガウス・ジョルダン法による計算
 	for (int i = 0; i < N; ++i) {
 		double pivot = matrix.mM[i][i];
-		if (pivot == 0) return inverse; // 正則でない場合
+		if (pivot == 0)
+			return inverse; // 正則でない場合
 
 		for (int j = 0; j < N; ++j) {
 			matrix.mM[i][j] /= pivot;
