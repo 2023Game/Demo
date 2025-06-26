@@ -31,6 +31,8 @@ void CPaladin::Render()
 		printf("x:%f, y:%f, z:%f  dir(x:%f, y:%f, z:%f)\n",
 			world.X(), world.Y(), world.Z(),
 			dir.X(), dir.Y(), dir.Z());
+		CVector v = CActionCamera::Instance()->VectorZ();
+		printf("dir: x:%f, y:%f, z:%f\n", v.X(), v.Y(), v.Z());
 		CColliderLine::Render(world, world + dir * 10.0f);
 	}
 }
