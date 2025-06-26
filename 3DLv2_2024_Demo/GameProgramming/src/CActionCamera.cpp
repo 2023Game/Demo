@@ -196,17 +196,24 @@ CVector CActionCamera::ScreenToWorld(const CVector& screen, CVector& world)
 	test = ModelViewInverse * mModelView;
 
 	// NDC → 目空間 → ワールド空間
-	CVector4 wd4 = CVector4(x, y, -1.0f, 1.0f) * ProjectionInverse;
+	CVector4 wd4 = CVector4(x, y, 0.0f, 1.0f) * ProjectionInverse;
+//	CVector4 wd4 = CVector4(x, y, 0.0f, 0.0f) * ProjectionInverse;
+	//wd4.Z(1.0f);
 	//wd4.mW = 1.0f;
 	CVector4 w4 = wd4 * ModelViewInverse;// *Vec4(x, y, -1.0f, 1.0f);
 	world.X(w4.X()); world.Y(w4.Y()); world.Z(w4.Z());
 	
 	// NDC → 目空間 → ワールド空間
-	CVector4 d4 = CVector4(x, y, 1.0f, 1.0f) * ProjectionInverse;
-	//d4.Z(1.0f);
-	d4.mW = 1.0f;
-	CVector dir = d4 * ModelViewInverse;// *Vec4(x, y, -1.0f, 1.0f);
+	CVector4 d4 = CVector4(x, y, -1.0f, 1.0f) * ProjectionInverse;
+	//d4.Z(-1.0f);
+	//d4.mW = 1.0f;
+	d4 = d4 * ModelViewInverse;// *Vec4(x, y, -1.0f, 1.0f);
+	CVector dir;
 	dir.X(d4.X()); dir.Y(d4.Y()); dir.Z(d4.Z());
+
+	//CVector w = world;
+	//world = dir;
+	//dir = w;
 
 	// NDC → 目空間
 	//CVector4 rayEye = CVector4(x, y, -1.0f, 1.0f) * ProjectionInverse;// *Vec4(x, y, -1.0f, 1.0f);
@@ -218,7 +225,7 @@ CVector CActionCamera::ScreenToWorld(const CVector& screen, CVector& world)
 
 //	return CVector(w4.X(), w4.Y(), w4.Z()).Normalize();
 
-	return (world - dir).Normalize();
+	return (dir - world).Normalize();
 //	return dir.Normalize();
 
 

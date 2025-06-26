@@ -22,18 +22,20 @@ void CPaladin::Render()
 
 	float x, y;
 	CInput mInput;
+
+	mInput.GetMousePos(&x, &y);
+	CVector world;
+	CVector sc(x, y, 0.0f);
+	CVector dir = CActionCamera::Instance()->ScreenToWorld(sc, world);
+	CColliderLine::Render(world, world + dir * 100.0f);
 	if (mInput.KeyDown(VK_LBUTTON))
 	{
-		mInput.GetMousePos(&x, &y);
-		CVector world;
-		CVector sc(x, y, 0.0f);
 		CVector dir = CActionCamera::Instance()->ScreenToWorld(sc, world);
 		printf("x:%f, y:%f, z:%f  dir(x:%f, y:%f, z:%f)\n",
 			world.X(), world.Y(), world.Z(),
 			dir.X(), dir.Y(), dir.Z());
 		CVector v = CActionCamera::Instance()->VectorZ();
 		printf("dir: x:%f, y:%f, z:%f\n", v.X(), v.Y(), v.Z());
-		CColliderLine::Render(world, world + dir * 10.0f);
 	}
 }
 
