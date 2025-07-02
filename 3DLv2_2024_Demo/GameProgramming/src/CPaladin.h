@@ -18,6 +18,8 @@ public:
 	static CModelX* Model() { return &sModel; }
 	CColliderCapsule& ColSword() { return mColSword; }
 private:
+	CMatrix mColTextMtx;
+	CCollider mColTest;
 	static CModelX sModel;
 	CColliderCapsule mColBody;	//‘Ì
 	CColliderCapsule mColSword;

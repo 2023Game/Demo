@@ -27,7 +27,9 @@ void CPaladin::Render()
 	CVector world;
 	CVector sc(x, y, 0.0f);
 	CVector dir = CActionCamera::Instance()->ScreenToWorld(sc, world);
-	CColliderLine::Render(world, world + dir * 100.0f);
+	//CColliderLine::Render(world, world + dir * 10.0f);
+	dir = dir * 10.0f + world;
+	mColTextMtx.Translate(dir.X(), dir.Y(), dir.Z());
 	if (mInput.KeyDown(VK_LBUTTON))
 	{
 		CVector dir = CActionCamera::Instance()->ScreenToWorld(sc, world);
@@ -54,6 +56,11 @@ CPaladin::CPaladin()
 		CVector(80.0f, 25.0f, 10.0f),
 		0.1f,
 		CCollider::ETag::ESWORD)
+	, mColTest(
+		nullptr,
+		&mColTextMtx,
+		CVector()
+		, 0.5f)
 {
 	if (sModel.IsLoaded() == false)
 	{
