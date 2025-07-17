@@ -700,7 +700,7 @@ void CMesh::CreateVertexBuffer()
 		}
 		int k = 0;
 		//マテリアル番号の昇順に面の頂点を設定
-		for (size_t i = 0; i < mMaterials.size(); i++) {
+		for (size_t i = 0; i < mpMaterials.size(); i++) {
 			int w = k;
 			for (int j = 0; j < mMaterialIndexNum; j++) {
 				if (mpMaterialIndex[j] == i) {
@@ -715,7 +715,7 @@ void CMesh::CreateVertexBuffer()
 			}
 			//マテリアル毎の頂点数を追加する
 			mMaterialVertexCount.push_back(k - w);
-			mMaterials[i]->mVertexNum = k - w;
+			mpMaterials[i]->mVertexNum = k - w;
 		}
 		//頂点バッファの作成
 		glGenBuffers(1, &mMyVertexBufferId);
@@ -825,10 +825,10 @@ void CMesh::Render()
 	/* 頂点のインデックスの場所を指定して図形を描画する */
 	for (int i = 0; i < mFaceNum; i++) {
 		//マテリアルを適用する
-		mMaterials[mpMaterialIndex[i]]->Enabled();
+		mpMaterials[mpMaterialIndex[i]]->Enabled();
 		glDrawElements(GL_TRIANGLES, 3,
 			GL_UNSIGNED_INT, &mpVertexIndex[ i * 3]);
-		mMaterials[mpMaterialIndex[i]]->Disabled();
+		mpMaterials[mpMaterialIndex[i]]->Disabled();
 	}
 
 	/* 頂点データ，法線データの配列を無効にする */
@@ -965,12 +965,12 @@ void CMesh::Init(CModelX* model) {
 				if (strcmp(model->Token(), "Material") == 0) {
 					shared_ptr<CMaterial> sp = make_shared<CMaterial>(model);
 					model->Materials().push_back(sp);
-					mMaterials.push_back(sp);
+					mpMaterials.push_back(sp);
 				}
 				else {
 					// {  既出
 					model->GetToken();	//MaterialName
-					mMaterials.push_back(
+					mpMaterials.push_back(
 						model->FindMaterial(model->Token()));
 					model->GetToken();	// }
 				}
