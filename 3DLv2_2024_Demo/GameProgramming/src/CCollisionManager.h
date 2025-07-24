@@ -26,9 +26,9 @@ public:
 	void Render(CTree* task);
 private:
 	//削除リスト
-	std::list<CCollider*> mDeleteTrees;
+	//std::list<CCollider*> mDeleteTrees;
 	//デフォルトコンストラクタ
-	CCollisionManager() {};
+	//CCollisionManager() {};
 	//マネージャのインスタンス
 	static CCollisionManager* mpInstance;
 };
