@@ -68,14 +68,14 @@ void CCollisionManager::Render(CTree* task)
 	Render(task->Right());
 }
 
-void CCollisionManager::Delete()
-{
-	for (auto tree : mDeleteTrees)
-		delete tree;
-	mDeleteTrees.clear();
-}
-
-void CCollisionManager::Delete(CCollider* c)
-{
-	mDeleteTrees.push_back(c);
-}
+//void CCollisionManager::Delete()
+//{
+//	for (auto tree : mDeleteTrees)
+//		delete tree;
+//	mDeleteTrees.clear();
+//}
+//
+//void CCollisionManager::Delete(CCollider* c)
+//{
+//	mDeleteTrees.push_back(c);
+//}

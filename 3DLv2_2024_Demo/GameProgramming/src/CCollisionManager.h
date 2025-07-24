@@ -10,10 +10,10 @@
 class CCollisionManager : public CTreeManager
 {
 public:
-	//削除リストの要素を削除する
-	void Delete();
-	//削除リストに追加する
-	void Delete(CCollider* c);
+	////削除リストの要素を削除する
+	//void Delete();
+	////削除リストに追加する
+	//void Delete(CCollider* c);
 
 	//インスタンスの取得
 	static CCollisionManager* Instance();
