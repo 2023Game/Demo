@@ -37,7 +37,7 @@ void CTaskManager::Delete(CTask* task)
 
 void CTaskManager::Update() 
 {
-	Update(Root().Right());
+	Update(mRoot.Right());
 }
 //XV
 void CTaskManager::Update(CTree* task)
@@ -50,7 +50,7 @@ void CTaskManager::Update(CTree* task)
 
 void CTaskManager::Render()
 {
-	Render(Root().Right());
+	Render(mRoot.Right());
 }
 
 //•`‰æ
@@ -64,7 +64,7 @@ void CTaskManager::Render(CTree* task) {
 
 void CTaskManager::RenderUI()
 {
-	RenderUI(Root().Right());
+	RenderUI(mRoot.Right());
 }
 
 //•`‰æ
@@ -79,7 +79,7 @@ void CTaskManager::RenderUI(CTree* task) {
 //Õ“Ëˆ—
 void CTaskManager::Collision()
 {
-	Collision(Root().Right());
+	Collision(mRoot.Right());
 }
 
 void CTaskManager::Collision(CTree* task) {

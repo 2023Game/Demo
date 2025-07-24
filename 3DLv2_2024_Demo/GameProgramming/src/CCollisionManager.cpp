@@ -52,12 +52,12 @@ void CCollisionManager::Collision(CCollider* c, int range)
 	int high = c->mPriority + range;
 
 	//ルートノードから衝突判定開始
-	Collision(c, (CCollider*)&Root(), low, high);
+	Collision(c, (CCollider*)&mRoot, low, high);
 }
 
 void CCollisionManager::Render()
 {
-	Render(Root().Right());
+	Render(mRoot.Right());
 }
 
 void CCollisionManager::Render(CTree* task)
