@@ -160,7 +160,7 @@ protected:
 	int mMaterialNum;	//マテリアル数
 	int mMaterialIndexNum;//マテリアル番号数（面数）
 	unique_ptr<int[]> mpMaterialIndex;	  //マテリアル番号
-	std::vector<shared_ptr<CMaterial>> mMaterials;//マテリアルデータ
+	std::vector<shared_ptr<CMaterial>> mpMaterials;//マテリアルデータ
 
 	int mNormalNum;	//法線数
 	vector<CVector> mNormal;//法線ベクトル
