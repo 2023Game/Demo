@@ -52,7 +52,7 @@ CMaterial::CMaterial(CModelX* model)
 	//model->Materials().push_back(this);
 
 	model->GetToken(); // { ? Name
-	if (strcmp(model->Token(), "{") != 0) {
+	if (model->Token() != "{") {
 		//{でないときはマテリアル名
 //		strcpy(mName, model->Token());
 		mName = model->Token();
@@ -76,7 +76,7 @@ CMaterial::CMaterial(CModelX* model)
 
 	model->GetToken(); // TextureFilename or }
 
-	if (strcmp(model->Token(), "TextureFilename") == 0) {
+	if (model->Token() == "TextureFilename") {
 		//テクスチャありの場合、テクスチャファイル名取得
 		model->GetToken(); // {
 		model->GetToken(); // filename

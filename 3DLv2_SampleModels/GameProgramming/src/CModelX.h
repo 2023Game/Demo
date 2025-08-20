@@ -7,6 +7,8 @@
 #include "CMatrix.h"	//マトリクスクラスのインクルード
 #include "CVector.h"
 #include "CMyShader.h" //シェーダーのインクルード
+#include <sstream>
+#include <regex>
 
 using namespace std;
 
@@ -253,14 +255,14 @@ public:
 
 	bool EOT(); // トークンが無くなったらtrue
 	void Render();
-	char* Token();
+	string& Token();
 
 	~CModelX();
 	//ノードの読み飛ばし
 	void SkipNode();
 
 	//単語の取り出し
-	char* GetToken();
+	const char* GetToken();
 
 	CModelX();
 	CModelX(const string& base);
@@ -277,6 +279,12 @@ public:
 		mBaseDir = base;
 	}
 private:
+	std::string mContent;
+	// イテレータで分割
+	std::sregex_token_iterator mTokenItr;
+	std::string mToken;
+	std::sregex_token_iterator mTokenEnd;
+
 	string mBaseDir;
 
 	//シェーダー用スキンマトリックス
@@ -292,8 +300,8 @@ private:
 	//cが区切り文字ならtrueを返す
 	bool IsDelimiter(char c);
 
-	char* mpPointer;	//読み込み位置
-	char mToken[1024];	//取り出した単語の領域
+	//char* mpPointer;	//読み込み位置
+	//char mToken[1024];	//取り出した単語の領域
 };
 
 #endif

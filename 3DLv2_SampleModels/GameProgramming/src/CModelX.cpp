@@ -77,7 +77,7 @@ void CModelX::AnimateFrame() {
 
 bool CModelX::EOT()
 {
-	return *mpPointer == '\0';
+	return mToken.empty();
 }
 
 /*
@@ -93,7 +93,7 @@ void CModelX::Render() {
 	//}
 }
 
-char* CModelX::Token()
+string& CModelX::Token()
 {
 	return mToken;
 }
@@ -121,19 +121,19 @@ SkipNode
 */
 void CModelX::SkipNode() {
 	//文字が終わったら終了
-	while (*mpPointer != '\0') {
+	while (!mToken.empty()) {
 		GetToken();	//次の単語取得
 		//{が見つかったらループ終了
-		if (strchr(mToken, '{')) break;
+		if (mToken == "{") break;
 	}
 	int count = 1;
 	//文字が終わるか、カウントが0になったら終了
-	while (*mpPointer != '\0' && count > 0) {
+	while (!mToken.empty() && count > 0) {
 		GetToken();	//次の単語取得
 		//{を見つけるとカウントアップ
-		if (strchr(mToken, '{')) count++;
+		if (mToken == "{") count++;
 		//}を見つけるとカウントダウン
-		else if (strchr(mToken, '}')) count--;
+		else if (mToken == "}") count--;
 	}
 }
 
@@ -146,7 +146,36 @@ std::vector<shared_ptr<CModelXFrame>>& CModelX::Frames()
 GetToken
 文字列データから、単語を1つ取得する
 */
-char* CModelX::GetToken() {
+const char* CModelX::GetToken() {
+
+	static bool skip = false;
+
+	mToken = mTokenItr->str();
+	//もしmTokenが//の場合は、コメントなので改行まで読み飛ばす
+	//strcmp(文字列1, 文字列2)
+	//文字列1と文字列2が等しい場合、0を返します。
+	//文字列1と文字列2が等しくない場合、0以外を返します。
+	if (skip)
+	{
+		// 改行が来るまでスキップ
+		auto pos = mTokenItr->first - mContent.begin();
+		if (mContent[pos] == '\n') {
+			skip = false;
+		}
+		mTokenItr++;
+		GetToken();
+	}
+	else
+	{
+		if ("//" == mToken) {
+			skip = true;
+			GetToken();
+		}
+	}
+	mTokenItr++;
+	return mToken.c_str();
+
+	/*
 	char* p = mpPointer;
 	char* q = mToken;
 	//タブ(\t)空白( )改行(\r)(\n)，；”の区切り文字以外になるまで読み飛ばす
@@ -170,7 +199,7 @@ char* CModelX::GetToken() {
 	strcmp(文字列1, 文字列2)
 	文字列1と文字列2が等しい場合、0を返します。
 	文字列1と文字列2が等しくない場合、0以外を返します。
-	*/
+
 	if (!strcmp("//", mToken)) {
 		//改行まで読み飛ばす
 		while (*p != '\0' && !strchr("\r\n", *p)) p++;
@@ -180,6 +209,7 @@ char* CModelX::GetToken() {
 		return GetToken();
 	}
 	return mToken;
+	*/
 }
 
 void CModelX::SetSkinWeightFrameIndex()
@@ -201,12 +231,12 @@ void CModelX::SetSkinWeightFrameIndex()
 
 
 CModelX::CModelX()
-	: mpPointer(nullptr)
-	, mLoaded(false)
+	: //mpPointer(nullptr)
+	 mLoaded(false)
 	, mpSkinningMatrix(nullptr)
 {
 	//mTokenを初期化
-	memset(mToken, 0, sizeof(mToken));
+	//memset(mToken, 0, sizeof(mToken));
 }
 
 CModelX::CModelX(const string& base)
@@ -215,7 +245,13 @@ CModelX::CModelX(const string& base)
 	mBaseDir = base;
 }
 
-void CModelX::Load(const string& file) {
+
+#include <fstream>
+#include <iostream>
+
+
+void CModelX::Load(const string& filename) {
+	/*
 	//
 	//ファイルサイズを取得する
 	//
@@ -245,6 +281,32 @@ void CModelX::Load(const string& file) {
 	//最後に\0を設定する（文字列の終端）
 	buf[size] = '\0';
 	fclose(fp);	//ファイルをクローズする
+	*/
+
+	std::ifstream file(filename);
+	if (!file) {
+		std::cerr << "ファイルを開けません: " << filename << std::endl;
+		return;
+	}
+
+	// ファイル全体を1つの文字列に読み込む
+	std::stringstream buffer;
+	buffer << file.rdbuf();  // ファイル全体を読み込む
+
+	mContent = buffer.str();
+	//	mIss.str(content);
+
+	// 正規表現で区切り文字を定義（空白, TAB, カンマ, セミコロン, ダブルクォート, 改行）
+	std::regex re(R"([\s,;"\n]+)");
+
+	// 初期化（代入）
+	mTokenItr = std::sregex_token_iterator(mContent.begin(), mContent.end(), re, -1);
+
+	//for (; mToken != mTokenEnd; ++mToken) {
+	//	if (!mToken->str().empty()) {
+	//		std::cout << "単語: " << mToken->str() << std::endl;
+	//	}
+	//}
 
 	//ダミールートフレームの作成
 //	CModelXFrame* p = new CModelXFrame();
@@ -256,25 +318,26 @@ void CModelX::Load(const string& file) {
 	AddFrame(p);
 	//mFrames.push_back(p);
 
+	GetToken();	//単語の取得
 	//文字列の最後まで繰り返し
-	while (*mpPointer != '\0') {
-		GetToken();	//単語の取得
+	while (!mToken.empty()) {
+
 		//template 読み飛ばし
-		if (strcmp(mToken, "template") == 0) {
+		if (mToken == "template") {
 			SkipNode();
 		}
 		//Material の時
-		else if (strcmp(mToken, "Material") == 0) {
+		else if (mToken == "Material") {
 			shared_ptr<CMaterial> sp = make_shared<CMaterial>(this);
 			//model->Materials().push_back(sp);
 			mMaterials.push_back(sp);
 			//new CMaterial(this);
 		}
 		//単語がFrameの場合
-		else if (strcmp(mToken, "Frame") == 0) {
+		else if (mToken == "Frame") {
 			//フレーム名取得
 			GetToken();
-			if (strchr(mToken, '{')) {
+			if (mToken == "{") {
 				//フレーム名なし：スキップ
 				SkipNode();
 				GetToken(); //}
@@ -291,9 +354,10 @@ void CModelX::Load(const string& file) {
 			}
 		}
 		//単語がAnimationSetの場合
-		else if (strcmp(mToken, "AnimationSet") == 0) {
+		else if (mToken == "AnimationSet") {
 			mAnimationSets.push_back(make_unique<CAnimationSet>(this));
 		}
+		GetToken();	//単語の取得
 	}
 
 //	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
@@ -391,8 +455,9 @@ void CModelX::RenderShader(CMatrix* pCombinedMatrix)
 	mShader.Render(this, pCombinedMatrix);
 }
 
-size_t CModelX::AddAnimationSet(const string& file)
+size_t CModelX::AddAnimationSet(const string& filename)
 {
+	/*
 	//
 	//ファイルサイズを取得する
 	//
@@ -421,17 +486,38 @@ size_t CModelX::AddAnimationSet(const string& file)
 	buf[size] = '\0';
 	fclose(fp);	//ファイルをクローズする
 
-	//文字列の最後まで繰り返し
-	while (*mpPointer != '\0') {
-		GetToken();	//単語の取得
+	*/
+
+	std::ifstream file(filename);
+	if (!file) {
+		std::cerr << "ファイルを開けません: " << filename << std::endl;
+		return 0;
+	}
+
+	// ファイル全体を1つの文字列に読み込む
+	std::stringstream buffer;
+	buffer << file.rdbuf();  // ファイル全体を読み込む
+	mContent = buffer.str();
+	//	mIss.str(content);
+
+	// 正規表現で区切り文字を定義（空白, TAB, カンマ, セミコロン, ダブルクォート, 改行）
+	std::regex re(R"([\s,;"\n]+)");
+
+	// 初期化（代入）
+	mTokenItr = std::sregex_token_iterator(mContent.begin(), mContent.end(), re, -1);
+
+	GetToken();	//単語の取得
+//文字列の最後まで繰り返し
+	while (mToken.empty()) {
 			//template 読み飛ばし
-		if (strcmp(mToken, "template") == 0) {
+		if (mToken == "template") {
 			SkipNode();
 		}
 		//単語がAnimationSetの場合
-		else if (strcmp(mToken, "AnimationSet") == 0) {
+		else if (mToken == "AnimationSet") {
 			mAnimationSets.push_back(make_unique<CAnimationSet>(this));
 		}
+		GetToken();	//単語の取得
 	}
 
 	return mAnimationSets.size();
@@ -594,23 +680,23 @@ CModelXFrame::CModelXFrame(CModelX* model)
 	//次の単語（{の予定）を取得する
 	model->GetToken();  // {
 	//文字が無くなったら終わり
-	while (*model->mpPointer != '\0') {
+	while (!model->mToken.empty()) {
 		//次の単語取得
 		model->GetToken(); // Frame
 		//}かっこの場合は終了
-		if (strchr(model->mToken, '}')) break;
+		if (model->mToken == "}") break;
 		//新なフレームの場合は、子フレームに追加
-		if (strcmp(model->mToken, "Frame") == 0) {
+		if (model->mToken == "Frame") {
 			//フレーム名取得
 			model->GetToken();
-			if (strchr(model->mToken, '{')) {
+			if (model->mToken == "{") {
 				//フレーム名なし：スキップ
 				model->SkipNode();
 				model->GetToken(); //}
 			}
 			else {
 				//フレームが無ければ
-				if (model->FindFrame(string(model->mToken)) == 0) {
+				if (model->FindFrame(model->mToken) == 0) {
 					//フレームを作成し、子フレームの配列に追加
 					shared_ptr<CModelXFrame> mf = make_shared<CModelXFrame>(model);
 					model->AddFrame(mf);
@@ -619,14 +705,14 @@ CModelXFrame::CModelXFrame(CModelX* model)
 				}
 			}
 		}
-		else if (strcmp(model->mToken, "FrameTransformMatrix") == 0) {
+		else if (model->mToken == "FrameTransformMatrix") {
 			model->GetToken(); // {
 			for (int i = 0; i < mTransformMatrix.Size(); i++) {
 				mTransformMatrix.M()[i] = atof(model->GetToken());
 			}
 			model->GetToken(); // }
 		}
-		else if (strcmp(model->mToken, "Mesh") == 0) {
+		else if (model->mToken == "Mesh") {
 //			mpMesh = new CMesh();
 			mpMesh = make_unique<CMesh>();
 			mpMesh->Init(model);
@@ -875,7 +961,7 @@ CMesh::~CMesh() {
 */
 void CMesh::Init(CModelX* model) {
 	model->GetToken();	// { or 名前
-	if (!strchr(model->Token(), '{')) {
+	if (model->Token() != "{") {
 		//名前の場合、次が{
 		model->GetToken();	// {
 	}
@@ -914,9 +1000,9 @@ void CMesh::Init(CModelX* model) {
 	while (!model->EOT()) {
 		model->GetToken();	//MeshNormals 
 		//}かっこの場合は終了
-		if (strchr(model->Token(), '}'))
+		if (model->Token() == "}")
 			break;
-		if (strcmp(model->Token(), "MeshNormals") == 0) {
+		if (model->Token() == "MeshNormals") {
 			model->GetToken();	// {
 			//法線データ数を取得
 			mNormalNum = atoi(model->GetToken());
@@ -949,7 +1035,7 @@ void CMesh::Init(CModelX* model) {
 			model->GetToken();	// }
 		} // End of MeshNormals
 		// MeshMaterialListのとき
-		else if (strcmp(model->Token(), "MeshMaterialList") == 0) {
+		else if (model->Token() == "MeshMaterialList") {
 			model->GetToken(); // {
 			// Materialの数
 			mMaterialNum = atoi(model->GetToken());
@@ -963,7 +1049,7 @@ void CMesh::Init(CModelX* model) {
 			//マテリアルデータの作成
 			for (int i = 0; i < mMaterialNum; i++) {
 				model->GetToken();	// Material
-				if (strcmp(model->Token(), "Material") == 0) {
+				if (model->Token() == "Material") {
 					shared_ptr<CMaterial> sp = make_shared<CMaterial>(model);
 					model->Materials().push_back(sp);
 					mpMaterials.push_back(sp);
@@ -980,12 +1066,12 @@ void CMesh::Init(CModelX* model) {
 			model->GetToken();	// } //End of MeshMaterialList
 		} //End of MeshMaterialList
 		//SkinWeightsのとき
-		else if (strcmp(model->Token(), "SkinWeights") == 0) {
+		else if (model->Token() == "SkinWeights") {
 			//CSkinWeightsクラスのインスタンスを作成し、配列に追加
 			mSkinWeights.push_back(make_shared<CSkinWeights>(model));
 		}
 		//テクスチャ座標の時
-		else if (strcmp(model->Token(), "MeshTextureCoords") == 0) {
+		else if (model->Token() == "MeshTextureCoords") {
 			model->GetToken();	// {
 			//テクスチャ座標数を取得
 			int textureCoordsNum = atoi(model->GetToken()) * 2;
@@ -1152,8 +1238,8 @@ CAnimationSet::CAnimationSet(CModelX* model)
 	model->GetToken(); // {
 	while (!model->EOT()) {
 		model->GetToken(); // } or Animation
-		if (strchr(model->Token(), '}'))break;
-		if (strcmp(model->Token(), "Animation") == 0) {
+		if (model->Token() == "}")break;
+		if (model->Token() == "Animation") {
 			//Animation要素読み込み
 			mAnimations.push_back(std::make_shared<CAnimation>(model));
 		}
@@ -1180,7 +1266,7 @@ CAnimation::CAnimation(CModelX* model)
 	//, mpKey(nullptr)
 {
 	model->GetToken(); // { or Animation Name
-	if (strchr(model->Token(), '{')) {
+	if (model->Token() == "{") {
 		model->GetToken(); // {
 	}
 	else {
@@ -1209,8 +1295,8 @@ CAnimation::CAnimation(CModelX* model)
 
 	while (!model->EOT()) {
 		model->GetToken(); // } or AnimationKey
-		if (strchr(model->Token(), '}')) break;
-		if (strcmp(model->Token(), "AnimationKey") == 0) {
+		if (model->Token() == "}") break;
+		if (model->Token() == "AnimationKey") {
 			model->GetToken(); // {
 			//データのタイプ取得
 			int type = atoi(model->GetToken());
