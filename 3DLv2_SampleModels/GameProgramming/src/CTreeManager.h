@@ -14,11 +14,14 @@ public:
 	void Remove(CTree* remove);
 
 	//2分探索木のルート取得
-	CTree& Root() { return mRoot; }
+//	CTree& Root() { return mRoot; }
 	// コンストラクタ
 	CTreeManager();
 	// デストラクタ
 	~CTreeManager();
+protected:
+	//2分探索木のルート
+	CTree mRoot;
 private:
 	void Add(CTree* parent, CTree* add);
 	// 最大値下位ノードの取得
@@ -27,7 +30,4 @@ private:
 	CTree* Min(CTree* task);
 	// Move(移動先, 移動元）
 	void Move(CTree* dest, CTree* src);
-
-	//2分探索木のルート
-	CTree mRoot;
 };

@@ -10,10 +10,10 @@
 class CCollisionManager : public CTreeManager
 {
 public:
-	//削除リストの要素を削除する
-	void Delete();
-	//削除リストに追加する
-	void Delete(CCollider* c);
+	////削除リストの要素を削除する
+	//void Delete();
+	////削除リストに追加する
+	//void Delete(CCollider* c);
 
 	//インスタンスの取得
 	static CCollisionManager* Instance();
@@ -26,9 +26,9 @@ public:
 	void Render(CTree* task);
 private:
 	//削除リスト
-	std::list<CCollider*> mDeleteTrees;
+	//std::list<CCollider*> mDeleteTrees;
 	//デフォルトコンストラクタ
-	CCollisionManager() {};
+	//CCollisionManager() {};
 	//マネージャのインスタンス
 	static CCollisionManager* mpInstance;
 };

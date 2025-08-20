@@ -52,12 +52,12 @@ void CCollisionManager::Collision(CCollider* c, int range)
 	int high = c->mPriority + range;
 
 	//ルートノードから衝突判定開始
-	Collision(c, (CCollider*)&Root(), low, high);
+	Collision(c, (CCollider*)&mRoot, low, high);
 }
 
 void CCollisionManager::Render()
 {
-	Render(Root().Right());
+	Render(mRoot.Right());
 }
 
 void CCollisionManager::Render(CTree* task)
@@ -68,14 +68,14 @@ void CCollisionManager::Render(CTree* task)
 	Render(task->Right());
 }
 
-void CCollisionManager::Delete()
-{
-	for (auto tree : mDeleteTrees)
-		delete tree;
-	mDeleteTrees.clear();
-}
-
-void CCollisionManager::Delete(CCollider* c)
-{
-	mDeleteTrees.push_back(c);
-}
+//void CCollisionManager::Delete()
+//{
+//	for (auto tree : mDeleteTrees)
+//		delete tree;
+//	mDeleteTrees.clear();
+//}
+//
+//void CCollisionManager::Delete(CCollider* c)
+//{
+//	mDeleteTrees.push_back(c);
+//}
