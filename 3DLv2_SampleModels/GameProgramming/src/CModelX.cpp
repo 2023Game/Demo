@@ -230,7 +230,8 @@ void CModelX::Load(const string& file) {
 	//ファイルサイズの取得
 	int size = ftell(fp);
 	//ファイルサイズ+1バイト分の領域を確保
-	shared_ptr<char[]> buf(new char[size + 1]);// make_shared<char[]>(new char[size + 1]);
+	//unique_ptr<char[]> buf(new char[size + 1]);// make_shared<char[]>(new char[size + 1]);
+	unique_ptr<char[]> buf = make_unique<char[]>(size + 1);
 	mpPointer = buf.get();
 
 //	char* buf = mpPointer = new char[size + 1];
