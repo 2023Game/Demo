@@ -279,11 +279,11 @@ public:
 		mBaseDir = base;
 	}
 private:
-	std::string mContent;
+	//std::string mContent;
 	// イテレータで分割
-	std::sregex_token_iterator mTokenItr;
+	//std::sregex_token_iterator mTokenItr;
 	std::string mToken;
-	std::sregex_token_iterator mTokenEnd;
+	//std::sregex_token_iterator mTokenEnd;
 
 	string mBaseDir;
 
@@ -300,7 +300,7 @@ private:
 	//cが区切り文字ならtrueを返す
 	bool IsDelimiter(char c);
 
-	//char* mpPointer;	//読み込み位置
+	char* mpPointer;	//読み込み位置
 	//char mToken[1024];	//取り出した単語の領域
 };
 

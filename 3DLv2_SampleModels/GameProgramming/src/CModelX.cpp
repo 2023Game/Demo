@@ -77,7 +77,7 @@ void CModelX::AnimateFrame() {
 
 bool CModelX::EOT()
 {
-	return mToken.empty();
+	return *mpPointer == '\0';
 }
 
 /*
@@ -121,14 +121,14 @@ SkipNode
 */
 void CModelX::SkipNode() {
 	//文字が終わったら終了
-	while (!mToken.empty()) {
+	while (!EOT()) {
 		GetToken();	//次の単語取得
 		//{が見つかったらループ終了
 		if (mToken == "{") break;
 	}
 	int count = 1;
 	//文字が終わるか、カウントが0になったら終了
-	while (!mToken.empty() && count > 0) {
+	while (!EOT() && count > 0) {
 		GetToken();	//次の単語取得
 		//{を見つけるとカウントアップ
 		if (mToken == "{") count++;
@@ -148,59 +148,67 @@ GetToken
 */
 const char* CModelX::GetToken() {
 
-	static bool skip = false;
+	/*
+	static bool comment = false;
 
 	mToken = mTokenItr->str();
 	//もしmTokenが//の場合は、コメントなので改行まで読み飛ばす
 	//strcmp(文字列1, 文字列2)
 	//文字列1と文字列2が等しい場合、0を返します。
 	//文字列1と文字列2が等しくない場合、0以外を返します。
-	if (skip)
+	if (comment)
 	{
 		// 改行が来るまでスキップ
 		auto pos = mTokenItr->first - mContent.begin();
+		pos += mToken.length();
 		if (mContent[pos] == '\n') {
-			skip = false;
+			comment = false;
+			mTokenItr++;
+			mToken = mTokenItr->str();
+			//mTokenItr++;
+			//return mToken.c_str();
 		}
-		mTokenItr++;
-		GetToken();
+		else
+		{
+			mTokenItr++;
+			return GetToken();
+		}
 	}
 	else
 	{
 		if ("//" == mToken) {
-			skip = true;
-			GetToken();
+			comment = true;
+			return GetToken();
 		}
 	}
 	mTokenItr++;
 	return mToken.c_str();
 
-	/*
+	*/
+
+
 	char* p = mpPointer;
-	char* q = mToken;
+	mToken.clear();	//mTokenをクリア
+
 	//タブ(\t)空白( )改行(\r)(\n)，；”の区切り文字以外になるまで読み飛ばす
 	while (*p != '\0' && IsDelimiter(*p)) p++;
 	if (*p == '{' || *p == '}') {
 		//{または}ならmTokenに代入し次の文字へ
-		*q++ = *p++;
+//		*q++ = *p++;
+		mToken += *p++;
 	}
 	else {
 		//タブ(\t)空白( )改行(\r)(\n)，；”の区切り文字、
 		//または、}の文字になるまでmTokenに代入する
 		while (*p != '\0' && !IsDelimiter(*p) && *p != '}')
-			*q++ = *p++;
+			//*q++ = *p++;
+			mToken += *p++;
 	}
 
-	*q = '\0';	//mTokenの最後に\0を代入
 	mpPointer = p;	//次の読み込むポイントを更新する
 
 	//もしmTokenが//の場合は、コメントなので改行まで読み飛ばす
-	/*
-	strcmp(文字列1, 文字列2)
-	文字列1と文字列2が等しい場合、0を返します。
-	文字列1と文字列2が等しくない場合、0以外を返します。
-
-	if (!strcmp("//", mToken)) {
+	if ("//" == mToken) {
 		//改行まで読み飛ばす
 		while (*p != '\0' && !strchr("\r\n", *p)) p++;
 		//読み込み位置の更新
@@ -208,8 +216,7 @@ const char* CModelX::GetToken() {
 		//単語を取得する（再帰呼び出し）
 		return GetToken();
 	}
-	return mToken;
-	*/
+	return mToken.c_str();
 }
 
 void CModelX::SetSkinWeightFrameIndex()
@@ -231,12 +238,10 @@ void CModelX::SetSkinWeightFrameIndex()
 
 
 CModelX::CModelX()
-	: //mpPointer(nullptr)
-	 mLoaded(false)
+	: mpPointer(nullptr)
+	, mLoaded(false)
 	, mpSkinningMatrix(nullptr)
 {
-	//mTokenを初期化
-	//memset(mToken, 0, sizeof(mToken));
 }
 
 CModelX::CModelX(const string& base)
@@ -293,20 +298,11 @@ void CModelX::Load(const string& filename) {
 	std::stringstream buffer;
 	buffer << file.rdbuf();  // ファイル全体を読み込む
 
-	mContent = buffer.str();
-	//	mIss.str(content);
+	std::string content = buffer.str();
 
-	// 正規表現で区切り文字を定義（空白, TAB, カンマ, セミコロン, ダブルクォート, 改行）
-	std::regex re(R"([\s,;"\n]+)");
-
-	// 初期化（代入）
-	mTokenItr = std::sregex_token_iterator(mContent.begin(), mContent.end(), re, -1);
-
-	//for (; mToken != mTokenEnd; ++mToken) {
-	//	if (!mToken->str().empty()) {
-	//		std::cout << "単語: " << mToken->str() << std::endl;
-	//	}
-	//}
+	unique_ptr<char[]> buf = make_unique<char[]>(content.size() + 1);
+	mpPointer = buf.get();
+	std::strcpy(mpPointer, content.c_str());
 
 	//ダミールートフレームの作成
 //	CModelXFrame* p = new CModelXFrame();
@@ -318,9 +314,9 @@ void CModelX::Load(const string& filename) {
 	AddFrame(p);
 	//mFrames.push_back(p);
 
-	GetToken();	//単語の取得
 	//文字列の最後まで繰り返し
-	while (!mToken.empty()) {
+	while (*mpPointer != '\0') {
+		GetToken();	//単語の取得
 
 		//template 読み飛ばし
 		if (mToken == "template") {
@@ -357,7 +353,6 @@ void CModelX::Load(const string& filename) {
 		else if (mToken == "AnimationSet") {
 			mAnimationSets.push_back(make_unique<CAnimationSet>(this));
 		}
-		GetToken();	//単語の取得
 	}
 
 //	SAFE_DELETE_ARRAY(buf);	//確保した領域を開放する
@@ -497,19 +492,16 @@ size_t CModelX::AddAnimationSet(const string& filename)
 	// ファイル全体を1つの文字列に読み込む
 	std::stringstream buffer;
 	buffer << file.rdbuf();  // ファイル全体を読み込む
-	mContent = buffer.str();
-	//	mIss.str(content);
+	std::string content = buffer.str();
 
-	// 正規表現で区切り文字を定義（空白, TAB, カンマ, セミコロン, ダブルクォート, 改行）
-	std::regex re(R"([\s,;"\n]+)");
+	unique_ptr<char[]> buf = make_unique<char[]>(content.size() + 1);
+	mpPointer = buf.get();
+	std::strcpy(mpPointer, content.c_str());
 
-	// 初期化（代入）
-	mTokenItr = std::sregex_token_iterator(mContent.begin(), mContent.end(), re, -1);
-
-	GetToken();	//単語の取得
-//文字列の最後まで繰り返し
-	while (mToken.empty()) {
-			//template 読み飛ばし
+	//文字列の最後まで繰り返し
+	while (*mpPointer != '\0') {
+		GetToken();	//単語の取得
+		//template 読み飛ばし
 		if (mToken == "template") {
 			SkipNode();
 		}
@@ -517,7 +509,6 @@ size_t CModelX::AddAnimationSet(const string& filename)
 		else if (mToken == "AnimationSet") {
 			mAnimationSets.push_back(make_unique<CAnimationSet>(this));
 		}
-		GetToken();	//単語の取得
 	}
 
 	return mAnimationSets.size();
@@ -680,7 +671,7 @@ CModelXFrame::CModelXFrame(CModelX* model)
 	//次の単語（{の予定）を取得する
 	model->GetToken();  // {
 	//文字が無くなったら終わり
-	while (!model->mToken.empty()) {
+	while (!model->EOT()) {
 		//次の単語取得
 		model->GetToken(); // Frame
 		//}かっこの場合は終了
