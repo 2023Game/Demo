@@ -148,7 +148,7 @@ public:
 private:
 protected:
 	//マテリアル毎の面数
-	std::vector<int> mMaterialVertexCount;
+	//std::vector<int> mMaterialVertexCount;
 	//頂点バッファ識別子
 	GLuint mMyVertexBufferId;
 

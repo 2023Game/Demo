@@ -340,7 +340,7 @@ void CModelX::Load(const string& filename) {
 			}
 			else {
 				//フレームが無ければ
-				if (FindFrame(string(mToken)) == 0) {
+				if (FindFrame(mToken) == 0) {
 					//フレームを作成する
 					shared_ptr<CModelXFrame> mf = make_unique<CModelXFrame>(this);
 					AddFrame(mf);
@@ -792,7 +792,7 @@ void CMesh::CreateVertexBuffer()
 				}
 			}
 			//マテリアル毎の頂点数を追加する
-			mMaterialVertexCount.push_back(k - w);
+			//mMaterialVertexCount.push_back(k - w);
 			mpMaterials[i]->mVertexNum = k - w;
 		}
 		//頂点バッファの作成
