@@ -9,6 +9,7 @@
 */
 class CVector {
 public:
+	float LengthSq();
 	void Print()
 	{
 		printf("%10f%10f%10f\n", mX, mY, mZ);

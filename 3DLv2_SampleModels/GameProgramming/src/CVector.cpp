@@ -12,6 +12,11 @@ float CVector::Length() const
 	return sqrtf(mX * mX + mY * mY + mZ * mZ);
 }
 
+float CVector::LengthSq()
+{
+	return this->Dot(*this);
+}
+
 void CVector::operator+=(const CVector& v)
 {
 	mX += v.mX;
