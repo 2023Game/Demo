@@ -362,5 +362,8 @@
     <ClInclude Include="src\CTreeManager.h">
       <Filter>ソース ファイル\Task</Filter>
     </ClInclude>
+    <ClInclude Include="AddNewFile.h">
+      <Filter>ソース ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
